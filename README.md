@@ -1,2 +1,3 @@
-# MediaBrowser.Android
-Media Browser for Android
+MediaBrowser.Android
+====================
+
