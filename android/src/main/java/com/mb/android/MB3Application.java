@@ -53,7 +53,6 @@ public class MB3Application extends Application
     private static VideoCastManager mCastMgr = null;
     private static AudioService mAudioService = null;
     public AndroidApiClient API;
-    private ConnectionState mConnectionState;
     public UserDto user;
     public Playlist PlayerQueue;
 //    public String LibretroNativeLibraryPath;
@@ -175,7 +174,6 @@ public class MB3Application extends Application
         FileLogger.getFileLogger().Info("Application object initialized");
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
 
-        this.mConnectionState = com.mb.network.ConnectionState.CONNECTED_WIFI;
         this.PlayerQueue = new Playlist();
         this.ParentalRatings = new ArrayList<>();
 
@@ -230,27 +228,6 @@ public class MB3Application extends Application
             mediaPlayer = null;
         } catch (Exception e) {
             FileLogger.getFileLogger().Info("SeriesViewActivity: Error releasing MediaPlayer");
-        }
-
-    }
-
-    //**********************************************************************************************
-    // Connection State Methods
-    //**********************************************************************************************
-
-    public ConnectionState GetConnectionState() {
-        return mConnectionState;
-    }
-
-    public void SetConnectionState(ConnectionState connectionState) {
-
-        if (connectionState.equals(ConnectionState.CONNECTED_WIFI)) {
-
-        } else if (connectionState.equals(ConnectionState.CONNECTED_CELLULAR)) {
-
-        } else {
-            // Disconnected
-            mConnectionState = connectionState;
         }
 
     }

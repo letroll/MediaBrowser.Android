@@ -199,12 +199,6 @@
             </intent-filter>
         </service>
 
-        <receiver android:name="com.mb.android.receivers.ConnectivityStateReceiver">
-            <intent-filter>
-                <action android:name="android.net.wifi.STATE_CHANGE"/>
-            </intent-filter>
-        </receiver>
-
         <receiver android:name="com.mb.android.playbackmediator.remotecontrol.VideoIntentReceiver">
             <intent-filter>
                 <action android:name="android.media.AUDIO_BECOMING_NOISY" />
