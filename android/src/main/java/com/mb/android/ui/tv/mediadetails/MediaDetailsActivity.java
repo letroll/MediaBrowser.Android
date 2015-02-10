@@ -207,45 +207,6 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
         super.onPause();
     }
 
-
-
-    private void RenderRatingsValues() {
-
-        if (mItem.getCommunityRating() != null) {
-            Utils.ShowStarRating(mItem.getCommunityRating(), mStarRating);
-            mStarRating.setVisibility(View.VISIBLE);
-
-        }
-
-        if (mItem.getMetascore() != null) {
-            mMetaScore.setText(String.valueOf(mItem.getMetascore().intValue()));
-            if (mItem.getMetascore() >= 60) {
-                mMetaScore.setBackgroundColor(Color.parseColor("#7066cc33"));
-            } else if (mItem.getMetascore() >= 40) {
-                mMetaScore.setBackgroundColor(Color.parseColor("#70ffcc33"));
-            } else {
-                mMetaScore.setBackgroundColor(Color.parseColor("#70f00000"));
-            }
-            mMetaScore.setVisibility(View.VISIBLE);
-
-        }
-
-        if (mItem.getCriticRating() != null) {
-            if (mItem.getCriticRating() >= 60) {
-                mRtImage.setImageResource(R.drawable.fresh);
-            } else {
-                mRtImage.setImageResource(R.drawable.rotten);
-            }
-            mRtImage.setVisibility(View.VISIBLE);
-
-            mRtValue.setText(String.valueOf(mItem.getCriticRating().intValue()) + "%");
-            mRtValue.setVisibility(View.VISIBLE);
-
-        }
-
-    }
-
-
     private void BuildSectionsList(BaseItemDto item) {
 
         if (mSpecialsCallbackCompleted && mReviewsCallbackCompleted && mQuickPlayCallbackCompleted) {

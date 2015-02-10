@@ -101,25 +101,6 @@ public class Utils {
     }
 
     /**
-     * A utility method to show a simple error dialog.
-     *
-     * @param context
-     * @param message The message to be shown in the dialog
-     */
-    public static final void showErrorDialog(Context context, String message) {
-        new AlertDialog.Builder(context).setTitle(R.string.error)
-                .setMessage(message)
-                .setPositiveButton(R.string.ok_button, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                })
-                .create()
-                .show();
-    }
-
-    /**
      * Shows a (long) toast.
      *
      * @param context

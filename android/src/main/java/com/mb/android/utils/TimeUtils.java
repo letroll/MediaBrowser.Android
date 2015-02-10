@@ -17,10 +17,6 @@ public class TimeUtils {
         return (long)milliseconds * 10000;
     }
 
-    public static long secondsToTicks(int seconds) {
-        return (long)seconds * 10000000;
-    }
-
     public static int secondsToMs(int seconds) {
         return seconds * 1000;
     }

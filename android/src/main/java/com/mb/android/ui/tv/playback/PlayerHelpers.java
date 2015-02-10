@@ -319,16 +319,6 @@ public final class PlayerHelpers {
         }
     }
 
-    public void playItems(MbBaseActivity context, List<BaseItemDto> items) {
-        if (items == null || items.size() == 0) {
-            throw new IllegalArgumentException("items");
-        }
-
-        MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
-        addToPlaylist(items);
-        playItems(context);
-    }
-
     public void playItem(final MbBaseActivity context, final BaseItemDto item, final Long startPositionTicks, final Integer audioStreamIndex, final Integer subtitleStreamIndex, final String mediaSourceId, boolean ignoreCinemaMode) {
         if (context == null) {
             throw new IllegalArgumentException("context");

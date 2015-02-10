@@ -11,7 +11,6 @@ import android.preference.PreferenceManager;
 import com.mb.android.SavedSessionInfo;
 import com.mb.android.logging.LogLevel;
 import com.mb.android.ui.main.ConnectionActivity;
-import com.mb.android.utils.FileUtils;
 import com.mb.android.R;
 import com.mb.android.logging.FileLogger;
 import com.mb.android.widget.customswitchpreference.CustomSwitchPreference;
@@ -36,24 +35,6 @@ public class MainSettingsFragment extends PreferenceFragment implements SharedPr
         SharedPreferences prefs =
                 PreferenceManager.getDefaultSharedPreferences(getActivity());
         prefs.registerOnSharedPreferenceChangeListener(this);
-
-        try {
-            FileUtils fileUtils = new FileUtils();
-
-            SavedSessionInfo savedSessionInfo = fileUtils.LoadSavedSessionInfo(getActivity());
-
-            if (savedSessionInfo != null) {
-                if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(savedSessionInfo.serverName))
-                    this.findPreference("pref_server_name").setTitle(savedSessionInfo.serverName);
-                else
-                    this.findPreference("pref_server_name").setTitle(savedSessionInfo.useInternalAddress
-                            ? savedSessionInfo.internalAddress
-                            : savedSessionInfo.externalAddress);
-            }
-
-        } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Exception handled", e);
-        }
     }
 
     @Override

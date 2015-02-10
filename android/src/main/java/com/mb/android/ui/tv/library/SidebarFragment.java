@@ -52,11 +52,6 @@ public class SidebarFragment extends Fragment {
         return view;
     }
 
-    public void setInfoFrom(BaseItemDto baseItem) {
-        Toast.makeText(MB3Application.getInstance(), "setInfoFrom successfully called", Toast.LENGTH_LONG).show();
-        populateItemInfo(baseItem);
-    }
-
     private void populateItemInfo(BaseItemDto item) {
 
         mMediaTitle.setText(!tangible.DotNetToJavaStringHelper.isNullOrEmpty(item.getName()) ? item.getName() : "");

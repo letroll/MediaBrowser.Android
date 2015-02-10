@@ -33,46 +33,6 @@ public class ServerAdapter extends BaseAdapter {
 
     }
 
-
-    public void addServer(ServerInfo server) {
-        mAvailableServers.add(server);
-        notifyDataSetChanged();
-    }
-
-    public void updateExistingServer(ServerInfo server) {
-
-        if (mAvailableServers == null || mAvailableServers.size() == 0 || server == null) return;
-
-        int index = -1;
-
-        for (ServerInfo info : mAvailableServers) {
-            if (info.getId().equalsIgnoreCase(server.getId()))
-                index = mAvailableServers.indexOf(info);
-        }
-
-        if (index >= 0) {
-            mAvailableServers.set(index, server);
-            notifyDataSetChanged();
-        }
-    }
-
-    public void removeServer(String serverId) {
-
-        if (mAvailableServers == null || mAvailableServers.size() == 0 || serverId == null) return;
-
-        int index = -1;
-
-        for (ServerInfo info : mAvailableServers) {
-            if (info.getId().equalsIgnoreCase(serverId))
-                index = mAvailableServers.indexOf(info);
-        }
-
-        if (index >= 0) {
-            mAvailableServers.remove(index);
-            notifyDataSetChanged();
-        }
-    }
-
     public int getCount() {
         if (mAvailableServers != null)
             return mAvailableServers.size();
