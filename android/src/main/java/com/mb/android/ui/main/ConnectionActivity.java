@@ -422,7 +422,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
             }
             dismissActivityDialog();
             MB3Application.getInstance().user = result.getUser();
-            updateStoredCredentials(MB3Application.getInstance().API.getServerInfo(), result);
+
             proceedToHomescreen();
         }
         @Override
@@ -443,27 +443,6 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
             FileLogger.getFileLogger().ErrorException("Exception handled: ", ex);
         }
     };
-
-    private void updateStoredCredentials(ServerInfo serverInfo, AuthenticationResult authenticationResult) {
-        if (serverInfo == null) {
-            return;
-        }
-        if (authenticationResult == null) {
-            return;
-        }
-
-        serverInfo.setAccessToken(authenticationResult.getAccessToken());
-        serverInfo.setUserId(authenticationResult.getUser().getId());
-        serverInfo.setUserLinkType(authenticationResult.getUser().getConnectLinkType());
-
-        AndroidCredentialProvider credentialProvider = new AndroidCredentialProvider(new GsonJsonSerializer(), MB3Application.getInstance());
-        ServerCredentials credentials = credentialProvider.GetCredentials();
-
-        if (credentials == null) return;
-
-        credentials.AddOrUpdateServer(serverInfo);
-        credentialProvider.SaveCredentials(credentials);
-    }
 
     //******************************************************************************************************************
 
