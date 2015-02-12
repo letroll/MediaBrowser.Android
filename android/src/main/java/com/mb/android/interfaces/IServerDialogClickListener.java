@@ -9,7 +9,5 @@ public interface IServerDialogClickListener {
 
     public void onOkClick(String address);
 
-    public void onEditOkClick(ServerInfo serverInfo);
-
     public void onCancelClick();
 }

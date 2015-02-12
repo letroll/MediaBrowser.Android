@@ -7,8 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-
-import com.mb.android.SavedSessionInfo;
 import com.mb.android.logging.LogLevel;
 import com.mb.android.ui.main.ConnectionActivity;
 import com.mb.android.R;

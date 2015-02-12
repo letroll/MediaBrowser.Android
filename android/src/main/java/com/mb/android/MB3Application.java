@@ -17,7 +17,6 @@ import com.mb.android.playbackmediator.utils.Utils;
 import com.mb.android.activities.mobile.RemoteControlActivity;
 import com.mb.android.player.AudioService;
 import com.mb.android.logging.FileLogger;
-import com.mb.network.ConnectionState;
 import mediabrowser.apiinteraction.IConnectionManager;
 import mediabrowser.apiinteraction.android.AndroidApiClient;
 import mediabrowser.apiinteraction.android.AndroidConnectionManager;
@@ -146,7 +145,7 @@ public class MB3Application extends Application
 
         capabilities.setPlayableMediaTypes(playableTypes);
         capabilities.setSupportedCommands(supportedCommands);
-        capabilities.setSupportsContentUploading(getUploadingEnabled());
+        capabilities.setSupportsContentUploading(true);
         if (getSyncEnabled()) {
             capabilities.setSupportsSync(true);
             capabilities.setDeviceProfile(new AndroidProfile(true, false));
@@ -159,11 +158,6 @@ public class MB3Application extends Application
     // TODO delete when feature is complete
     public boolean getSyncEnabled() {
         return false;
-    }
-
-    // TODO delete when feature complete
-    public boolean getUploadingEnabled() {
-        return true;
     }
 
     @Override
@@ -418,10 +412,6 @@ public class MB3Application extends Application
     private boolean isConnected;
     public boolean getIsConnected() { return isConnected; }
     public void setIsConnected(boolean value) { isConnected = value; }
-
-    private ArrayList<ServerInfo> knownServers;
-    public ArrayList<ServerInfo> getKnownServers() { return knownServers; }
-    public void setKnownServers(ArrayList<ServerInfo> servers) { knownServers = servers; }
 
     private DisplayPreferenceManager preferenceManager;
     public DisplayPreferenceManager getPreferenceManager() {

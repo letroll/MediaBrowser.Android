@@ -17,19 +17,6 @@ import java.util.Formatter;
  * Created by Mark on 11/12/13.
  */
 public class Connectivity {
-    private final static String[] typicalLanIps = {"192.", "10.", "127."};
-
-    /**
-     * Check if there is any connectivity
-     *
-     * @param context
-     * @return
-     */
-    public static boolean isConnected(Context context) {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo info = cm.getActiveNetworkInfo();
-        return (info != null && info.isConnected());
-    }
 
     public static boolean isConnectedLAN(Context context) {
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

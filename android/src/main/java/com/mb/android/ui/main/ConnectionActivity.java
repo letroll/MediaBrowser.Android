@@ -138,13 +138,9 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
                     ConnectionActivity.this.onSignedIn(result);
                     break;
                 case ConnectSignIn:
-                    ConnectionActivity.this.onConnectSignIn(result);
+                    ConnectionActivity.this.onServerSelection();
                     break;
             }
-        }
-        @Override
-        public void onError(Exception ex) {
-            ConnectionActivity.this.onError(ex);
         }
     };
 
@@ -152,8 +148,8 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         // No servers found. User must manually enter connection info.
         FileLogger.getFileLogger().Info("**** UNAVAILABLE ***");
         dismissActivityDialog();
-        MB3Application.getInstance().setKnownServers(result.getServers());
-        showServerSelection();
+
+        showServerSelection(result.getServers());
         Toast.makeText(this, "Server Unreachable", Toast.LENGTH_LONG).show();
     }
 
@@ -169,7 +165,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         // Display a login screen and authenticate with the server using result.ApiClient
         FileLogger.getFileLogger().Info("**** SERVER SIGN IN ****");
         dismissActivityDialog();
-        MB3Application.getInstance().setKnownServers(result.getServers());
+
         showUserSelection(result);
     }
 
@@ -181,41 +177,25 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         MB3Application.getInstance().API = (AndroidApiClient)result.getApiClient();
         MB3Application.getInstance().user = new UserDto();
         MB3Application.getInstance().user.setId(MB3Application.getInstance().API.getCurrentUserId());
-        MB3Application.getInstance().setKnownServers(result.getServers());
+
         proceedToHomescreen();
     }
-
-    private void onConnectSignIn(ConnectionResult result) {
-        FileLogger.getFileLogger().Info("**** CONNECT SIGN IN ****");
-        dismissActivityDialog();
-        MB3Application.getInstance().setKnownServers(result.getServers());
-        showServerSelection();
-    }
-
-    private void onError(Exception ex) {
-        FileLogger.getFileLogger().Info("**** ON ERROR ***");
-        FileLogger.getFileLogger().ErrorException("Connection error handled: ", ex);
-        dismissActivityDialog();
-        showServerSelection();
-    }
-
 
     private Response<ArrayList<ServerInfo>> getAvailableServersResponse = new Response<ArrayList<ServerInfo>>() {
         @Override
         public void onResponse(ArrayList<ServerInfo> servers) {
             dismissActivityDialog();
-            MB3Application.getInstance().setKnownServers(servers);
-            showServerSelection();
+            showServerSelection(servers);
         }
         @Override
         public void onError(Exception e) {
             dismissActivityDialog();
-            showServerSelection();
+            showServerSelection(new ArrayList<ServerInfo>());
         }
     };
 
 
-    private void showServerSelection() {
+    private void showServerSelection(final ArrayList<ServerInfo> servers) {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable() {
             @Override
@@ -223,13 +203,11 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
                 FileLogger.getFileLogger().Debug("Updating header buttons for server selection");
                 mChangeServerButton.setOnClickListener(onAddServerClick);
                 updateHeader(getResources().getString(R.string.select_mb_server), true);
-                if (MB3Application.getInstance().getKnownServers() == null) {
-                    MB3Application.getInstance().setKnownServers(new ArrayList<ServerInfo>());
-                }
-                FileLogger.getFileLogger().Debug("Creating server list");
-                FileLogger.getFileLogger().Debug(String.valueOf(MB3Application.getInstance().getKnownServers().size()) + " servers to display");
 
-                mContentGrid.setAdapter(new ServerAdapter(MB3Application.getInstance().getKnownServers(), ConnectionActivity.this, null));
+                FileLogger.getFileLogger().Debug("Creating server list");
+                FileLogger.getFileLogger().Debug(String.valueOf(servers.size()) + " servers to display");
+
+                mContentGrid.setAdapter(new ServerAdapter(servers, ConnectionActivity.this, null));
                 mContentGrid.setOnItemClickListener(onServerClick);
             }
         });
@@ -345,10 +323,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
     private View.OnClickListener onChangeServerClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if (MB3Application.getInstance().API != null) {
-                MB3Application.getInstance().API.Logout(new EmptyResponse());
-            }
-            showServerSelection();
+            ConnectionActivity.this.onServerSelection();
         }
     };
 
@@ -356,11 +331,6 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
     public void onOkClick(String address) {
         FileLogger.getFileLogger().Debug("Attempting to manually connect to " + address);
         MB3Application.getInstance().getConnectionManager().Connect(address, connectionResponse);
-    }
-
-    @Override
-    public void onEditOkClick(ServerInfo serverInfo) {
-
     }
 
     @Override
