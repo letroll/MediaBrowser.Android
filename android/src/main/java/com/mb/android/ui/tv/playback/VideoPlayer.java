@@ -44,7 +44,7 @@ import com.mb.android.utils.TimeUtils;
 import com.mb.android.utils.Utils;
 import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.subtitles.Caption;
 import com.mb.android.subtitles.TimedTextObject;
 import mediabrowser.model.dlna.StreamInfo;
@@ -201,9 +201,9 @@ public class VideoPlayer extends FragmentActivity
         DolbyAudioProcessing mDolbyAudioProcessing = DolbyAudioProcessing.getDolbyAudioProcessing(this, DolbyAudioProcessing.PROFILE.GAME, this);
 
         if (mDolbyAudioProcessing == null) {
-            FileLogger.getFileLogger().Debug("Dolby NOT available");
+            AppLogger.getLogger().Debug("Dolby NOT available");
         } else {
-            FileLogger.getFileLogger().Debug("Dolby available!!!!!");
+            AppLogger.getLogger().Debug("Dolby available!!!!!");
         }
 
         playlistAdapter = new BaseSongAdapter(MB3Application.getInstance().PlayerQueue.PlaylistItems, this);
@@ -217,7 +217,7 @@ public class VideoPlayer extends FragmentActivity
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
-        FileLogger.getFileLogger().Info(TAG +": onResume");
+        AppLogger.getLogger().Info(TAG +": onResume");
         MB3Application.getInstance().setCurrentActivity(this);
 //        mVideoView.postDelayed(onEverySecond, 1000);
         hideSystemUi();
@@ -229,7 +229,7 @@ public class VideoPlayer extends FragmentActivity
     @Override
     public void onPause() {
         super.onPause();
-        FileLogger.getFileLogger().Info(TAG + ": onPause");
+        AppLogger.getLogger().Info(TAG + ": onPause");
         playerPause();
         mIsPaused = true;
         clearReferences();
@@ -241,11 +241,11 @@ public class VideoPlayer extends FragmentActivity
      */
     @Override
     public void onDestroy() {
-        FileLogger.getFileLogger().Info(TAG + ": onDestroy");
+        AppLogger.getLogger().Info(TAG + ": onDestroy");
         try {
             PlayerHelpers.sendPlaybackStoppedToServer(mStreamInfo, (long) mTruePlayerPositionMs * 10000, new EmptyResponse());
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Error sending playback stopped ", e);
+            AppLogger.getLogger().ErrorException("Error sending playback stopped ", e);
         }
 
         clearReferences();
@@ -261,12 +261,12 @@ public class VideoPlayer extends FragmentActivity
         if (mVideoView != null) {
             try {
                 if (mIsPrepared) {
-                    FileLogger.getFileLogger().Info(TAG + ": calling mPlayer.release");
+                    AppLogger.getLogger().Info(TAG + ": calling mPlayer.release");
                     mVideoView.stopPlayback();
-                    FileLogger.getFileLogger().Info(TAG + ": mPlayer.release called");
+                    AppLogger.getLogger().Info(TAG + ": mPlayer.release called");
                 }
             } catch (Exception e) {
-                FileLogger.getFileLogger().Error(TAG + ": Error releasing player");
+                AppLogger.getLogger().Error(TAG + ": Error releasing player");
                 e.printStackTrace();
             } finally {
                 mVideoView.clearFocus();
@@ -748,7 +748,7 @@ public class VideoPlayer extends FragmentActivity
     }
 
     private void onPlayPauseButton() {
-        FileLogger.getFileLogger().Info(TAG + ": onPlayPauseButton");
+        AppLogger.getLogger().Info(TAG + ": onPlayPauseButton");
         if (mIsPaused) {
             onPlayButton();
         } else {
@@ -758,14 +758,14 @@ public class VideoPlayer extends FragmentActivity
     }
 
     private void onPlayButton() {
-        FileLogger.getFileLogger().Info(TAG + ": onPlayButton");
+        AppLogger.getLogger().Info(TAG + ": onPlayButton");
         mPlayPauseButton.setImageResource(R.drawable.vp_pause_selector);
         playerStart();
         showPlayerUi();
     }
 
     private void onPauseButton() {
-        FileLogger.getFileLogger().Info(TAG + ": onPauseButton");
+        AppLogger.getLogger().Info(TAG + ": onPauseButton");
         if (mIsPaused) {
             onPlayButton();
         } else {
@@ -827,7 +827,7 @@ public class VideoPlayer extends FragmentActivity
                 if (chapterInfoDto == null) return;
                 onSeekCommand(chapterInfoDto.getStartPositionTicks());
             } catch (ClassCastException ex) {
-                FileLogger.getFileLogger().Error("Something went wrong determining chapter position");
+                AppLogger.getLogger().Error("Something went wrong determining chapter position");
             }
             selectionGrid.setVisibility(View.GONE);
             mGridVisible = false;
@@ -873,7 +873,7 @@ public class VideoPlayer extends FragmentActivity
 
 
             } catch (ClassCastException ex) {
-                FileLogger.getFileLogger().Error("Something went wrong determining stream index");
+                AppLogger.getLogger().Error("Something went wrong determining stream index");
             }
             selectionGrid.setVisibility(View.GONE);
             mGridVisible = false;
@@ -884,12 +884,12 @@ public class VideoPlayer extends FragmentActivity
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() <= position) {
-                FileLogger.getFileLogger().Debug("Invalid playlist index");
+                AppLogger.getLogger().Debug("Invalid playlist index");
                 return;
             }
             if (mVideoView != null) {
                 mVideoView.stopPlayback();
-                FileLogger.getFileLogger().Info(TAG + ": video player killed");
+                AppLogger.getLogger().Info(TAG + ": video player killed");
             }
             mCurrentlyPlayingIndex = position;
             if (mIsStreamingHls) {
@@ -1010,12 +1010,12 @@ public class VideoPlayer extends FragmentActivity
 
     private void loadUrlIntoPlayer(String url) {
 
-        FileLogger.getFileLogger().Info(TAG + ": attempting to play - " + url);
+        AppLogger.getLogger().Info(TAG + ": attempting to play - " + url);
         try {
             mVideoView.setVideoPath(url);
             mVideoView.start();
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Exception handled: ", e);
+            AppLogger.getLogger().ErrorException("Exception handled: ", e);
         }
     }
 
@@ -1109,10 +1109,10 @@ public class VideoPlayer extends FragmentActivity
             } catch (Exception e) {
                 mSubtitlesText.setTextSize(18);
             }
-            FileLogger.getFileLogger().Info("Subtitle Downloader: Create display handler");
+            AppLogger.getLogger().Info("Subtitle Downloader: Create display handler");
             mSubtitleDisplayHandler = new Handler();
             mSubtitleDisplayHandler.post(processSubtitles);
-            FileLogger.getFileLogger().Info("Subtitle Downloader: Finished!");
+            AppLogger.getLogger().Info("Subtitle Downloader: Finished!");
         }
         @Override
         public void onError(Exception ex) {
@@ -1248,35 +1248,35 @@ public class VideoPlayer extends FragmentActivity
 
     @Override
     public void onRemotePlayRequest(PlayRequest request, String mediaType) {
-        FileLogger.getFileLogger().Info(TAG + ": remote play request received");
+        AppLogger.getLogger().Info(TAG + ": remote play request received");
         if ("audio".equalsIgnoreCase(mediaType)) {
-            FileLogger.getFileLogger().Info(TAG + ": first item is audio.");
+            AppLogger.getLogger().Info(TAG + ": first item is audio.");
             if (mVideoView != null) {
                 mVideoView.stopPlayback();
             }
             MB3Application.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
-            FileLogger.getFileLogger().Info(TAG + ": video player killed");
+            AppLogger.getLogger().Info(TAG + ": video player killed");
             Intent intent = new Intent(this, AudioPlayer.class);
             startActivity(intent);
             this.finish();
-            FileLogger.getFileLogger().Info(TAG + ": finished audio play request");
+            AppLogger.getLogger().Info(TAG + ": finished audio play request");
         } else if ("video".equalsIgnoreCase(mediaType)) {
-            FileLogger.getFileLogger().Info(TAG + ": first item is video");
+            AppLogger.getLogger().Info(TAG + ": first item is video");
             if (mVideoView != null) {
                 mVideoView.stopPlayback();
             }
             MB3Application.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
-            FileLogger.getFileLogger().Info(TAG + ": video player killed");
+            AppLogger.getLogger().Info(TAG + ": video player killed");
             MB3Application.getInstance().API.GetItemAsync(
                     MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
                     MB3Application.getInstance().API.getCurrentUserId(),
                     new BaseItemResponse(this)
             );
-            FileLogger.getFileLogger().Info(TAG + ": finished video play request");
+            AppLogger.getLogger().Info(TAG + ": finished video play request");
         } else {
-            FileLogger.getFileLogger().Info(TAG + ": unable to process play request. Unsupported media type");
+            AppLogger.getLogger().Info(TAG + ": unable to process play request. Unsupported media type");
         }
     }
 
@@ -1289,7 +1289,7 @@ public class VideoPlayer extends FragmentActivity
 
     @Override
     public void onRemoteBrowseRequest(BaseItemDto baseItemDto) {
-        FileLogger.getFileLogger().Info(TAG + ": ignoring remote browse request due to media playback");
+        AppLogger.getLogger().Info(TAG + ": ignoring remote browse request due to media playback");
     }
 
     @Override
@@ -1363,13 +1363,13 @@ public class VideoPlayer extends FragmentActivity
                 loadStreamInfoIntoPlayer();
             }
         } catch (IllegalArgumentException e) {
-            FileLogger.getFileLogger().ErrorException("onStopTrackingTouch: IllegalArgumentException", e);
+            AppLogger.getLogger().ErrorException("onStopTrackingTouch: IllegalArgumentException", e);
             e.printStackTrace();
         } catch (SecurityException e) {
-            FileLogger.getFileLogger().ErrorException("onStopTrackingTouch: SecurityException", e);
+            AppLogger.getLogger().ErrorException("onStopTrackingTouch: SecurityException", e);
             e.printStackTrace();
         } catch (IllegalStateException e) {
-            FileLogger.getFileLogger().ErrorException("onStopTrackingTouch: IllegalStateException", e);
+            AppLogger.getLogger().ErrorException("onStopTrackingTouch: IllegalStateException", e);
             e.printStackTrace();
         }
     }

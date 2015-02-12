@@ -18,7 +18,7 @@ import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.utils.Utils;
 import mediabrowser.apiinteraction.ApiClient;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.widget.AnimatedNetworkImageView;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
@@ -68,7 +68,7 @@ public class HorizontalAdapterBackdrops extends BaseAdapter implements SectionIn
                     .getBoolean("pref_enable_image_enhancers", true);
 
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Error in adapter initialization", e);
+            AppLogger.getLogger().ErrorException("Error in adapter initialization", e);
         }
     }
 
@@ -231,7 +231,7 @@ public class HorizontalAdapterBackdrops extends BaseAdapter implements SectionIn
             }
         } catch (Exception e) {
             holder.playedProgress.setVisibility(View.INVISIBLE);
-            FileLogger.getFileLogger().ErrorException("Error setting progressbar value", e);
+            AppLogger.getLogger().ErrorException("Error setting progressbar value", e);
         }
 
         return convertView;

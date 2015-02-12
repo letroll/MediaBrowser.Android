@@ -24,7 +24,7 @@ import com.mb.android.activities.mobile.MediaDetailsActivity;
 import com.mb.android.activities.mobile.SeriesViewActivity;
 import com.mb.android.utils.Utils;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
@@ -138,7 +138,7 @@ public class LatestItemsDialogFragment extends DialogFragment {
         }
         @Override
         public void onError(Exception ex) {
-            FileLogger.getFileLogger().Info("********* ON ERROR *********");
+            AppLogger.getLogger().Info("********* ON ERROR *********");
         }
     };
 
@@ -205,7 +205,7 @@ public class LatestItemsDialogFragment extends DialogFragment {
                     epTitle += mLatestItems[position].getName();
                     episodeHolder.episodeTitle.setText(epTitle);
                 } catch (Exception e) {
-                    FileLogger.getFileLogger().ErrorException("Error setting episode text", e);
+                    AppLogger.getLogger().ErrorException("Error setting episode text", e);
                     episodeHolder.episodeTitle.setText(mLatestItems[position].getName());
                 }
             } else {

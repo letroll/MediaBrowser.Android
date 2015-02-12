@@ -3,7 +3,6 @@ package com.mb.android.ui.main;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,17 +14,12 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
-import com.mb.android.logging.FileLogger;
 import com.mb.android.utils.Utils;
 import mediabrowser.model.dto.UserDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * Created by Mark on 12/12/13.

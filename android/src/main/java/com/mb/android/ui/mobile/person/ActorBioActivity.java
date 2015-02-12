@@ -14,7 +14,7 @@ import android.view.View;
 
 import com.mb.android.MB3Application;
 import com.mb.android.activities.BaseMbMobileActivity;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.playbackmediator.widgets.MiniController;
 import com.mb.android.R;
 import com.mb.android.fragments.NavigationMenuFragment;
@@ -133,10 +133,10 @@ public class ActorBioActivity extends BaseMbMobileActivity {
     private void buildUI() {
         if (mIsFresh) {
             if (mViewPager != null) {
-                FileLogger.getFileLogger().Info(TAG + ": building ViewPager");
+                AppLogger.getLogger().Info(TAG + ": building ViewPager");
                 mViewPager.setAdapter(new ActorPagerAdapter(getSupportFragmentManager()));
             } else {
-                FileLogger.getFileLogger().Info(TAG + ": building UI Components");
+                AppLogger.getLogger().Info(TAG + ": building UI Components");
                 Bundle args = new Bundle();
                 args.putString("ActorName", mActorName);
                 args.putString("ActorId", mActorId);
@@ -156,7 +156,7 @@ public class ActorBioActivity extends BaseMbMobileActivity {
                 fragmentTransaction.commit();
             }
             mIsFresh = false;
-            FileLogger.getFileLogger().Info(TAG + ": finished building UI");
+            AppLogger.getLogger().Info(TAG + ": finished building UI");
         }
     }
 

@@ -23,9 +23,7 @@ import com.mb.android.playbackmediator.widgets.MiniController;
 import com.mb.android.R;
 import com.mb.android.ui.main.SettingsActivity;
 import com.mb.android.fragments.NavigationMenuFragment;
-import com.mb.android.logging.FileLogger;
-import mediabrowser.apiinteraction.android.sync.OnDemandSync;
-import mediabrowser.apiinteraction.android.sync.PeriodicSync;
+import com.mb.android.logging.AppLogger;
 
 /**
  * Created by Mark on 12/12/13.
@@ -44,7 +42,7 @@ public class HomescreenActivity extends BaseMbMobileActivity {
 
         setContentView(R.layout.activity_homescreen);
         mViewPager = (ViewPager) findViewById(R.id.vpEhsViewPager);
-        FileLogger.getFileLogger().Info("HomeScreen Activity: onCreate");
+        AppLogger.getLogger().Info("HomeScreen Activity: onCreate");
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -154,7 +152,7 @@ public class HomescreenActivity extends BaseMbMobileActivity {
     @Override
     public void onPause() {
         super.onPause();
-        FileLogger.getFileLogger().Info("HomeScreen Activity: onPause");
+        AppLogger.getLogger().Info("HomeScreen Activity: onPause");
 //        mMini.removeOnMiniControllerChangedListener(mCastManager);
     }
 
@@ -162,14 +160,14 @@ public class HomescreenActivity extends BaseMbMobileActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        FileLogger.getFileLogger().Info("HomeScreen Activity: onDestroy");
+        AppLogger.getLogger().Info("HomeScreen Activity: onDestroy");
         MB3Application.getAudioService().Terminate();
 //        try {
 //            if (MB3Application.getInstance().webSocketService != null
 //                    && MB3Application.getInstance().webSocketService.GetIsInitialized())
 //                MB3Application.getInstance().webSocketService.Disconnect();
 //        } catch (Exception e) {
-//            FileLogger.getFileLogger().ErrorException("Error disconnecting WebSocket. Possibly previously disconnected", e);
+//            FileLogger.getLogger().ErrorException("Error disconnecting WebSocket. Possibly previously disconnected", e);
 //        }
     }
 
@@ -187,7 +185,7 @@ public class HomescreenActivity extends BaseMbMobileActivity {
                 String tabIndex = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_home_default_tab", "1");
                 mViewPager.setCurrentItem(Integer.valueOf(tabIndex), true);
             } catch (Exception e) {
-                FileLogger.getFileLogger().ErrorException("Error setting view pager index", e);
+                AppLogger.getLogger().ErrorException("Error setting view pager index", e);
             }
 
             mViewPager.requestFocus();
@@ -210,7 +208,7 @@ public class HomescreenActivity extends BaseMbMobileActivity {
 //                        }
 //                    }
 //                } catch (NullPointerException | ClassCastException ex) {
-//                    FileLogger.getFileLogger().Debug("Error sending play request to fragment");
+//                    FileLogger.getLogger().Debug("Error sending play request to fragment");
 //                }
 //
 //                return true;

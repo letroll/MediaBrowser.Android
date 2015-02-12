@@ -18,20 +18,17 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.utils.Utils;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
 import mediabrowser.model.entities.LocationType;
-import mediabrowser.model.extensions.StringHelper;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Created by Mark on 12/12/13.
@@ -73,7 +70,7 @@ public class ChannelsAdapter extends BaseAdapter implements SectionIndexer {
                     .getBoolean("pref_enable_image_enhancers", true);
 
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Error in adapter initialization", e);
+            AppLogger.getLogger().ErrorException("Error in adapter initialization", e);
         }
 
 //        fadeIn = AnimationUtils.loadAnimation(mContext, R.anim.fade_in);
@@ -289,7 +286,7 @@ public class ChannelsAdapter extends BaseAdapter implements SectionIndexer {
             }
         } catch (Exception e) {
             holder.playedProgress.setVisibility(View.INVISIBLE);
-            FileLogger.getFileLogger().ErrorException("Error setting progressbar value", e);
+            AppLogger.getLogger().ErrorException("Error setting progressbar value", e);
         }
 
         return convertView;

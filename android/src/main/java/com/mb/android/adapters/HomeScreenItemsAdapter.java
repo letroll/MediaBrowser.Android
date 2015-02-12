@@ -16,7 +16,7 @@ import com.mb.android.R;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 
 /**
  * Created by Mark on 12/12/13.
@@ -47,7 +47,7 @@ public class HomeScreenItemsAdapter extends BaseAdapter {
                     .getDefaultSharedPreferences(MB3Application.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("error initializing adapter properties", e);
+            AppLogger.getLogger().ErrorException("error initializing adapter properties", e);
         }
     }
 
@@ -110,7 +110,7 @@ public class HomeScreenItemsAdapter extends BaseAdapter {
                                 mItems[i].getName()
                 );
             } catch (Exception e) {
-                FileLogger.getFileLogger().ErrorException("Error setting episode text", e);
+                AppLogger.getLogger().ErrorException("Error setting episode text", e);
                 holder.CollectionName.setText(mItems[i].getName());
             }
         } else {
@@ -188,7 +188,7 @@ public class HomeScreenItemsAdapter extends BaseAdapter {
             }
 
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Error setting image: ", e);
+            AppLogger.getLogger().ErrorException("Error setting image: ", e);
         }
 
 
@@ -204,7 +204,7 @@ public class HomeScreenItemsAdapter extends BaseAdapter {
             }
         } catch (Exception e) {
             holder.CollectionProgress.setVisibility(View.INVISIBLE);
-            FileLogger.getFileLogger().ErrorException("Error setting progressbar value", e);
+            AppLogger.getLogger().ErrorException("Error setting progressbar value", e);
         }
 
         return convertView;

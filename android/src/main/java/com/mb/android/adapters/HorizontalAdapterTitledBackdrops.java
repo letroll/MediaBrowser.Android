@@ -17,9 +17,8 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.utils.Utils;
-import com.mb.android.widget.AnimatedNetworkImageView;
 
 import java.util.Date;
 import java.util.List;
@@ -74,7 +73,7 @@ public class HorizontalAdapterTitledBackdrops extends BaseAdapter implements Sec
                     .getBoolean("pref_enable_image_enhancers", true);
 
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Error in adapter initialization", e);
+            AppLogger.getLogger().ErrorException("Error in adapter initialization", e);
         }
     }
 
@@ -252,7 +251,7 @@ public class HorizontalAdapterTitledBackdrops extends BaseAdapter implements Sec
             }
         } catch (Exception e) {
             holder.playedProgress.setVisibility(View.GONE);
-            FileLogger.getFileLogger().ErrorException("Error setting progressbar value", e);
+            AppLogger.getLogger().ErrorException("Error setting progressbar value", e);
         }
 
         return convertView;

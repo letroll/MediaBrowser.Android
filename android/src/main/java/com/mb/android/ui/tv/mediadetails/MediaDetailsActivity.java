@@ -2,16 +2,13 @@ package com.mb.android.ui.tv.mediadetails;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
@@ -36,7 +33,7 @@ import com.mb.android.adapters.TvActorAdapter;
 import com.mb.android.adapters.TvReviewsAdapter;
 import com.mb.android.adapters.TvScenesAdapter;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.tv.MbBackdropActivity;
 import com.mb.android.ui.tv.library.interfaces.ILongPressDialogListener;
 import com.mb.android.ui.tv.library.dialogs.LongPressDialogFragment;
@@ -132,7 +129,7 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         mDensity = metrics.density;
 
-        FileLogger.getFileLogger().Info("DetailsOverviewFragment: finish onCreateView");
+        AppLogger.getLogger().Info("DetailsOverviewFragment: finish onCreateView");
     }
 
     @Override
@@ -666,10 +663,10 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
             } else {
                 if (trailers == null) {
                     Log.i("GetItemsCallback", "result is null or no trailers");
-                    FileLogger.getFileLogger()
+                    AppLogger.getLogger()
                             .Error("Error getting trailers");
                 } else {
-                    FileLogger.getFileLogger()
+                    AppLogger.getLogger()
                             .Error("Empty list returned for trailers");
                 }
             }

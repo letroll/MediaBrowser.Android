@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,16 +21,11 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MB3Application;
 import com.mb.android.Playlist;
 import com.mb.android.R;
-import com.mb.android.activities.mobile.SeriesViewActivity;
-import com.mb.android.logging.FileLogger;
 import com.mb.android.player.AudioService;
 import com.mb.android.ui.main.ConnectionActivity;
-import com.mb.android.ui.main.UserAdapter;
 import com.mb.android.ui.tv.library.interfaces.IQuickPlayDialogListener;
-import com.mb.android.ui.tv.playback.PlayerHelpers;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.apiinteraction.Response;
@@ -39,10 +33,6 @@ import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.dto.UserDto;
 import mediabrowser.model.entities.ImageType;
-import mediabrowser.model.entities.SortOrder;
-import mediabrowser.model.querying.ItemFields;
-import mediabrowser.model.querying.ItemQuery;
-import mediabrowser.model.querying.ItemsResult;
 import mediabrowser.model.session.SessionInfoDto;
 import mediabrowser.model.session.SessionUserInfo;
 

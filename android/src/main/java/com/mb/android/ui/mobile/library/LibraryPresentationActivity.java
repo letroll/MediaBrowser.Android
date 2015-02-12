@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.mb.android.activities.BaseMbMobileActivity;
 import mediabrowser.apiinteraction.Response;
+
+import com.mb.android.logging.AppLogger;
 import com.mb.android.playbackmediator.widgets.MiniController;
 import com.mb.android.MB3Application;
 import com.mb.android.Playlist;
@@ -44,7 +46,6 @@ import mediabrowser.model.querying.ItemSortBy;
 import mediabrowser.model.entities.LocationType;
 import mediabrowser.model.library.PlayAccess;
 import mediabrowser.model.entities.SortOrder;
-import com.mb.android.logging.FileLogger;
 import mediabrowser.model.session.PlayCommand;
 
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
         super.onCreate(savedInstanceState);
         mSavedInstanceState = savedInstanceState;
 
-        FileLogger.getFileLogger().Info(TAG + ": onCreate");
+        AppLogger.getLogger().Info(TAG + ": onCreate");
         setContentView(R.layout.activity_library);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -146,7 +147,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
 
         mMini = (MiniController) findViewById(R.id.miniController1);
         mCastManager.addMiniController(mMini);
-        FileLogger.getFileLogger().Info(TAG + ": finish onCreate");
+        AppLogger.getLogger().Info(TAG + ": finish onCreate");
     }
 
 
@@ -193,7 +194,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
          */
         if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.play_all_action_bar_button))) {
 
-            FileLogger.getFileLogger().Info("Library Presentation Fragment: play all clicked");
+            AppLogger.getLogger().Info("Library Presentation Fragment: play all clicked");
             handlePlayRequest(false);
 
         /*
@@ -201,7 +202,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.shuffle_action_bar_button))) {
 
-            FileLogger.getFileLogger().Info("Library Presentation Fragment: shuffle all clicked");
+            AppLogger.getLogger().Info("Library Presentation Fragment: shuffle all clicked");
             handlePlayRequest(true);
 
         /*
@@ -266,7 +267,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
             } else {
                 // TODO Fix this mess
 //                if (mItemsCatagory.equalsIgnoreCase("games")) {
-//                    FileLogger.getFileLogger().Info("Games are not yet supported");
+//                    FileLogger.getLogger().Info("Games are not yet supported");
 //                } else if (mMediaWrapper.ItemsCatagory.equalsIgnoreCase("movies")) {
 //                    query.setIncludeItemTypes(new String[]{"Movie"});
 //                } else if (mMediaWrapper.ItemsCatagory.equalsIgnoreCase("music")) {
@@ -290,9 +291,9 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
     @Override
     public void onResume() {
         super.onResume();
-        FileLogger.getFileLogger().Info(TAG + ": onResume");
+        AppLogger.getLogger().Info(TAG + ": onResume");
         if (MB3Application.getInstance().getIsConnected()) {
-            FileLogger.getFileLogger().Info(TAG + ": is Connected");
+            AppLogger.getLogger().Info(TAG + ": is Connected");
             if (mSavedInstanceState == null) {
                 if (mIsFresh) {
                     performUiSetup();
@@ -300,7 +301,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
                     mIsFresh = false;
                 }
             } else {
-                FileLogger.getFileLogger().Info(TAG + ": re-acquiring content fragment");
+                AppLogger.getLogger().Info(TAG + ": re-acquiring content fragment");
                 mLibraryView = (LibraryPresentationFragment) getSupportFragmentManager().findFragmentByTag("library");
             }
         }
@@ -313,7 +314,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
         try {
             mMini.removeOnMiniControllerChangedListener(mCastManager);
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Error handled removing Mini Controller changed listener ", e);
+            AppLogger.getLogger().ErrorException("Error handled removing Mini Controller changed listener ", e);
         }
     }
 
@@ -321,18 +322,18 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        FileLogger.getFileLogger().Info("Library Presentation Activity: onDestroy");
+        AppLogger.getLogger().Info("Library Presentation Activity: onDestroy");
         Log.i("LibraryPresentationFragment", "onDestroy");
     }
 
     @Override
     protected void onConnectionRestored() {
-        FileLogger.getFileLogger().Info(TAG + ": onConnection restored");
+        AppLogger.getLogger().Info(TAG + ": onConnection restored");
         performUiSetup();
         if (mSavedInstanceState == null) {
             setContent();
         } else {
-            FileLogger.getFileLogger().Info(TAG + ": re-acquiring content fragment");
+            AppLogger.getLogger().Info(TAG + ": re-acquiring content fragment");
             mLibraryView = (LibraryPresentationFragment) getSupportFragmentManager().findFragmentByTag("library");
         }
         // Notify the fragment of the change
@@ -344,7 +345,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
     public List<ParentalRating> ParentalRatings = new ArrayList<>();
     private void performUiSetup() {
 
-        FileLogger.getFileLogger().Info(TAG + ": parsing initial query information");
+        AppLogger.getLogger().Info(TAG + ": parsing initial query information");
         if (ParentalRatings.size() == 0) {
             MB3Application.getInstance().API.GetParentalRatingsAsync(getParentalRatingsResponse);
         }
@@ -380,7 +381,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
         } else if (mEpisodeQuery != null) {
             mEpisodeQuery = mEpisodeQuery;
         }  else {
-            FileLogger.getFileLogger().Error("LibraryPresentationActivity: Nothing to show");
+            AppLogger.getLogger().Error("LibraryPresentationActivity: Nothing to show");
             return;
         }
 
@@ -422,7 +423,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
 
 
     private void setContent() {
-        FileLogger.getFileLogger().Info(TAG + ": building content fragment");
+        AppLogger.getLogger().Info(TAG + ": building content fragment");
         mLibraryView = new LibraryPresentationFragment();
 
         Bundle bundle = new Bundle();
@@ -468,10 +469,10 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
 
         List<String> sortedList = new ArrayList<>();
 
-        FileLogger.getFileLogger().Info("Begin Sorting Ratings");
+        AppLogger.getLogger().Info("Begin Sorting Ratings");
         for (String rating : mOfficialRatings) {
             if (sortedList.size() == 0) {
-                FileLogger.getFileLogger().Info("Add the initial rating");
+                AppLogger.getLogger().Info("Add the initial rating");
                 sortedList.add(rating);
                 continue;
             }
@@ -479,7 +480,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
             ParentalRating comparingRating = null;
             for (ParentalRating r : ParentalRatings) {
                 if (r.getName().equalsIgnoreCase(rating)) {
-                    FileLogger.getFileLogger().Info("Matched: Setting comparingRating");
+                    AppLogger.getLogger().Info("Matched: Setting comparingRating");
                     comparingRating = r;
                     break;
                 }
@@ -700,7 +701,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-            FileLogger.getFileLogger().Info("Genre Clicked");
+            AppLogger.getLogger().Info("Genre Clicked");
 
             // ignore the user pressing on the header
             if (i == 0) return;
@@ -1034,24 +1035,24 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
 
         @Override
         public void onResponse(ItemsResult response) {
-            FileLogger.getFileLogger().Info("Library Presentation Fragment: play-all/shuffle response received");
+            AppLogger.getLogger().Info("Library Presentation Fragment: play-all/shuffle response received");
 
             if (response == null) {
-                FileLogger.getFileLogger().Info("Library Presentation Fragment: response was null");
+                AppLogger.getLogger().Info("Library Presentation Fragment: response was null");
                 return;
             }
 
             if (response.getItems() == null) {
-                FileLogger.getFileLogger().Info("Library Presentation Fragment: items is null");
+                AppLogger.getLogger().Info("Library Presentation Fragment: items is null");
                 return;
             }
 
             if (response.getItems().length == 0) {
-                FileLogger.getFileLogger().Info("Library Presentation Fragment: items is empty");
+                AppLogger.getLogger().Info("Library Presentation Fragment: items is empty");
                 return;
             }
 
-            FileLogger.getFileLogger().Info("response.Items.length = " + String.valueOf(response.getItems().length));
+            AppLogger.getLogger().Info("response.Items.length = " + String.valueOf(response.getItems().length));
 
             // Filter out unplayable items
             ArrayList<BaseItemDto> filteredItems = new ArrayList<>();
@@ -1061,7 +1062,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
             }
             response.setItems(filteredItems.toArray(new BaseItemDto[filteredItems.size()]));
 
-            FileLogger.getFileLogger().Info("filtered result.Items.length = " + String.valueOf(response.getItems().length));
+            AppLogger.getLogger().Info("filtered result.Items.length = " + String.valueOf(response.getItems().length));
 
             if (mShuffleResults) {
                 ArrayList<BaseItemDto> items = new ArrayList<>();
@@ -1069,12 +1070,12 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
                 Collections.shuffle(items);
                 response.setItems(items.toArray(new BaseItemDto[items.size()]));
 
-                FileLogger.getFileLogger().Info("shuffled result.Items.length = " + String.valueOf(response.getItems().length));
+                AppLogger.getLogger().Info("shuffled result.Items.length = " + String.valueOf(response.getItems().length));
             }
 
             MB3Application.getInstance().PlayerQueue = new Playlist();
 
-            FileLogger.getFileLogger().Info("Library Presentation Fragment: processing response");
+            AppLogger.getLogger().Info("Library Presentation Fragment: processing response");
             for (BaseItemDto item : response.getItems()) {
                 PlaylistItem playableItem = new PlaylistItem();
                 playableItem.Id = item.getId();
@@ -1112,9 +1113,9 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
 
             if (ratings != null && ratings.length > 0) {
                 ParentalRatings.addAll(Arrays.asList(ratings));
-                FileLogger.getFileLogger().Info("ratings returned: " + String.valueOf(ratings.length));
+                AppLogger.getLogger().Info("ratings returned: " + String.valueOf(ratings.length));
             } else
-                FileLogger.getFileLogger().Info("ratings response from server was null");
+                AppLogger.getLogger().Info("ratings response from server was null");
         }
         @Override
         public void onError(Exception ex) {

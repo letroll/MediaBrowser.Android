@@ -3,15 +3,6 @@ package com.mb.network;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.telephony.TelephonyManager;
-
-import com.mb.android.logging.FileLogger;
-import mediabrowser.model.apiclient.ServerInfo;
-import mediabrowser.model.extensions.StringHelper;
-
-import java.util.Formatter;
 
 /**
  * Created by Mark on 11/12/13.

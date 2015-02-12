@@ -27,15 +27,11 @@ import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.ui.mobile.homescreen.HomescreenActivity;
 import com.mb.android.interfaces.IServerDialogClickListener;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.tv.homescreen.HomeScreenActivity;
 import mediabrowser.apiinteraction.ConnectionResult;
-import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.apiinteraction.Response;
 import mediabrowser.apiinteraction.android.AndroidApiClient;
-import mediabrowser.apiinteraction.android.AndroidCredentialProvider;
-import mediabrowser.apiinteraction.android.GsonJsonSerializer;
-import mediabrowser.model.apiclient.ServerCredentials;
 import mediabrowser.model.apiclient.ServerInfo;
 import mediabrowser.model.dto.UserDto;
 import mediabrowser.model.net.HttpException;
@@ -96,7 +92,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
             connectSignInButton.setOnClickListener(onMbConnectClick);
 
             // Always show debug logging during initial connection
-            FileLogger.getFileLogger().setDebugLoggingEnabled(true);
+            AppLogger.getLogger().setDebugLoggingEnabled(true);
             if (showServerSelection) {
                 onServerSelection();
             } else if (showUserSelection) {
@@ -145,7 +141,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
 
     private void onUnavailable(ConnectionResult result) {
         // No servers found. User must manually enter connection info.
-        FileLogger.getFileLogger().Info("**** UNAVAILABLE ***");
+        AppLogger.getLogger().Info("**** UNAVAILABLE ***");
         dismissActivityDialog();
 
         showServerSelection(result.getServers());
@@ -155,14 +151,14 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
     private void onServerSelection() {
         // Multiple servers available
         // Display a selection screen
-        FileLogger.getFileLogger().Info("**** SERVER SELECTION ****");
+        AppLogger.getLogger().Info("**** SERVER SELECTION ****");
         MB3Application.getInstance().getConnectionManager().GetAvailableServers(getAvailableServersResponse);
     }
 
     private void onServerSignIn(ConnectionResult result) {
         // A server was found and the user needs to login.
         // Display a login screen and authenticate with the server using result.ApiClient
-        FileLogger.getFileLogger().Info("**** SERVER SIGN IN ****");
+        AppLogger.getLogger().Info("**** SERVER SIGN IN ****");
         dismissActivityDialog();
 
         showUserSelection(result);
@@ -171,7 +167,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
     private void onSignedIn(ConnectionResult result) {
         // A server was found and the user has been signed in using previously saved credentials.
         // Ready to browse using result.ApiClient
-        FileLogger.getFileLogger().Info("**** SIGNED IN ****");
+        AppLogger.getLogger().Info("**** SIGNED IN ****");
         dismissActivityDialog();
         MB3Application.getInstance().API = (AndroidApiClient)result.getApiClient();
         MB3Application.getInstance().user = new UserDto();
@@ -199,12 +195,12 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         handler.post(new Runnable() {
             @Override
             public void run() {
-                FileLogger.getFileLogger().Debug("Updating header buttons for server selection");
+                AppLogger.getLogger().Debug("Updating header buttons for server selection");
                 mChangeServerButton.setOnClickListener(onAddServerClick);
                 updateHeader(getResources().getString(R.string.select_mb_server), true);
 
-                FileLogger.getFileLogger().Debug("Creating server list");
-                FileLogger.getFileLogger().Debug(String.valueOf(servers.size()) + " servers to display");
+                AppLogger.getLogger().Debug("Creating server list");
+                AppLogger.getLogger().Debug(String.valueOf(servers.size()) + " servers to display");
 
                 mContentGrid.setAdapter(new ServerAdapter(servers, ConnectionActivity.this, null));
                 mContentGrid.setOnItemClickListener(onServerClick);
@@ -217,7 +213,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         handler.post(new Runnable() {
             @Override
             public void run() {
-                FileLogger.getFileLogger().Debug("Updating header buttons for user selection");
+                AppLogger.getLogger().Debug("Updating header buttons for user selection");
                 mChangeServerButton.setOnClickListener(onChangeServerClick);
                 updateHeader(getResources().getString(R.string.select_mb_user), false);
                 if (result.getApiClient() != null) {
@@ -231,7 +227,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
     private Response<UserDto[]> getPublicUsersResponse = new Response<UserDto[]>() {
         @Override
         public void onResponse(UserDto[] users) {
-            FileLogger.getFileLogger().Debug("Get public users response received");
+            AppLogger.getLogger().Debug("Get public users response received");
             if (users == null) {
                 users = new UserDto[0];
             }
@@ -240,15 +236,15 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         }
         @Override
         public void onError(Exception ex) {
-            FileLogger.getFileLogger().Debug("Error handled getting public users: " + ex);
+            AppLogger.getLogger().Debug("Error handled getting public users: " + ex);
             mUsers = new UserDto[0];
             buildUserGrid();
         }
     };
 
     private void buildUserGrid() {
-        FileLogger.getFileLogger().Debug("Building user selection grid");
-        FileLogger.getFileLogger().Debug(String.valueOf(mUsers.length) + " public users to display");
+        AppLogger.getLogger().Debug("Building user selection grid");
+        AppLogger.getLogger().Debug(String.valueOf(mUsers.length) + " public users to display");
         mContentGrid.setAdapter(new UserAdapter(mUsers));
         mContentGrid.setOnItemClickListener(onUserClick);
     }
@@ -266,13 +262,13 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
     private AdapterView.OnItemClickListener onServerClick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            FileLogger.getFileLogger().Debug("Server at position " + String.valueOf(i) + " clicked");
+            AppLogger.getLogger().Debug("Server at position " + String.valueOf(i) + " clicked");
             ServerInfo server = (ServerInfo) adapterView.getItemAtPosition(i);
             if (server == null) {
-                FileLogger.getFileLogger().Debug("Adapter returned null for Server at position " + String.valueOf(i));
+                AppLogger.getLogger().Debug("Adapter returned null for Server at position " + String.valueOf(i));
                 return;
             }
-            FileLogger.getFileLogger().Debug("Passing server to ConnectionManager");
+            AppLogger.getLogger().Debug("Passing server to ConnectionManager");
             MB3Application.getInstance().getConnectionManager().Connect(server, connectionResponse);
             showActivityDialog(!tangible.DotNetToJavaStringHelper.isNullOrEmpty(server.getName()) ? "Connecting to " + server.getName() : "Connecting");
         }
@@ -281,17 +277,17 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
     private AdapterView.OnItemClickListener onUserClick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            FileLogger.getFileLogger().Debug("User at position " + String.valueOf(i) + " clicked");
+            AppLogger.getLogger().Debug("User at position " + String.valueOf(i) + " clicked");
             UserDto user = (UserDto) adapterView.getItemAtPosition(i);
             if (user == null) {
-                FileLogger.getFileLogger().Debug("Adapter returned null for User at position " + String.valueOf(i));
+                AppLogger.getLogger().Debug("Adapter returned null for User at position " + String.valueOf(i));
                 return;
             }
             if (user.getHasPassword()) {
-                FileLogger.getFileLogger().Debug("User requires password: Showing login dialog");
+                AppLogger.getLogger().Debug("User requires password: Showing login dialog");
                 showLoginDialog(user);
             } else {
-                FileLogger.getFileLogger().Debug("User does not require a password: Logging in.");
+                AppLogger.getLogger().Debug("User does not require a password: Logging in.");
                 onLoginDialogPositiveButtonClick(user, "");
             }
         }
@@ -302,7 +298,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         LoginPasswordDialogFragment dialog = new LoginPasswordDialogFragment();
         dialog.setUser(user);
         dialog.show(ConnectionActivity.this.getSupportFragmentManager(), "LoginDialog");
-        FileLogger.getFileLogger().Debug("Login dialog visible");
+        AppLogger.getLogger().Debug("Login dialog visible");
     }
 
     //******************************************************************************************************************
@@ -312,10 +308,10 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
     private View.OnClickListener onAddServerClick = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            FileLogger.getFileLogger().Debug("Showing manual server entry dialog");
+            AppLogger.getLogger().Debug("Showing manual server entry dialog");
             DialogFragment dialog = new ServerConnectionDialogFragment();
             dialog.show(ConnectionActivity.this.getSupportFragmentManager(), "ServerConnectionDialog");
-            FileLogger.getFileLogger().Debug("Dialog visible");
+            AppLogger.getLogger().Debug("Dialog visible");
         }
     };
 
@@ -328,7 +324,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
 
     @Override
     public void onOkClick(String address) {
-        FileLogger.getFileLogger().Debug("Attempting to manually connect to " + address);
+        AppLogger.getLogger().Debug("Attempting to manually connect to " + address);
         MB3Application.getInstance().getConnectionManager().Connect(address, connectionResponse);
     }
 
@@ -340,7 +336,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
     private View.OnClickListener onMbConnectClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            FileLogger.getFileLogger().Debug("Switching to MbConnect login activity");
+            AppLogger.getLogger().Debug("Switching to MbConnect login activity");
             Intent intent = new Intent(ConnectionActivity.this, MbConnectActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
@@ -367,11 +363,11 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
     @Override
     public void onLoginDialogPositiveButtonClick(String username, String password) {
         try {
-            FileLogger.getFileLogger().Debug("Attempting to log in user " + username);
+            AppLogger.getLogger().Debug("Attempting to log in user " + username);
             MB3Application.getInstance().API.AuthenticateUserAsync(username, password, authenticationResultResponse);
             showActivityDialog("Logging In");
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            FileLogger.getFileLogger().ErrorException("Error handled attempting login request: ", e);
+            AppLogger.getLogger().ErrorException("Error handled attempting login request: ", e);
             e.printStackTrace();
         }
     }
@@ -384,9 +380,9 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
     private Response<AuthenticationResult> authenticationResultResponse = new Response<AuthenticationResult>() {
         @Override
         public void onResponse(AuthenticationResult result) {
-            FileLogger.getFileLogger().Debug("AuthenticationResult received");
+            AppLogger.getLogger().Debug("AuthenticationResult received");
             if (result == null || result.getUser() == null) {
-                FileLogger.getFileLogger().Debug("AuthenticationResult or AuthenticationResult.User is null");
+                AppLogger.getLogger().Debug("AuthenticationResult or AuthenticationResult.User is null");
                 return;
             }
             dismissActivityDialog();
@@ -397,19 +393,19 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         @Override
         public void onError(Exception ex) {
             dismissActivityDialog();
-            FileLogger.getFileLogger().Debug("Error handled authenticating user");
+            AppLogger.getLogger().Debug("Error handled authenticating user");
             try {
                 HttpException exception = (HttpException) ex;
                 if (exception.getStatusCode() != null && exception.getStatusCode() == 401) {
                     Toast.makeText(ConnectionActivity.this, "Error logging in. Possibly incorrect password", Toast.LENGTH_LONG).show();
-                    FileLogger.getFileLogger().Debug("Login failure: Incorrect password");
+                    AppLogger.getLogger().Debug("Login failure: Incorrect password");
                     return;
                 }
             } catch (ClassCastException cce) {
                 // silently fall through.
             }
             Toast.makeText(ConnectionActivity.this, "Error logging in. Please try again later", Toast.LENGTH_LONG).show();
-            FileLogger.getFileLogger().ErrorException("Exception handled: ", ex);
+            AppLogger.getLogger().ErrorException("Exception handled: ", ex);
         }
     };
 
@@ -417,24 +413,24 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
 
     private void proceedToHomescreen() {
 
-        FileLogger.getFileLogger().Debug("ensuring is_first_run is now false");
+        AppLogger.getLogger().Debug("ensuring is_first_run is now false");
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefs.edit().putBoolean("is_first_run", false).apply();
 
         MB3Application.getInstance().setIsConnected(true);
 
         // Restore logging to the level defined in the user preferences
-        FileLogger.getFileLogger().setDebugLoggingEnabled(sharedPrefs.getBoolean("pref_debug_logging_enabled", false));
+        AppLogger.getLogger().setDebugLoggingEnabled(sharedPrefs.getBoolean("pref_debug_logging_enabled", false));
 
         MB3Application.getInstance().startContentSync();
 
         Intent intent;
         if (sharedPrefs.getString("pref_application_profile", "Mobile").equalsIgnoreCase("Mobile")) {
-            FileLogger.getFileLogger().Info("proceeding to mobile homescreen");
+            AppLogger.getLogger().Info("proceeding to mobile homescreen");
             // proceed to the mobile layouts
             intent = new Intent(this, HomescreenActivity.class);
         } else {
-            FileLogger.getFileLogger().Info("proceeding to living room homescreen");
+            AppLogger.getLogger().Info("proceeding to living room homescreen");
             // proceed to the livingroom layouts.
             intent = new Intent(this, HomeScreenActivity.class);
         }

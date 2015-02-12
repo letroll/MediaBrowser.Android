@@ -24,7 +24,7 @@ import com.mb.android.ui.tv.library.LibraryTools;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 
 /**
  * Created by Mark on 12/12/13.
@@ -58,7 +58,7 @@ public class SeriesDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        FileLogger.getFileLogger().Info("SeriesDetailsFragment: onCreateView");
+        AppLogger.getLogger().Info("SeriesDetailsFragment: onCreateView");
 
         mView = inflater.inflate(R.layout.fragment_series_details, container, false);
         mBackdropImage = (NetworkImageView) mView.findViewById(R.id.ivSeriesImageHeader);
@@ -83,7 +83,7 @@ public class SeriesDetailsFragment extends Fragment {
     public void setSeries(BaseItemDto series) {
         mSeries = series;
 
-        FileLogger.getFileLogger().Info("SeriesDetailsFragment: BuildImageQuery");
+        AppLogger.getLogger().Info("SeriesDetailsFragment: BuildImageQuery");
 
         if (mBackdropImage != null) {
 
@@ -140,16 +140,16 @@ public class SeriesDetailsFragment extends Fragment {
 
     private void PopulateView() {
 
-        FileLogger.getFileLogger().Info("SeriesDetailsFragment: PopulateView");
+        AppLogger.getLogger().Info("SeriesDetailsFragment: PopulateView");
 
         TextView titleText = (TextView) mView.findViewById(R.id.tvMediaTitle);
         titleText.setText(mSeries.getName());
 
-        FileLogger.getFileLogger().Info("SeriesDetailsFragment: Setting Airing Info");
+        AppLogger.getLogger().Info("SeriesDetailsFragment: Setting Airing Info");
         TextView airingInfo = (TextView) mView.findViewById(R.id.tvSeriesViewAiringInfo);
         airingInfo.setText(LibraryTools.buildAiringInfoString(mSeries));
 
-        FileLogger.getFileLogger().Info("SeriesDetailsFragment: Set Overview");
+        AppLogger.getLogger().Info("SeriesDetailsFragment: Set Overview");
         TextView seriesOverview = (TextView) mView.findViewById(R.id.tvSeriesOverview);
         seriesOverview.setText(mSeries.getOverview());
         seriesOverview.setMovementMethod(new ScrollingMovementMethod());
@@ -169,7 +169,7 @@ public class SeriesDetailsFragment extends Fragment {
         TextView genreText = (TextView) mView.findViewById(R.id.tvSeriesGenre);
         genreText.setText(Html.fromHtml(gText), TextView.BufferType.SPANNABLE);
 
-        FileLogger.getFileLogger().Info("SeriesDetailsFragment: Finished setting Genre(s)");
+        AppLogger.getLogger().Info("SeriesDetailsFragment: Finished setting Genre(s)");
 
         if (mSeries.getProviderIds() != null && !mSeries.getProviderIds().isEmpty()) {
             final String tvdb = mSeries.getProviderIds().get("Tvdb");
@@ -189,7 +189,7 @@ public class SeriesDetailsFragment extends Fragment {
                     }
                 });
 
-                FileLogger.getFileLogger().Info("SeriesDetailsFragment: Finished setting Links");
+                AppLogger.getLogger().Info("SeriesDetailsFragment: Finished setting Links");
             }
         }
     }

@@ -7,11 +7,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import com.mb.android.ui.main.ConnectionActivity;
+
 import com.mb.android.R;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.widget.customswitchpreference.CustomSwitchPreference;
-import mediabrowser.model.extensions.StringHelper;
 
 /**
  * Created by Mark on 12/12/13.
@@ -37,8 +36,8 @@ public class MainSettingsFragment extends PreferenceFragment implements SharedPr
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-        FileLogger.getFileLogger().Info("onSharedPreferenceChanged");
-        FileLogger.getFileLogger().Info("key = " + key);
+        AppLogger.getLogger().Info("onSharedPreferenceChanged");
+        AppLogger.getLogger().Info("key = " + key);
         if (key.equals("pref_enable_external_player")) {
             final CustomSwitchPreference csp = (CustomSwitchPreference) getPreferenceScreen().findPreference(key);
 
@@ -91,7 +90,7 @@ public class MainSettingsFragment extends PreferenceFragment implements SharedPr
         } else if (key.equals("pref_debug_logging_enabled")) {
             final CustomSwitchPreference csp = (CustomSwitchPreference) getPreferenceScreen().findPreference(key);
             if (csp == null) return;
-            FileLogger.getFileLogger().setDebugLoggingEnabled(csp.isChecked());
+            AppLogger.getLogger().setDebugLoggingEnabled(csp.isChecked());
         }
 
     }

@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.mb.android.R;
 import com.mb.android.interfaces.IServerDialogClickListener;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.utils.Utils;
 
 /**
@@ -77,7 +77,7 @@ public class ServerConnectionDialogFragment extends DialogFragment {
                         try {
                             mCallback = (IServerDialogClickListener) getActivity();
                         } catch (ClassCastException e) {
-                            FileLogger.getFileLogger().ErrorException("Error casting callback class ", e);
+                            AppLogger.getLogger().ErrorException("Error casting callback class ", e);
                         }
 
                         String address = etHostName.getText().toString();
@@ -104,7 +104,7 @@ public class ServerConnectionDialogFragment extends DialogFragment {
                                 mCallback.onCancelClick();
                             }
                         } catch (ClassCastException e) {
-                            FileLogger.getFileLogger().ErrorException("Error casting callback class ", e);
+                            AppLogger.getLogger().ErrorException("Error casting callback class ", e);
                         }
                         d.dismiss();
                     }

@@ -27,7 +27,7 @@ import com.mb.android.adapters.HomeScreenItemsAdapter;
 import com.mb.android.ui.mobile.playback.PlaybackActivity;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.querying.ItemFields;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import mediabrowser.model.querying.LatestItemsQuery;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class NewItemsFragment extends Fragment implements ICommandListener {
     @Override
     public void onResume() {
         super.onResume();
-        FileLogger.getFileLogger().Info(TAG + "onResume");
+        AppLogger.getLogger().Info(TAG + "onResume");
         if (MB3Application.getInstance().API != null
                 && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getCurrentUserId())) {
             LatestItemsQuery query = new LatestItemsQuery();
@@ -71,22 +71,22 @@ public class NewItemsFragment extends Fragment implements ICommandListener {
             query.setGroupItems(true);
             MB3Application.getInstance().API.GetLatestItems(query, getNewItemsResponse);
         }
-        FileLogger.getFileLogger().Info(TAG + "finish onResume");
+        AppLogger.getLogger().Info(TAG + "finish onResume");
     }
 
     private Response<BaseItemDto[]> getNewItemsResponse = new Response<BaseItemDto[]>() {
         @Override
         public void onResponse(BaseItemDto[] response) {
-            FileLogger.getFileLogger().Info(TAG + ": GetNewItems");
+            AppLogger.getLogger().Info(TAG + ": GetNewItems");
             hideActivityIndicator();
             processResponse(response);
             toggleNoContentWarning();
             refreshOrInitializeGridContent();
-            FileLogger.getFileLogger().Info(TAG + ": Finished GetNewItems");
+            AppLogger.getLogger().Info(TAG + ": Finished GetNewItems");
         }
         @Override
         public void onError(Exception ex) {
-            FileLogger.getFileLogger().Info(TAG + ": error getting new items");
+            AppLogger.getLogger().Info(TAG + ": error getting new items");
         }
     };
 
@@ -98,10 +98,10 @@ public class NewItemsFragment extends Fragment implements ICommandListener {
 
     private void processResponse(BaseItemDto[] response) {
         if (null == response) {
-            FileLogger.getFileLogger().Info(TAG + " - processResponse: Invalid response");
+            AppLogger.getLogger().Info(TAG + " - processResponse: Invalid response");
             return;
         }
-        FileLogger.getFileLogger().Info(TAG + " - processResponse: " + String.valueOf(response.length) + " Items received.");
+        AppLogger.getLogger().Info(TAG + " - processResponse: " + String.valueOf(response.length) + " Items received.");
         mItems = response;
     }
 

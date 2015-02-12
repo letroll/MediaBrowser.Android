@@ -19,7 +19,7 @@ import com.jess.ui.TwoWayGridView;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.adapters.HorizontalAdapterPosters;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.tv.playback.PlayerHelpers;
 import com.mb.android.utils.Utils;
 import mediabrowser.apiinteraction.Response;
@@ -263,14 +263,14 @@ public class CoverFlowFragment extends BaseLibraryFragment {
 
     @Override
     public void refreshData(BaseItemDto item) {
-        FileLogger.getFileLogger().Debug("Refresh data requested");
+        AppLogger.getLogger().Debug("Refresh data requested");
         if (contentGrid != null) {
             HorizontalAdapterPosters adapter = (HorizontalAdapterPosters)contentGrid.getAdapter();
-            FileLogger.getFileLogger().Debug("Trying to replace item in dataset");
+            AppLogger.getLogger().Debug("Trying to replace item in dataset");
             boolean insertSucceeded = Utils.insertIntoDataset(item, mItems);
-            FileLogger.getFileLogger().Debug("Watched: " + String.valueOf(item.getUserData().getPlayed()));
+            AppLogger.getLogger().Debug("Watched: " + String.valueOf(item.getUserData().getPlayed()));
             if (adapter != null && insertSucceeded) {
-                FileLogger.getFileLogger().Debug("insert succeeded");
+                AppLogger.getLogger().Debug("insert succeeded");
                 adapter.notifyDataSetChanged();
             }
         }

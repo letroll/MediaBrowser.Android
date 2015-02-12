@@ -45,7 +45,8 @@ import com.mb.android.chromecast.PlayCommandItemData;
 import com.mb.android.R;
 import com.mb.android.chromecast.StreamSelectionCommandData;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.logging.FileLogger;
+
+import com.mb.android.logging.AppLogger;
 import com.mb.android.mediaroute.MediaBrowserControlIntent;
 import com.mb.android.playbackmediator.cast.callbacks.IVideoCastConsumer;
 import com.mb.android.playbackmediator.cast.dialog.video.VideoMediaRouteDialogFactory;
@@ -69,7 +70,6 @@ import com.mb.android.ui.mobile.playback.AudioPlaybackActivity;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
-import mediabrowser.model.extensions.StringHelper;
 import mediabrowser.model.livetv.ChannelInfoDto;
 import mediabrowser.model.querying.SessionQuery;
 import mediabrowser.model.session.PlayCommand;
@@ -181,7 +181,7 @@ public class VideoCastManager extends BaseCastManager
     public static synchronized VideoCastManager initialize(Context context,
                                                            String applicationId, Class<?> targetActivity, String dataNamespace) {
         if (null == sInstance) {
-            FileLogger.getFileLogger().Info(TAG + ": New instance of VideoCastManager is created");
+            AppLogger.getLogger().Info(TAG + ": New instance of VideoCastManager is created");
             LOGD(TAG, "New instance of VideoCastManager is created");
             if (ConnectionResult.SUCCESS != GooglePlayServicesUtil
                     .isGooglePlayServicesAvailable(context)) {
@@ -1617,7 +1617,7 @@ public class VideoCastManager extends BaseCastManager
             throw new IllegalStateException("No Data Namespace is configured");
         }
         checkConnectivity();
-        FileLogger.getFileLogger().Info("sending data message to CC");
+        AppLogger.getLogger().Info("sending data message to CC");
         Cast.CastApi.sendMessage(mApiClient, mDataNamespace, message)
                 .setResultCallback(new ResultCallback<Status>() {
 
@@ -2244,12 +2244,12 @@ public class VideoCastManager extends BaseCastManager
         MediaRouter.RouteInfo routInfo = getRouteInfo();
 
         if (routInfo == null) {
-            FileLogger.getFileLogger().Info("MediaController: routeInfo is null");
+            AppLogger.getLogger().Info("MediaController: routeInfo is null");
             return;
         }
 
         if (routInfo.supportsControlCategory(CastMediaControlIntent.categoryForCast(mApplicationId))) {
-            FileLogger.getFileLogger().Info("MediaController: Build payload for CC");
+            AppLogger.getLogger().Info("MediaController: Build payload for CC");
             // We're connected to a Chromecast
             List<PlayCommandItemData> itemPayload = new ArrayList<>();
 
@@ -2270,7 +2270,7 @@ public class VideoCastManager extends BaseCastManager
             buildAndSendMessage(payload, command.name());
         } else {
             // We're connected to another MB Client
-            FileLogger.getFileLogger().Info("MediaController: Build payload for MB Client");
+            AppLogger.getLogger().Info("MediaController: Build payload for MB Client");
 
             List<String> itemIds = new ArrayList<>();
                 itemIds.add(channel.getId());
@@ -2298,12 +2298,12 @@ public class VideoCastManager extends BaseCastManager
                     @Override
                     public void onError(String error, Bundle data) {
                         super.onError(error, data);
-                        FileLogger.getFileLogger().Error("PlayItems.onError: " + error);
+                        AppLogger.getLogger().Error("PlayItems.onError: " + error);
                     }
                 });
             } else {
                 LOGD(TAG, "Device does not support control request");
-                FileLogger.getFileLogger().Info("Device does not support control request");
+                AppLogger.getLogger().Info("Device does not support control request");
             }
 
             startPulseCheck();
@@ -2339,7 +2339,7 @@ public class VideoCastManager extends BaseCastManager
      */
     public void playItems(BaseItemDto[] items, PlayCommand command, Long startPositionTicks) throws NullPointerException{
 
-        FileLogger.getFileLogger().Info("MediaController:PlayItems");
+        AppLogger.getLogger().Info("MediaController:PlayItems");
         if (items == null || items.length == 0) {
             throw new NullPointerException("items");
         }
@@ -2351,12 +2351,12 @@ public class VideoCastManager extends BaseCastManager
         MediaRouter.RouteInfo routInfo = getRouteInfo();
 
         if (routInfo == null) {
-            FileLogger.getFileLogger().Info("MediaController: routeInfo is null");
+            AppLogger.getLogger().Info("MediaController: routeInfo is null");
             return;
         }
 
         if (routInfo.supportsControlCategory(CastMediaControlIntent.categoryForCast(mApplicationId))) {
-            FileLogger.getFileLogger().Info("MediaController: Build payload for CC");
+            AppLogger.getLogger().Info("MediaController: Build payload for CC");
             // We're connected to a Chromecast
             List<PlayCommandItemData> itemPayload = new ArrayList<>();
 
@@ -2381,7 +2381,7 @@ public class VideoCastManager extends BaseCastManager
         } else {
 
             // We're connected to another MB Client
-            FileLogger.getFileLogger().Info("MediaController: Build payload for MB Client");
+            AppLogger.getLogger().Info("MediaController: Build payload for MB Client");
 
             List<String> itemIds = new ArrayList<>();
             for (BaseItemDto item : items) {
@@ -2411,12 +2411,12 @@ public class VideoCastManager extends BaseCastManager
                     @Override
                     public void onError(String error, Bundle data) {
                         super.onError(error, data);
-                        FileLogger.getFileLogger().Error("PlayItems.onError: " + error);
+                        AppLogger.getLogger().Error("PlayItems.onError: " + error);
                     }
                 });
             } else {
                 LOGD(TAG, "Device does not support control request");
-                FileLogger.getFileLogger().Info("Device does not support control request");
+                AppLogger.getLogger().Info("Device does not support control request");
             }
 
             startPulseCheck();
@@ -2465,28 +2465,28 @@ public class VideoCastManager extends BaseCastManager
             intent.putExtra("ItemId", item.getId());
             intent.putExtra("ItemType", item.getType());
 
-            FileLogger.getFileLogger().Info(TAG + ": Attempting to send command to MB Client");
-            FileLogger.getFileLogger().Info(TAG + ": Route name - " + getRouteInfo().getName());
-            FileLogger.getFileLogger().Info(TAG + ": Session Id - " + id);
+            AppLogger.getLogger().Info(TAG + ": Attempting to send command to MB Client");
+            AppLogger.getLogger().Info(TAG + ": Route name - " + getRouteInfo().getName());
+            AppLogger.getLogger().Info(TAG + ": Session Id - " + id);
 
             if (getRouteInfo().supportsControlRequest(intent)) {
-                FileLogger.getFileLogger().Info(TAG + ": Control action is supported");
+                AppLogger.getLogger().Info(TAG + ": Control action is supported");
                 getRouteInfo().sendControlRequest(intent, new MediaRouter.ControlRequestCallback() {
                     @Override
                     public void onResult(Bundle data) {
                         super.onResult(data);
-                        FileLogger.getFileLogger().Info(TAG + "Successfully sent control request");
+                        AppLogger.getLogger().Info(TAG + "Successfully sent control request");
                     }
 
                     @Override
                     public void onError(String error, Bundle data) {
                         super.onError(error, data);
-                        FileLogger.getFileLogger().Error(TAG + "Error sending control request: ");
-                        FileLogger.getFileLogger().Error(error);
+                        AppLogger.getLogger().Error(TAG + "Error sending control request: ");
+                        AppLogger.getLogger().Error(error);
                     }
                 });
             } else {
-                FileLogger.getFileLogger().Info(TAG + ": Control action NOT supported");
+                AppLogger.getLogger().Info(TAG + ": Control action NOT supported");
             }
         }
     }
@@ -2569,10 +2569,10 @@ public class VideoCastManager extends BaseCastManager
         try {
             String messageString = gson.toJson(message);
             Log.d(TAG, "Message String: " + messageString);
-            FileLogger.getFileLogger().Info("Payload string: " + messageString);
+            AppLogger.getLogger().Info("Payload string: " + messageString);
             sendDataMessage(messageString);
         } catch (TransientNetworkDisconnectionException | NoConnectionException | IllegalStateException e ) {
-            FileLogger.getFileLogger().ErrorException("Error sending data message ", e);
+            AppLogger.getLogger().ErrorException("Error sending data message ", e);
         }
     }
 

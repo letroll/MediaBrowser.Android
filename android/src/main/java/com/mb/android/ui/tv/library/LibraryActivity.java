@@ -18,6 +18,7 @@ import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.displaypreferences.DisplayPreference;
 import com.mb.android.displaypreferences.ViewType;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.tv.library.dialogs.LongPressDialogFragment;
 import com.mb.android.ui.tv.library.dialogs.MediaResumeDialogFragment;
 import com.mb.android.ui.tv.library.dialogs.MenuDialogFragment;
@@ -26,7 +27,7 @@ import com.mb.android.ui.tv.library.interfaces.ILongPressDialogListener;
 import com.mb.android.ui.tv.library.interfaces.IQuickPlayDialogListener;
 import com.mb.android.ui.tv.library.interfaces.IViewChangeListener;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.logging.FileLogger;
+
 import com.mb.android.ui.tv.MbBackdropActivity;
 import com.mb.android.ui.tv.playback.PlayerHelpers;
 import mediabrowser.model.channels.ChannelItemQuery;
@@ -75,7 +76,7 @@ public class LibraryActivity
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
-        FileLogger.getFileLogger().Info(TAG + ": Create Activity");
+        AppLogger.getLogger().Info(TAG + ": Create Activity");
         setContentView(R.layout.tv_activity_library);
         mBackdropSwitcher = (ViewSwitcher) findViewById(R.id.vsBackdropImages);
         mBackdropImage1 = (NetworkImageView) findViewById(R.id.ivBackdropImage1);
@@ -87,7 +88,7 @@ public class LibraryActivity
         mParent = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
         mParentCollectionType = getIntent().getStringExtra("CollectionType");
         setOverscanValues();
-        FileLogger.getFileLogger().Info(TAG + ": Finished creating Activity");
+        AppLogger.getLogger().Info(TAG + ": Finished creating Activity");
         mPlayHelper = new PlayerHelpers();
         onGridSelected();
         mItems = new ArrayList<>();
@@ -118,7 +119,7 @@ public class LibraryActivity
     @Override
     public void onResume() {
         super.onResume();
-        FileLogger.getFileLogger().Info(TAG + ": resuming activity");
+        AppLogger.getLogger().Info(TAG + ": resuming activity");
         if (MB3Application.getInstance().getIsConnected()) {
             buildAndSendQuery();
         }
@@ -161,23 +162,23 @@ public class LibraryActivity
 
     @Override
     public void onConnectionRestored() {
-        FileLogger.getFileLogger().Info(TAG + ": connection restored");
+        AppLogger.getLogger().Info(TAG + ": connection restored");
         buildAndSendQuery();
     }
 
     @Override
     protected void onUserDataUpdated(String itemId, UserItemDataDto userItemDataDto) {
-        FileLogger.getFileLogger().Debug("onUserDataUpdated");
+        AppLogger.getLogger().Debug("onUserDataUpdated");
         if (tangible.DotNetToJavaStringHelper.isNullOrEmpty(itemId) || userItemDataDto == null) {
             return;
         }
-        FileLogger.getFileLogger().Debug("Parsing dataset");
+        AppLogger.getLogger().Debug("Parsing dataset");
         for (BaseItemDto item : mItems) {
             if (itemId.equalsIgnoreCase(item.getId())) {
-                FileLogger.getFileLogger().Debug("item matched");
+                AppLogger.getLogger().Debug("item matched");
                 item.setUserData(userItemDataDto);
                 if (libraryFragment != null) {
-                    FileLogger.getFileLogger().Debug("Notify fragment of change");
+                    AppLogger.getLogger().Debug("Notify fragment of change");
                     libraryFragment.refreshData(item);
                 }
                 break;
@@ -187,7 +188,7 @@ public class LibraryActivity
     }
 
     private void buildAndSendQuery() {
-        FileLogger.getFileLogger().Info(TAG + ": preparing to build query");
+        AppLogger.getLogger().Info(TAG + ": preparing to build query");
         if (mIsFresh & mParent != null) {
             if ("series".equalsIgnoreCase(mParent.getType())) {
                 buildEpisodeQuery();
@@ -206,7 +207,7 @@ public class LibraryActivity
     }
 
     private void buildEpisodeQuery() {
-        FileLogger.getFileLogger().Info(TAG + ": building episode query");
+        AppLogger.getLogger().Info(TAG + ": building episode query");
         String seasonId = getIntent().getStringExtra("SeasonId");
         EpisodeQuery episodeQuery = new EpisodeQuery();
         episodeQuery.setUserId(MB3Application.getInstance().API.getCurrentUserId());
@@ -248,7 +249,7 @@ public class LibraryActivity
 
 
     private void buildStandardItemQuery() {
-        FileLogger.getFileLogger().Info(TAG + ": building item query");
+        AppLogger.getLogger().Info(TAG + ": building item query");
         mQuery = new ItemQuery();
         mQuery.setUserId(MB3Application.getInstance().API.getCurrentUserId());
         mQuery.setParentId(mParent.getId());
@@ -406,9 +407,9 @@ public class LibraryActivity
         @Override
         public void onResponse(ItemsResult response) {
             hideActivityIndicator();
-            FileLogger.getFileLogger().Info(TAG + ": item response");
+            AppLogger.getLogger().Info(TAG + ": item response");
             if (response != null && response.getItems() != null && response.getItems().length > 0) {
-                FileLogger.getFileLogger().Info(TAG + ": response contains items");
+                AppLogger.getLogger().Info(TAG + ": response contains items");
                 mItems.addAll(Arrays.asList(response.getItems()));
                 if (libraryFragment != null) {
                     libraryFragment.addContent(response.getItems());
@@ -416,7 +417,7 @@ public class LibraryActivity
                 mCurrentQueryStartIndex += response.getItems().length;
 
                 if (response.getTotalRecordCount() > mCurrentQueryStartIndex + 1) {
-                    FileLogger.getFileLogger().Info(TAG + ": more items to retrieve");
+                    AppLogger.getLogger().Info(TAG + ": more items to retrieve");
                     if (mArtistsQuery != null) {
                         mArtistsQuery.setStartIndex(mCurrentQueryStartIndex);
                         MB3Application.getInstance().API.GetAlbumArtistsAsync(mArtistsQuery, this);
@@ -429,7 +430,7 @@ public class LibraryActivity
         }
         @Override
         public void onError(Exception ex) {
-            FileLogger.getFileLogger().Info(TAG + ": item response error");
+            AppLogger.getLogger().Info(TAG + ": item response error");
             hideActivityIndicator();
             // Only show an on-screen warning if no content has been shown yet
 //            if (mItemsGrid.getAdapter() == null) {

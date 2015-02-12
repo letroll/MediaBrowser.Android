@@ -15,12 +15,11 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.ViewHolderSong;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import mediabrowser.apiinteraction.android.GsonJsonSerializer;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
-import mediabrowser.model.extensions.StringHelper;
 
 import java.util.List;
 
@@ -115,7 +114,7 @@ public class SongAdapter extends BaseAdapter implements SectionIndexer {
         }
 
         if (position == 6) {
-            FileLogger.getFileLogger().Info(new GsonJsonSerializer().SerializeToString(mSongs.get(position)));
+            AppLogger.getLogger().Info(new GsonJsonSerializer().SerializeToString(mSongs.get(position)));
         }
 
         if (mSongs.get(position).getArtists() != null) {

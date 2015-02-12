@@ -24,7 +24,7 @@ import mediabrowser.model.entities.ImageType;
 import mediabrowser.model.querying.ItemFields;
 import mediabrowser.model.querying.ItemSortBy;
 import mediabrowser.model.entities.SortOrder;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 
 /**
  * Created by Mark on 12/12/13.
@@ -115,7 +115,7 @@ public class PhotoDetailsActivity extends BaseMbMobileActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        FileLogger.getFileLogger().Info("Photo Details Activity: onDestroy");
+        AppLogger.getLogger().Info("Photo Details Activity: onDestroy");
     }
 
     @Override
@@ -243,11 +243,11 @@ public class PhotoDetailsActivity extends BaseMbMobileActivity {
 
         @Override
         public void onResponse(ItemsResult response) {
-            FileLogger.getFileLogger().Info(TAG + ": Get Items Callback");
+            AppLogger.getLogger().Info(TAG + ": Get Items Callback");
 
             if (response != null && response.getItems() != null && response.getItems().length > 0) {
-                FileLogger.getFileLogger().Info(TAG + " - Get Items Callback: " + response.getItems().length + " Items to process");
-                FileLogger.getFileLogger().Info(TAG + " - Get Items Callback: Total Record Count = " + response.getTotalRecordCount());
+                AppLogger.getLogger().Info(TAG + " - Get Items Callback: " + response.getItems().length + " Items to process");
+                AppLogger.getLogger().Info(TAG + " - Get Items Callback: Total Record Count = " + response.getTotalRecordCount());
 
                 _photos = response.getItems();
 
@@ -261,7 +261,7 @@ public class PhotoDetailsActivity extends BaseMbMobileActivity {
                         }
 
                     } catch (Exception e) {
-                        FileLogger.getFileLogger().ErrorException("Error setting initial photo", e);
+                        AppLogger.getLogger().ErrorException("Error setting initial photo", e);
                     }
                 }
             }

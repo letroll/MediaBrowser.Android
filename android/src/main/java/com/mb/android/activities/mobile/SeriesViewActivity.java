@@ -20,6 +20,8 @@ import android.view.View;
 import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.activities.BaseMbMobileActivity;
 import mediabrowser.apiinteraction.Response;
+
+import com.mb.android.logging.AppLogger;
 import com.mb.android.playbackmediator.cast.exceptions.NoConnectionException;
 import com.mb.android.playbackmediator.cast.exceptions.TransientNetworkDisconnectionException;
 import com.mb.android.playbackmediator.widgets.MiniController;
@@ -44,7 +46,7 @@ import mediabrowser.model.library.PlayAccess;
 import mediabrowser.model.entities.SortOrder;
 import com.mb.android.fragments.SeasonsFragment;
 import com.mb.android.fragments.SeriesDetailsFragment;
-import com.mb.android.logging.FileLogger;
+
 import mediabrowser.model.session.PlayCommand;
 
 /**
@@ -77,7 +79,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_series_view);
 
-        FileLogger.getFileLogger().Info("SeriesViewActivity: onCreate");
+        AppLogger.getLogger().Info("SeriesViewActivity: onCreate");
 
         ((PagerTabStrip) findViewById(R.id.pager_title_strip)).setDrawFullUnderline(false);
 
@@ -88,7 +90,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
             ViewPager pager = (ViewPager) findViewById(R.id.seriesPager);
 
             if (pager != null) {
-                FileLogger.getFileLogger().Info("SeriesViewActivity: Initialize ViewPager");
+                AppLogger.getLogger().Info("SeriesViewActivity: Initialize ViewPager");
                 pager.setAdapter(new SeriesPagerAdapter(getSupportFragmentManager()));
             }
         }
@@ -198,7 +200,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
 
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mSeries.getId())) {
 
-            FileLogger.getFileLogger().Info("SeriesViewActivity: GetItemAsync");
+            AppLogger.getLogger().Info("SeriesViewActivity: GetItemAsync");
             MB3Application.getInstance().API.GetItemAsync(
                     mSeries.getId(),
                     MB3Application.getInstance().API.getCurrentUserId(),
@@ -356,7 +358,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
 
     private void handlePlayOrShuffleRequest(boolean shuffleMedia) {
 
-        FileLogger.getFileLogger().Info("Library Presentation Fragment: Play-all/Shuffle clicked");
+        AppLogger.getLogger().Info("Library Presentation Fragment: Play-all/Shuffle clicked");
 
         AudioService.PlayerState currentState = MB3Application.getAudioService().getPlayerState();
         if (currentState.equals(AudioService.PlayerState.PLAYING) || currentState.equals(AudioService.PlayerState.PAUSED)) {
@@ -386,18 +388,18 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
     public void updateFavoriteVisibleIcons() {
 
         Log.i("", "updateFavoriteVisibleIcons called");
-        FileLogger.getFileLogger().Info("Update favorite visible icons");
+        AppLogger.getLogger().Info("Update favorite visible icons");
 
         if (mSeries != null && mSeries.getUserData() != null && mSeries.getUserData().getIsFavorite()) {
 
-            FileLogger.getFileLogger().Info("Show remove favorite");
+            AppLogger.getLogger().Info("Show remove favorite");
             // only show the remove favorite
             mAddFavoriteMenuItemVisible = false;
             mRemoveFavoriteMenuItemVisible = true;
 
         } else {
 
-            FileLogger.getFileLogger().Info("Show add favorite");
+            AppLogger.getLogger().Info("Show add favorite");
             // only show the add favorite
             mAddFavoriteMenuItemVisible = true;
             mRemoveFavoriteMenuItemVisible = false;
@@ -409,7 +411,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
     private void updatePlaystateVisibleIcons() {
 
         Log.i("", "updatePlaystateVisibleIcons called");
-        FileLogger.getFileLogger().Info("Update playstate visible icons");
+        AppLogger.getLogger().Info("Update playstate visible icons");
 
         if (mSeries != null && mSeries.getUserData() != null && mSeries.getUserData().getPlayed()) {
 
@@ -453,11 +455,11 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
         @Override
         public void onResponse(BaseItemDto item) {
             Log.i("GetInitialItemCallback", "Item Callback");
-            FileLogger.getFileLogger().Info("SeriesViewActivity: GetInitialItemCallback");
+            AppLogger.getLogger().Info("SeriesViewActivity: GetInitialItemCallback");
 
             if (item == null) {
                 Log.i("GetInitialItemCallback", "result is null");
-                FileLogger.getFileLogger().Info("SeriesViewActivity: item is null");
+                AppLogger.getLogger().Info("SeriesViewActivity: item is null");
                 return;
             }
 
@@ -547,24 +549,24 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
 
         @Override
         public void onResponse(ItemsResult response) {
-            FileLogger.getFileLogger().Info(TAG + ": play-all/shuffle response received");
+            AppLogger.getLogger().Info(TAG + ": play-all/shuffle response received");
 
             if (response == null) {
-                FileLogger.getFileLogger().Info(TAG + ": response was null");
+                AppLogger.getLogger().Info(TAG + ": response was null");
                 return;
             }
 
             if (response.getItems() == null) {
-                FileLogger.getFileLogger().Info(TAG + ": items is null");
+                AppLogger.getLogger().Info(TAG + ": items is null");
                 return;
             }
 
             if (response.getItems().length == 0) {
-                FileLogger.getFileLogger().Info(TAG + ": items is empty");
+                AppLogger.getLogger().Info(TAG + ": items is empty");
                 return;
             }
 
-            FileLogger.getFileLogger().Info(TAG + ": processing response");
+            AppLogger.getLogger().Info(TAG + ": processing response");
             for (BaseItemDto item : response.getItems()) {
                 PlaylistItem playableItem = new PlaylistItem();
                 playableItem.Id = item.getId();

@@ -5,10 +5,9 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.main.ConnectionActivity;
 import mediabrowser.apiinteraction.Response;
-import mediabrowser.model.extensions.StringHelper;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -93,7 +92,7 @@ public class SubtitleDownloader extends AsyncTask<String, String, File> {
 
                 } catch (Exception e) {
                     Log.i(TAG, "Exception");
-                    FileLogger.getFileLogger().ErrorException("Exception: ", e);
+                    AppLogger.getLogger().ErrorException("Exception: ", e);
                     if (e.getMessage() != null) {
                         Log.e(TAG, e.getMessage());
                     }
@@ -106,7 +105,7 @@ public class SubtitleDownloader extends AsyncTask<String, String, File> {
             }
 
         } catch (IOException e) {
-            FileLogger.getFileLogger().ErrorException(TAG + ", Exception handled. ", e);
+            AppLogger.getLogger().ErrorException(TAG + ", Exception handled. ", e);
 
             if (e.getMessage() != null) {
                 Log.i(TAG, e.getMessage());

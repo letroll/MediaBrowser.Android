@@ -16,6 +16,7 @@ import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.interfaces.ICommandListener;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.musicartist.ArtistActivity;
 import com.mb.android.activities.mobile.BookDetailsActivity;
 import com.mb.android.ui.mobile.library.LibraryPresentationActivity;
@@ -32,7 +33,6 @@ import mediabrowser.model.querying.ItemFields;
 import mediabrowser.model.querying.ItemFilter;
 import mediabrowser.model.querying.ItemSortBy;
 import mediabrowser.model.entities.SortOrder;
-import com.mb.android.logging.FileLogger;
 
 import java.util.ArrayList;
 
@@ -56,27 +56,27 @@ public class FavoritesFragment extends Fragment implements ICommandListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FileLogger.getFileLogger().Info(TAG + " onCreateView() reached");
+        AppLogger.getLogger().Info(TAG + " onCreateView() reached");
         View view = inflater.inflate(R.layout.fragment_homescreen_items, container, false);
         if (view != null) {
             mActivityIndicator = (ProgressBar) view.findViewById(R.id.pbActivityIndicator);
             mFavoriteItemsGrid = (GridView) view.findViewById(R.id.gvUpNext);
             noContentText = (TextView) view.findViewById(R.id.tvNoContentWarning);
         }
-        FileLogger.getFileLogger().Info(TAG + " finish onCreateView()");
+        AppLogger.getLogger().Info(TAG + " finish onCreateView()");
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        FileLogger.getFileLogger().Info(TAG + "onResume");
+        AppLogger.getLogger().Info(TAG + "onResume");
         if (MB3Application.getInstance().API != null
                 && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getCurrentUserId())) {
             ItemQuery query = buildNewItemsQuery();
             MB3Application.getInstance().API.GetItemsAsync(query, getFavoritesResponse);
         }
-        FileLogger.getFileLogger().Info(TAG + "finish onResume");
+        AppLogger.getLogger().Info(TAG + "finish onResume");
     }
 
     @Override
@@ -101,16 +101,16 @@ public class FavoritesFragment extends Fragment implements ICommandListener {
     private Response<ItemsResult> getFavoritesResponse = new Response<ItemsResult>() {
         @Override
         public void onResponse(ItemsResult response) {
-            FileLogger.getFileLogger().Info(TAG + ": GetFavoriteItems callback");
+            AppLogger.getLogger().Info(TAG + ": GetFavoriteItems callback");
             hideActivityIndicator();
             processResponse(response);
             toggleNoContentWarning();
             refreshOrInitializeGridContent();
-            FileLogger.getFileLogger().Info(TAG + ": Finished GetFavoriteItems callback");
+            AppLogger.getLogger().Info(TAG + ": Finished GetFavoriteItems callback");
         }
         @Override
         public void onError(Exception ex) {
-            FileLogger.getFileLogger().Info("********* ON ERROR *********");
+            AppLogger.getLogger().Info("********* ON ERROR *********");
         }
     };
 
@@ -122,16 +122,16 @@ public class FavoritesFragment extends Fragment implements ICommandListener {
 
     private void processResponse(ItemsResult response) {
         if (null == response) {
-            FileLogger.getFileLogger().Info(TAG + " - processResponse: Invalid response");
+            AppLogger.getLogger().Info(TAG + " - processResponse: Invalid response");
             return;
         }
         try {
             if (null != response.getItems() && response.getItems().length > 0) {
-                FileLogger.getFileLogger().Info(TAG + " - processResponse: Items received.");
+                AppLogger.getLogger().Info(TAG + " - processResponse: Items received.");
                 mItems = response.getItems();
             }
         } catch (Exception ex) {
-            FileLogger.getFileLogger().Info(TAG + " - processResponse: Failed to cast data");
+            AppLogger.getLogger().Info(TAG + " - processResponse: Failed to cast data");
         }
     }
 

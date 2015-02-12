@@ -31,6 +31,8 @@ import com.mb.android.DialogFragments.SyncDialog;
 import com.mb.android.activities.BaseMbMobileActivity;
 import com.mb.android.adapters.ResumeDialogAdapter;
 import mediabrowser.apiinteraction.Response;
+
+import com.mb.android.logging.AppLogger;
 import com.mb.android.playbackmediator.cast.exceptions.NoConnectionException;
 import com.mb.android.playbackmediator.cast.exceptions.TransientNetworkDisconnectionException;
 import com.mb.android.playbackmediator.widgets.MiniController;
@@ -55,9 +57,8 @@ import mediabrowser.model.entities.LocationType;
 import mediabrowser.model.library.PlayAccess;
 import com.mb.android.fragments.MediaActorsFragment;
 import com.mb.android.fragments.MediaOverviewFragment;
-import com.mb.android.logging.FileLogger;
+
 import mediabrowser.model.session.PlayCommand;
-import mediabrowser.model.sync.SyncJobRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -99,7 +100,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         super.onCreate(savedInstanceState);
         mSavedInstanceState = savedInstanceState;
 
-        FileLogger.getFileLogger().Info("Media Details Activity: onCreate");
+        AppLogger.getLogger().Info("Media Details Activity: onCreate");
         setContentView(R.layout.activity_media_details);
 
         PagerTabStrip tabStrip = (PagerTabStrip) findViewById(R.id.pager_title_strip);
@@ -138,7 +139,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
 
         if (getMb3Intent() == null) {
             Log.i("MediaDetailsActivity", "intent is null");
-            FileLogger.getFileLogger().Error("MediaDetailsActivity: Intent is null");
+            AppLogger.getLogger().Error("MediaDetailsActivity: Intent is null");
         }
 
         String jsonData = getMb3Intent().getStringExtra("Item");
@@ -171,7 +172,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
     public boolean onCreateOptionsMenu(Menu menu) {
 
         if (mItem == null) {
-            FileLogger.getFileLogger().Error("mMediaWrapper.Item is null");
+            AppLogger.getLogger().Error("mMediaWrapper.Item is null");
         } else {
             if (mItem.getLocationType() != LocationType.Virtual && mItem.getPlayAccess().equals(PlayAccess.Full)) {
 
@@ -264,7 +265,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
             It's a game, we'll need to pass the media to an emulator
              */
 //            if (mMediaWrapper.Item.Type.equalsIgnoreCase("Game")) {
-//                FileLogger.getFileLogger(this).Info("Building Game intent");
+//                FileLogger.getLogger(this).Info("Building Game intent");
 //
 //                String current_ime = Settings.Secure.getString(getContentResolver(),
 //                        Settings.Secure.DEFAULT_INPUT_METHOD);
@@ -278,7 +279,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
 //                intent.putExtra("IME", current_ime);
 //
 //
-//                FileLogger.getFileLogger(this).Info("Start Activity");
+//                FileLogger.getLogger(this).Info("Start Activity");
 //                // TODO figure out how to make this work
 //                try {
 //                    startActivity(intent);
@@ -411,7 +412,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                 && MB3Application.getInstance().user.getPolicy().getEnableSync()) {
         }
 
-        FileLogger.getFileLogger().Info("Media Details Activity: onResume");
+        AppLogger.getLogger().Info("Media Details Activity: onResume");
         mDying = false;
     }
 
@@ -433,7 +434,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
 
     @Override
     public void onPause() {
-        FileLogger.getFileLogger().Info("Media Details Activity: onPause");
+        AppLogger.getLogger().Info("Media Details Activity: onPause");
         mDying = true;
         super.onPause();
     }
@@ -442,7 +443,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
     @Override
     public void onDestroy() {
 
-        FileLogger.getFileLogger().Info("Media Details Activity: onDestroy");
+        AppLogger.getLogger().Info("Media Details Activity: onDestroy");
         super.onDestroy();
     }
 
@@ -511,7 +512,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         Playback is to commence on a ChromeCast device.
         */
         if (mCastManager.isConnected()) {
-            FileLogger.getFileLogger().Info("Play requested: Remote player detected");
+            AppLogger.getLogger().Info("Play requested: Remote player detected");
 
             mCastManager.playItem(item, PlayCommand.PlayNow, resume ? item.getUserData().getPlaybackPositionTicks() : 0);
 
@@ -525,7 +526,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         } else if (PreferenceManager.getDefaultSharedPreferences(this)
                 .getBoolean("pref_enable_external_player", false)) {
 
-            FileLogger.getFileLogger().Info("Play requested: External player");
+            AppLogger.getLogger().Info("Play requested: External player");
 
 //            String url = MB3Application.getInstance().API.getApiUrl() + "/Videos/" + item.getId() + "/stream?static=true";
             StreamInfo info = PlayerHelpers.buildExternalPlayerStreamInfo(
@@ -536,7 +537,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                     mSelectedAudioStreamIndex,
                     mSelectedSubtitleStreamIndex);
             String url = info.ToUrl(MB3Application.getInstance().API.getApiUrl());
-            FileLogger.getFileLogger().Info("External player URL: " + url);
+            AppLogger.getLogger().Info("External player URL: " + url);
             Log.d("External Player url", url);
 
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -546,7 +547,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         Playback is to commence on the internal player
         */
         } else {
-            FileLogger.getFileLogger().Info("Play requested: Internal player");
+            AppLogger.getLogger().Info("Play requested: Internal player");
             MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
 
             if (isTrailer || resume) {
@@ -612,18 +613,18 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
     public void updateFavoriteVisibleIcons() {
 
         Log.i("", "updateFavoriteVisibleIcons called");
-        FileLogger.getFileLogger().Info("Update favorite visible icons");
+        AppLogger.getLogger().Info("Update favorite visible icons");
 
         if (mItem.getUserData() != null && mItem.getUserData().getIsFavorite()) {
 
-            FileLogger.getFileLogger().Info("Show remove favorite");
+            AppLogger.getLogger().Info("Show remove favorite");
             // only show the remove favorite
             mAddFavoriteMenuItemVisible = false;
             mRemoveFavoriteMenuItemVisible = true;
 
         } else {
 
-            FileLogger.getFileLogger().Info("Show add favorite");
+            AppLogger.getLogger().Info("Show add favorite");
             // only show the add favorite
             mAddFavoriteMenuItemVisible = true;
             mRemoveFavoriteMenuItemVisible = false;
@@ -718,7 +719,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
     private void updatePlaystateVisibleIcons() {
 
         Log.i("", "updatePlaystateVisibleIcons called");
-        FileLogger.getFileLogger().Info("Update playstate visible icons");
+        AppLogger.getLogger().Info("Update playstate visible icons");
 
         if (mItem.getUserData() != null && mItem.getUserData().getPlayed()) {
 
@@ -784,10 +785,10 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                 if (mViewPager != null) {
                     PagerAdapter adapter = mViewPager.getAdapter();
                     if (adapter == null) {
-                        FileLogger.getFileLogger().Info("MediaDetailsActivity: initializing viewpager");
+                        AppLogger.getLogger().Info("MediaDetailsActivity: initializing viewpager");
                         mViewPager.setAdapter(new MediaPagerAdapter(getSupportFragmentManager()));
                     } else {
-                        FileLogger.getFileLogger().Info("MediaDetailsActivity: viewpager already exists");
+                        AppLogger.getLogger().Info("MediaDetailsActivity: viewpager already exists");
                         if (isFresh && adapter.getCount() == 1) {
                             PagerTitleStrip titleStrip = (PagerTitleStrip) findViewById(R.id.pager_title_strip);
                             titleStrip.setVisibility(View.GONE);
@@ -848,7 +849,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
 
             } else {
                 Log.i("GetInitialItemCallback", "result is null");
-                FileLogger.getFileLogger().Error("MediaDetailsActivity: GetItemCallback - Result is null");
+                AppLogger.getLogger().Error("MediaDetailsActivity: GetItemCallback - Result is null");
             }
             isFresh = false;
         }
@@ -925,10 +926,10 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
             } else {
                 if (trailers == null) {
                     Log.i("GetItemsCallback", "result is null or no trailers");
-                    FileLogger.getFileLogger()
+                    AppLogger.getLogger()
                             .Error("Error getting trailers");
                 } else {
-                    FileLogger.getFileLogger()
+                    AppLogger.getLogger()
                             .Error("Empty list returned for trailers");
                 }
             }
@@ -980,7 +981,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
     private void setBackdropImage(String imageUrl) {
 
         if (imageUrl == null || imageUrl.isEmpty()) {
-            FileLogger.getFileLogger().Error("Error setting backdrop - imageUrl is null or empty");
+            AppLogger.getLogger().Error("Error setting backdrop - imageUrl is null or empty");
             return;
         }
 

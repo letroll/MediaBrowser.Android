@@ -23,7 +23,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MB3Application;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
 
@@ -143,7 +143,7 @@ public class PhotoPlayer extends FragmentActivity {
 
     private void loadImage() {
         if (mPhotoUrls == null || mPhotoUrls.isEmpty() || mPhotoUrls.size() <= mPhotoIndex) {
-            FileLogger.getFileLogger().Error("Error setting image - mPhotoUrls is null or empty");
+            AppLogger.getLogger().Error("Error setting image - mPhotoUrls is null or empty");
             return;
         }
 

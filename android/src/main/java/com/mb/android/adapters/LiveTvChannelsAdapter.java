@@ -18,7 +18,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.ApiClient;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
@@ -61,7 +61,7 @@ public class LiveTvChannelsAdapter extends BaseAdapter implements SectionIndexer
                     .getBoolean("pref_enable_image_enhancers", true);
 
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Error in adapter initialization", e);
+            AppLogger.getLogger().ErrorException("Error in adapter initialization", e);
         }
 
     }

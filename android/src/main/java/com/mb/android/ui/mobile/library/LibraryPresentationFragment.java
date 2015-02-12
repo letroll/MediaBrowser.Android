@@ -20,6 +20,7 @@ import mediabrowser.apiinteraction.Response;
 import com.mb.android.interfaces.ICommandListener;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.musicartist.ArtistActivity;
 import com.mb.android.activities.mobile.BookDetailsActivity;
 import com.mb.android.activities.mobile.MediaDetailsActivity;
@@ -33,7 +34,6 @@ import mediabrowser.model.querying.EpisodeQuery;
 import mediabrowser.model.querying.ItemsResult;
 import mediabrowser.model.querying.ItemQuery;
 import mediabrowser.model.library.PlayAccess;
-import com.mb.android.logging.FileLogger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,7 +67,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        FileLogger.getFileLogger().Info(TAG + ": onCreate");
+        AppLogger.getLogger().Info(TAG + ": onCreate");
 
         String jsonData = getArguments().getString("EpisodeQuery");
         if (jsonData != null) {
@@ -103,7 +103,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        FileLogger.getFileLogger().Info("Library Presentation Fragment: onCreateView");
+        AppLogger.getLogger().Info("Library Presentation Fragment: onCreateView");
 
         if (mPosterViewEnabled) {
             if (mDisableIndexing) {
@@ -127,7 +127,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
         mLibraryGrid = (GridView) mView.findViewById(R.id.gvLibrary);
         mLibraryGrid.setOnItemClickListener(itemClickListener);
 
-        FileLogger.getFileLogger().Info("Library Presentation Fragment: Requesting Items");
+        AppLogger.getLogger().Info("Library Presentation Fragment: Requesting Items");
         mProgress.setVisibility(ProgressBar.VISIBLE);
 
         if (MB3Application.getInstance().getIsConnected()) {
@@ -164,10 +164,10 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
 
     private void InitializeLibraryView() {
 
-        FileLogger.getFileLogger().Info(TAG + ": Populating Library View");
+        AppLogger.getLogger().Info(TAG + ": Populating Library View");
 
         if (mItems.size() > 0) {
-            FileLogger.getFileLogger().Info(TAG + ": " + String.valueOf(mItems.size()) + " items to show");
+            AppLogger.getLogger().Info(TAG + ": " + String.valueOf(mItems.size()) + " items to show");
 
             mLibraryGrid.setAdapter(mPosterViewEnabled
                     ? new MediaAdapterPosters(mItems, MB3Application.getInstance().getResources().getInteger(R.integer.library_columns_poster), MB3Application.getInstance().API, R.drawable.default_video_portrait)
@@ -176,7 +176,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
             mLibraryGrid.setFastScrollEnabled(true);
             mLibraryGrid.requestFocus();
         } else {
-            FileLogger.getFileLogger().Info(TAG + ": No items in collection");
+            AppLogger.getLogger().Info(TAG + ": No items in collection");
             Log.i("InitializeLibraryView", "No items in collection.");
         }
     }
@@ -186,7 +186,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
         public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
             Log.i("ItemClickListener", "Position Clicked [" + position + "]");
-            FileLogger.getFileLogger().Info("Library Presentation Fragment: Position Clicked " + position);
+            AppLogger.getLogger().Info("Library Presentation Fragment: Position Clicked " + position);
 
             mItem = mItems.get(position);
             String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mItem);
@@ -195,13 +195,13 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
 
             if (mItem.getType().equalsIgnoreCase("MusicArtist")) {
 
-                FileLogger.getFileLogger().Info("Library Presentation Fragment: Item is MusicArtist");
+                AppLogger.getLogger().Info("Library Presentation Fragment: Item is MusicArtist");
                 intent = new Intent(mLibraryActivity, ArtistActivity.class);
                 intent.putExtra("ArtistId", mItem.getId());
 
             } else if (mItem.getType().equalsIgnoreCase("MusicAlbum")) {
 
-                FileLogger.getFileLogger().Info("Library Presentation Fragment: Item is MusicAlbum");
+                AppLogger.getLogger().Info("Library Presentation Fragment: Item is MusicAlbum");
                 intent = new Intent(mLibraryActivity, MusicAlbumActivity.class);
                 intent.putExtra("AlbumId", mItem.getId());
 
@@ -232,7 +232,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
 //                    try {
 //                        MB3Application.getCastManager(mLibraryActivity).loadMedia(mediaInfo, true, 0);
 //                    } catch (TransientNetworkDisconnectionException e) {
-//                        FileLogger.getFileLogger().ErrorException("Exception Handled: ", e);
+//                        FileLogger.getLogger().ErrorException("Exception Handled: ", e);
 //                    } catch (NoConnectionException e) {
 //                        e.printStackTrace();
 //                    }
@@ -251,19 +251,19 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
 
             } else if (mItem.getIsFolder()) {
 
-                FileLogger.getFileLogger().Info("Library Presentation Fragment: Item is folder");
+                AppLogger.getLogger().Info("Library Presentation Fragment: Item is folder");
                 intent = new Intent(mLibraryActivity, LibraryPresentationActivity.class);
                 intent.putExtra("Item", jsonData);
 
             } else {
 
-                FileLogger.getFileLogger().Info("Library Presentation Fragment: Item is media");
+                AppLogger.getLogger().Info("Library Presentation Fragment: Item is media");
                 intent = new Intent(mLibraryActivity, MediaDetailsActivity.class);
                 intent.putExtra("currentIndex", position);
                 intent.putExtra("Item", jsonData);
             }
 
-            FileLogger.getFileLogger().Info("Calling StartActivity");
+            AppLogger.getLogger().Info("Calling StartActivity");
             startActivity(intent);
         }
     };
@@ -339,14 +339,14 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
 
         @Override
         public void onResponse(ItemsResult response) {
-            FileLogger.getFileLogger().Info("Library Presentation Fragment: Get Items response");
+            AppLogger.getLogger().Info("Library Presentation Fragment: Get Items response");
             mProgress.setVisibility(ProgressBar.GONE);
 
             if (response == null) return;
 
             if (response.getItems() != null && response.getItems().length > 0) {
-                FileLogger.getFileLogger().Info("Library Presentation Fragment - Get Items response: " + response.getItems().length + " Items to process");
-                FileLogger.getFileLogger().Info("Library Presentation Fragment - Get Items response: Total Record Count = " + response.getTotalRecordCount());
+                AppLogger.getLogger().Info("Library Presentation Fragment - Get Items response: " + response.getItems().length + " Items to process");
+                AppLogger.getLogger().Info("Library Presentation Fragment - Get Items response: Total Record Count = " + response.getTotalRecordCount());
 
                 if (mLibraryGrid.getAdapter() == null) {
                     mLibraryActivity.SetPlayControlsEnabled(areItemsPlayable(response.getItems()));
@@ -374,7 +374,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
 
 
 //                if (mMediaWrapper.Items[0].Type.equalsIgnoreCase("MusicArtist")) {
-//                    FileLogger.getFileLogger(LibraryPresentationActivity.this).Info("Library Presentation Fragment - Get Items Callback: response contains MusicArtists, getting Albums");
+//                    FileLogger.getLogger(LibraryPresentationActivity.this).Info("Library Presentation Fragment - Get Items Callback: response contains MusicArtists, getting Albums");
 //                    isProcessed = false;
 //                    ItemQuery query = new ItemQuery();
 //                    query.UserId = mPayload.User.Id;
@@ -390,7 +390,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
 //                }
             } else {
                 Log.i("GetItemCallback", "result or result.items is null");
-                FileLogger.getFileLogger().Info("Library Presentation Fragment - Get Items Callback: No items or response was null");
+                AppLogger.getLogger().Info("Library Presentation Fragment - Get Items Callback: No items or response was null");
 
                 TextView noContentWarning = (TextView) mView.findViewById(R.id.tvNoContentWarning);
                 noContentWarning.setVisibility(TextView.VISIBLE);

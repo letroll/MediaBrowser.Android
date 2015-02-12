@@ -5,19 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mb.android.MB3Application;
 import com.mb.android.R;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.widget.AnimatedNetworkImageView;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
-import mediabrowser.model.extensions.StringHelper;
-
-import org.w3c.dom.Text;
 
 
 public class NextUpCardAdapter extends BaseAdapter {
@@ -79,7 +75,7 @@ public class NextUpCardAdapter extends BaseAdapter {
                 holder.overview.setText("Season " + String.valueOf(mItems[index].getParentIndexNumber()) + ", Episode " + String.valueOf(mItems[index].getIndexNumber()));
             }
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("PopulateTvInfo - ", e);
+            AppLogger.getLogger().ErrorException("PopulateTvInfo - ", e);
 //            tvInfo.setVisibility(LinearLayout.GONE);
         }
 

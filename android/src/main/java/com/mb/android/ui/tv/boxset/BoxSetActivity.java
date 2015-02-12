@@ -3,7 +3,6 @@ package com.mb.android.ui.tv.boxset;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.BaseAdapter;
@@ -19,16 +18,15 @@ import com.jess.ui.TwoWayAdapterView;
 import com.jess.ui.TwoWayGridView;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
-import com.mb.android.adapters.HorizontalAdapterBackdrops;
-import com.mb.android.adapters.HorizontalAdapterPosters;
 import com.mb.android.adapters.HorizontalAdapterTitledBackdrops;
 import com.mb.android.adapters.HorizontalAdapterTitledPosters;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.tv.library.dialogs.MediaResumeDialogFragment;
 import com.mb.android.ui.tv.library.dialogs.QuickPlayDialogFragment;
 import com.mb.android.ui.tv.library.interfaces.ILongPressDialogListener;
 import com.mb.android.ui.tv.library.interfaces.IQuickPlayDialogListener;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.logging.FileLogger;
+
 import com.mb.android.ui.tv.MbBackdropActivity;
 import com.mb.android.ui.tv.library.dialogs.LongPressDialogFragment;
 import com.mb.android.ui.tv.playback.PlayerHelpers;
@@ -71,7 +69,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        FileLogger.getFileLogger().Info(TAG + ": creating boxset view");
+        AppLogger.getLogger().Info(TAG + ": creating boxset view");
         setContentView(R.layout.tv_activity_boxset);
         inflateViews();
         setOverscanValues();
@@ -79,7 +77,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
         String jsonData = getIntent().getStringExtra("CurrentBaseItemDTO");
         mParent = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
         mParentCollectionType = getIntent().getStringExtra("CollectionType");
-        FileLogger.getFileLogger().Info(TAG + ": finish creating view");
+        AppLogger.getLogger().Info(TAG + ": finish creating view");
     }
 
 
@@ -193,7 +191,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
 
     private void getParentItem() {
         if (mIsFresh && mParent != null) {
-            FileLogger.getFileLogger().Info(TAG + ": Requesting full info for parent.");
+            AppLogger.getLogger().Info(TAG + ": Requesting full info for parent.");
             MB3Application.getInstance().API.GetItemAsync(
                     mParent.getId(),
                     MB3Application.getInstance().API.getCurrentUserId(),
@@ -219,7 +217,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
 
     private void loadBoxsetImage() {
         if (mParent.getHasPrimaryImage()) {
-            FileLogger.getFileLogger().Info(TAG + ": Parent has primary image");
+            AppLogger.getLogger().Info(TAG + ": Parent has primary image");
             ImageOptions options = new ImageOptions();
             options.setImageType(ImageType.Primary);
             options.setMaxHeight(600);
@@ -228,13 +226,13 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
             String imageUrl = MB3Application.getInstance().API.GetImageUrl(mParent, options);
             mPrimaryImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
         } else {
-            FileLogger.getFileLogger().Info(TAG + ": Parent has no primary image");
+            AppLogger.getLogger().Info(TAG + ": Parent has no primary image");
             mPrimaryImage.setVisibility(View.INVISIBLE);
         }
     }
 
     private void performSeriesQuery() {
-        FileLogger.getFileLogger().Info(TAG + ": Parent is a series, requesting seasons");
+        AppLogger.getLogger().Info(TAG + ": Parent is a series, requesting seasons");
         SeasonQuery query = new SeasonQuery();
         query.setSeriesId(mParent.getId());
         query.setUserId(MB3Application.getInstance().user.getId());
@@ -244,7 +242,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
     }
 
     private void performEpisodesQuery() {
-        FileLogger.getFileLogger().Info(TAG + ": Parent is series, requesting episodes");
+        AppLogger.getLogger().Info(TAG + ": Parent is series, requesting episodes");
         ItemQuery query = new ItemQuery();
         query.setParentId(mParent.getId());
         query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
@@ -258,7 +256,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
     }
 
     private void performItemsQuery() {
-        FileLogger.getFileLogger().Info(TAG + ": Parent is boxset, requesting children");
+        AppLogger.getLogger().Info(TAG + ": Parent is boxset, requesting children");
         ItemQuery query = new ItemQuery();
         query.setParentId(mParent.getId());
         query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
@@ -273,7 +271,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
     private void LoadTitle() {
 
         if (mParent.getHasLogo()) {
-            FileLogger.getFileLogger().Info(TAG + ": Setting logo image");
+            AppLogger.getLogger().Info(TAG + ": Setting logo image");
             ImageOptions options = new ImageOptions();
             options.setImageType(ImageType.Logo);
             options.setMaxHeight(300);
@@ -284,7 +282,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
             mTitle.setVisibility(View.GONE);
             mLogo.setVisibility(View.VISIBLE);
         } else {
-            FileLogger.getFileLogger().Info(TAG + ": Setting title text");
+            AppLogger.getLogger().Info(TAG + ": Setting title text");
             mTitle.setText(mParent.getName());
             mTitle.setVisibility(View.VISIBLE);
             mLogo.setVisibility(View.GONE);
@@ -296,7 +294,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
 
         if (mParent.getBackdropCount() > 0) {
             List<String> backdropUrls = new ArrayList<>();
-            FileLogger.getFileLogger().Info(TAG + ": Building backdrop image urls");
+            AppLogger.getLogger().Info(TAG + ": Building backdrop image urls");
 
             for (int i = 0; i < mParent.getBackdropCount(); i++) {
 
@@ -310,7 +308,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
             }
 
             if (backdropUrls.size() > 0) {
-                FileLogger.getFileLogger().Info(TAG + ": setting backdrop(s)");
+                AppLogger.getLogger().Info(TAG + ": setting backdrop(s)");
                 setBackdropImages(backdropUrls);
             }
         }
@@ -353,10 +351,10 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
         @Override
         public void onResponse(BaseItemDto response) {
             if (response == null) {
-                FileLogger.getFileLogger().Info(TAG + ": No item returned from initial query");
+                AppLogger.getLogger().Info(TAG + ": No item returned from initial query");
                 return;
             }
-            FileLogger.getFileLogger().Info(TAG + ": valid response returned from initial query");
+            AppLogger.getLogger().Info(TAG + ": valid response returned from initial query");
             mParent = response;
 
             if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mParent.getOverview())) {
@@ -372,7 +370,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
         }
         @Override
         public void onError(Exception ex) {
-            FileLogger.getFileLogger().Info(TAG + ": Error reported during initial query");
+            AppLogger.getLogger().Info(TAG + ": Error reported during initial query");
         }
     }
 
@@ -385,11 +383,11 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
             mActivityIndicator.setVisibility(View.GONE);
 
             if (response == null || response.getItems() == null) {
-                FileLogger.getFileLogger().Info(TAG + ": No results returned in query");
+                AppLogger.getLogger().Info(TAG + ": No results returned in query");
                 return;
             }
 
-            FileLogger.getFileLogger().Info(TAG + ": Children returned. Building Grid");
+            AppLogger.getLogger().Info(TAG + ": Children returned. Building Grid");
             mChildren = Arrays.asList(response.getItems());
 
             if (isThumbMajority(mChildren)) {
@@ -420,7 +418,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
         }
         @Override
         public void onError(Exception ex) {
-            FileLogger.getFileLogger().Info(TAG + ": Error getting child items");
+            AppLogger.getLogger().Info(TAG + ": Error getting child items");
         }
     };
 

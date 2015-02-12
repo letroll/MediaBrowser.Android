@@ -25,14 +25,13 @@ import com.mb.android.ui.mobile.playback.AudioPlaybackActivity;
 import com.mb.android.adapters.GenericAdapterPosters;
 import com.mb.android.listeners.AlbumOnItemClickListener;
 import com.mb.android.listeners.SongOnItemClickListener;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.album.SongAdapter;
 import com.mb.android.widget.nestedlistview.NestedListView;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
 import mediabrowser.model.entities.SortOrder;
-import mediabrowser.model.extensions.StringHelper;
 import mediabrowser.model.querying.ItemsResult;
 import mediabrowser.model.querying.ItemFields;
 import mediabrowser.model.querying.ItemFilter;
@@ -218,7 +217,7 @@ public class OnStageFragment extends Fragment {
                 MB3Application.getInstance().API.GetInstantMixFromSongAsync(query, getInstantMixResponse);
             } else {
                 // Couldn't get any music from the server.
-                FileLogger.getFileLogger().Error("OnStage: Could not retrieve song for instant mix");
+                AppLogger.getLogger().Error("OnStage: Could not retrieve song for instant mix");
             }
         }
         @Override
@@ -375,7 +374,7 @@ public class OnStageFragment extends Fragment {
     private void setInstantMixImage(String imageUrl) {
 
         if (imageUrl == null || imageUrl.isEmpty()) {
-            FileLogger.getFileLogger().Error("Error setting backdrop - imageUrl is null or empty");
+            AppLogger.getLogger().Error("Error setting backdrop - imageUrl is null or empty");
             return;
         }
 

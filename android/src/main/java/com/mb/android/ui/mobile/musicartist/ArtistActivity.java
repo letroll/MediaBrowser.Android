@@ -35,7 +35,7 @@ import mediabrowser.model.querying.ItemFields;
 import mediabrowser.model.querying.ItemSortBy;
 import mediabrowser.model.library.PlayAccess;
 import mediabrowser.model.entities.SortOrder;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import mediabrowser.model.session.PlayCommand;
 
 import java.util.ArrayList;
@@ -327,18 +327,18 @@ public class ArtistActivity extends BaseMbMobileActivity {
     public void updateFavoriteVisibleIcons() {
 
         Log.i("", "updateFavoriteVisibleIcons called");
-        FileLogger.getFileLogger().Info("Update favorite visible icons");
+        AppLogger.getLogger().Info("Update favorite visible icons");
         if (mArtist == null) return;
 
         if (mArtist.getUserData() != null && mArtist.getUserData().getIsFavorite()) {
 
-            FileLogger.getFileLogger().Info("Show remove favorite");
+            AppLogger.getLogger().Info("Show remove favorite");
             // only show the remove favorite
             mAddFavoriteMenuItemVisible = false;
             mRemoveFavoriteMenuItemVisible = true;
 
         } else {
-            FileLogger.getFileLogger().Info("Show add favorite");
+            AppLogger.getLogger().Info("Show add favorite");
             // only show the add favorite
             mAddFavoriteMenuItemVisible = true;
             mRemoveFavoriteMenuItemVisible = false;
@@ -353,7 +353,7 @@ public class ArtistActivity extends BaseMbMobileActivity {
     private void updatePlaystateVisibleIcons() {
 
         Log.i("", "updatePlaystateVisibleIcons called");
-        FileLogger.getFileLogger().Info("Update playstate visible icons");
+        AppLogger.getLogger().Info("Update playstate visible icons");
 
         if (mArtist == null) return;
 

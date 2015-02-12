@@ -18,7 +18,7 @@ import android.widget.RadioGroup;
 
 import com.mb.android.MB3Application;
 import com.mb.android.R;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.utils.Utils;
 import com.mb.network.Connectivity;
 
@@ -197,7 +197,7 @@ public class StreamSelectionDialogFragment extends DialogFragment {
         boolean hlsEnabled = prefs.getBoolean("pref_enable_hls", true);
         boolean h264StrictModeEnabled = prefs.getBoolean("pref_h264_strict", true);
 
-        FileLogger.getFileLogger().Info("Create VideoOptions");
+        AppLogger.getLogger().Info("Create VideoOptions");
         VideoOptions options = new VideoOptions();
         options.setItemId(baseItemDto.getId());
         options.setMediaSources(baseItemDto.getMediaSources());
@@ -205,11 +205,11 @@ public class StreamSelectionDialogFragment extends DialogFragment {
         options.setDeviceId(Settings.Secure.getString(MB3Application.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
-        FileLogger.getFileLogger().Info("Create StreamInfo");
+        AppLogger.getLogger().Info("Create StreamInfo");
         StreamInfo streamInfo = new StreamBuilder().BuildVideoItem(options);
 
         if (streamInfo == null) {
-            FileLogger.getFileLogger().Info("streamInfo is null");
+            AppLogger.getLogger().Info("streamInfo is null");
         }
         return streamInfo;
     }

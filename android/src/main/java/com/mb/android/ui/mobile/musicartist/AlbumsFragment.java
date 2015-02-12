@@ -22,7 +22,7 @@ import mediabrowser.model.querying.ItemQuery;
 import mediabrowser.model.querying.ItemFields;
 import mediabrowser.model.querying.ItemSortBy;
 import mediabrowser.model.entities.SortOrder;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -97,7 +97,7 @@ public class AlbumsFragment extends Fragment {
 
                 if (mAlbums.size() == 0) {
                     Log.i("GetAlbumsCallback", "mAlbums is null or empty");
-                    FileLogger.getFileLogger().Error("mAlbums is null or empty");
+                    AppLogger.getLogger().Error("mAlbums is null or empty");
                     return;
                 }
 

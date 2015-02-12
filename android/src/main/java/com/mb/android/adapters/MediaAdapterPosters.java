@@ -25,7 +25,7 @@ import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
 import mediabrowser.model.entities.LocationType;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 
 import java.util.Date;
 import java.util.List;
@@ -88,7 +88,7 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
                     .getBoolean("pref_enable_image_enhancers", true);
 
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Error in adapter initialization", e);
+            AppLogger.getLogger().ErrorException("Error in adapter initialization", e);
         }
 
     }
@@ -249,7 +249,7 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
             }
         } catch (Exception e) {
             holder.playedProgress.setVisibility(View.INVISIBLE);
-            FileLogger.getFileLogger().ErrorException("Error setting progressbar value", e);
+            AppLogger.getLogger().ErrorException("Error setting progressbar value", e);
         }
 
         return convertView;

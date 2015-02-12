@@ -2,13 +2,10 @@ package com.mb.android.ui.mobile.livetv;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.media.MediaRouter;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,8 +18,6 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.cast.CastMediaControlIntent;
 import com.mb.android.Playlist;
 import com.mb.android.activities.BaseMbMobileActivity;
-import com.mb.android.logging.FileLogger;
-import com.mb.android.ui.tv.playback.PlayerHelpers;
 import com.mb.android.utils.Utils;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.playbackmediator.widgets.MiniController;
@@ -38,7 +33,6 @@ import com.mb.android.livetv.ListingHeader;
 import com.mb.android.player.AudioService;
 import com.mb.android.ui.mobile.playback.PlaybackActivity;
 
-import mediabrowser.model.dlna.StreamInfo;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
 import mediabrowser.model.livetv.ChannelInfoDto;
@@ -48,12 +42,10 @@ import mediabrowser.model.results.ProgramInfoDtoResult;
 import mediabrowser.model.session.PlayCommand;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  * Created by Mark on 2014-06-01.
@@ -294,12 +286,12 @@ public class ChannelListingsActivity extends BaseMbMobileActivity {
 //            } else if (PreferenceManager.getDefaultSharedPreferences(ChannelListingsActivity.this)
 //                    .getBoolean("pref_enable_external_player", false)) {
 //
-//                FileLogger.getFileLogger().Info("Play requested: External player");
+//                FileLogger.getLogger().Info("Play requested: External player");
 //
 //                String url = MB3Application.getInstance().API.getApiUrl() + "/Video/" + mChannel.getId() + "/stream.wtv?static=true";
 //
 ////                String url = info.ToUrl(MB3Application.getInstance().API.getApiUrl());
-//                FileLogger.getFileLogger().Info("External player URL: " + url);
+//                FileLogger.getLogger().Info("External player URL: " + url);
 //                Log.d("External Player url", url);
 //
 //                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

@@ -32,7 +32,7 @@ import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.BaseItemInfo;
 import mediabrowser.model.entities.ImageType;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 
 import mediabrowser.model.session.SessionInfoDto;
 
@@ -197,7 +197,7 @@ public class RemoteControlActivity extends BaseMbMobileActivity {
     @Override
     public void onPause() {
         super.onPause();
-        FileLogger.getFileLogger().Info("RemoteControlActivity: onPause");
+        AppLogger.getLogger().Info("RemoteControlActivity: onPause");
         backdrop.removeCallbacks(onEverySecond);
     }
 
@@ -419,7 +419,7 @@ public class RemoteControlActivity extends BaseMbMobileActivity {
         public void onClick(View v) {
 
             try {
-                FileLogger.getFileLogger()
+                AppLogger.getLogger()
                         .Info("stop button pressed");
                 mCastManager.stop();
                 RemoteControlActivity.this.finish();

@@ -52,7 +52,7 @@ import com.mb.android.ui.mobile.playback.AudioPlaybackActivity;
 import com.mb.android.ui.mobile.playback.PlaybackActivity;
 import mediabrowser.model.apiclient.ConnectionState;
 import mediabrowser.model.dto.BaseItemDto;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import mediabrowser.model.dto.UserDto;
 import mediabrowser.model.session.PlayRequest;
 
@@ -92,7 +92,7 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
 
         // If we've recovered from a crash, we don't want to crash again. Just restart the app normally
         if (MB3Application.getInstance().API == null) {
-            FileLogger.getFileLogger().Info("Recovering from crash. Trying to re-acquiring server");
+            AppLogger.getLogger().Info("Recovering from crash. Trying to re-acquiring server");
             MB3Application.getInstance().setIsConnected(false);
             Thread thread = new Thread() {
                 @Override
@@ -160,7 +160,7 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
             @Override
             public void onDataMessageSendFailed(int errorCode) {
                 Log.d(TAG, "onDataMessageSendFailed. Error Code: " + String.valueOf(errorCode));
-                FileLogger.getFileLogger().Error("Error sending data message.");
+                AppLogger.getLogger().Error("Error sending data message.");
             }
 
             @Override
@@ -223,7 +223,7 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        FileLogger.getFileLogger().Warn("Application is running low on memory");
+        AppLogger.getLogger().Warn("Application is running low on memory");
     }
 
     private Response<ConnectionResult> connectionResult = new Response<ConnectionResult>() {
@@ -233,7 +233,7 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
             if (ConnectionState.SignedIn.equals(result.getState())) {
                 // A server was found and the user has been signed in using previously saved credentials.
                 // Ready to browse using result.ApiClient
-                FileLogger.getFileLogger().Info("**** SIGNED IN ****");
+                AppLogger.getLogger().Info("**** SIGNED IN ****");
                 MB3Application.getInstance().API = (AndroidApiClient)result.getApiClient();
                 MB3Application.getInstance().user = new UserDto();
                 MB3Application.getInstance().user.setId(MB3Application.getInstance().API.getCurrentUserId());
@@ -252,7 +252,7 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
 
 
     private void returnToConnectionActivity() {
-        FileLogger.getFileLogger().Info("Failed to recover session after crash");
+        AppLogger.getLogger().Info("Failed to recover session after crash");
         Intent intent = new Intent(MB3Application.getInstance(), ConnectionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

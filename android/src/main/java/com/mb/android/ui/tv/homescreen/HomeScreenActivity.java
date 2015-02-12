@@ -17,7 +17,7 @@ import com.mb.android.ui.main.SettingsActivity;
 import com.mb.android.adapters.HorizontalAdapterPosters;
 import com.mb.android.ui.tv.library.LibraryTools;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.tv.MbBackdropActivity;
 import com.mb.android.ui.tv.library.dialogs.QuickUserDialogFragment;
 import com.mb.android.ui.tv.library.interfaces.IQuickPlayDialogListener;
@@ -442,7 +442,7 @@ public class HomeScreenActivity extends MbBackdropActivity implements IQuickPlay
             }
 
             if (result.getItems() == null || result.getItems().length == 0) {
-                FileLogger.getFileLogger().Debug("No recordings returned");
+                AppLogger.getLogger().Debug("No recordings returned");
             } else {
                 ralGrid.setAdapter(new RecordingsAdapterBackdrops(Arrays.asList(result.getItems())));
                 ralGrid.setOnItemSelectedListener(onTileSelected);
@@ -520,7 +520,7 @@ public class HomeScreenActivity extends MbBackdropActivity implements IQuickPlay
 
     @Override
     public void onQuickPlaySelectionFinished() {
-        FileLogger.getFileLogger().Info("HomeScreenActivity: onQuickPlaySelectionFinished");
+        AppLogger.getLogger().Info("HomeScreenActivity: onQuickPlaySelectionFinished");
         mPlayHelper.playItems(this);
     }
 }

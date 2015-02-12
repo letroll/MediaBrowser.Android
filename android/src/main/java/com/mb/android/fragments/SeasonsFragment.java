@@ -24,7 +24,7 @@ import mediabrowser.model.querying.ItemsResult;
 import mediabrowser.model.querying.EpisodeQuery;
 import mediabrowser.model.querying.SeasonQuery;
 import mediabrowser.model.querying.ItemFields;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 
 import java.util.Arrays;
 
@@ -50,7 +50,7 @@ public class SeasonsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        FileLogger.getFileLogger().Info("SeasonsFragment: onCreateView");
+        AppLogger.getLogger().Info("SeasonsFragment: onCreateView");
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mSeriesActivity);
         mPostersEnabled = prefs.getBoolean("pref_prefer_posters", false);
@@ -73,13 +73,13 @@ public class SeasonsFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        FileLogger.getFileLogger().Info("SeasonsFragment: creating query");
+        AppLogger.getLogger().Info("SeasonsFragment: creating query");
         SeasonQuery query = new SeasonQuery();
         query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
         query.setSeriesId(mSeriesid);
         query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.SortName});
 
-        FileLogger.getFileLogger().Info("SeasonsFragment: Requesting seasons");
+        AppLogger.getLogger().Info("SeasonsFragment: Requesting seasons");
         MB3Application.getInstance().API.GetSeasonsAsync(query, getItemsResponse);
 
     }
@@ -101,11 +101,11 @@ public class SeasonsFragment extends Fragment {
 
         @Override
         public void onResponse(final ItemsResult response) {
-            FileLogger.getFileLogger().Info("SeasonsFragment: GetItemsCallback");
+            AppLogger.getLogger().Info("SeasonsFragment: GetItemsCallback");
 
             if (response != null && response.getItems() != null && response.getItems().length > 0) {
 
-                FileLogger.getFileLogger()
+                AppLogger.getLogger()
                         .Info("SeasonsFragment: Initialize GridView");
 
                 GridView seasonsList = (GridView) mView.findViewById(R.id.gvLibrary);
@@ -147,9 +147,9 @@ public class SeasonsFragment extends Fragment {
                     seasonsList.requestFocus();
             } else {
                 if (response == null) {
-                    FileLogger.getFileLogger().Info("SeasonsFragment: Results is null");
+                    AppLogger.getLogger().Info("SeasonsFragment: Results is null");
                 } else {
-                    FileLogger.getFileLogger().Info("SeasonsFragment: Results is empty");
+                    AppLogger.getLogger().Info("SeasonsFragment: Results is empty");
                 }
             }
         }

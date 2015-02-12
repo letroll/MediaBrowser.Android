@@ -19,7 +19,8 @@ import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import com.mb.android.activities.BaseMbMobileActivity;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.logging.FileLogger;
+
+import com.mb.android.logging.AppLogger;
 import com.mb.android.player.AudioPlayerListener;
 import com.mb.android.player.AudioService;
 import com.mb.android.ui.mobile.album.BaseSongAdapter;
@@ -28,7 +29,6 @@ import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.dto.UserItemDataDto;
 import mediabrowser.model.entities.ImageType;
-import mediabrowser.model.extensions.StringHelper;
 import mediabrowser.model.session.PlayRequest;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
@@ -164,7 +164,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
     @Override
     public void onDestroy() {
         super.onDestroy();
-        FileLogger.getFileLogger().Info(TAG + ": onDestroy");
+        AppLogger.getLogger().Info(TAG + ": onDestroy");
         mPlayPauseButton.removeCallbacks(onEverySecond);
         if (mAudioService != null) {
             mAudioService.removeAudioPlayerListener(this);
@@ -251,7 +251,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
     }
 
     private void setNowPlayingInfo(BaseItemDto mediaItem) {
-        FileLogger.getFileLogger().Info(TAG + ": SetNowPlayingInfo");
+        AppLogger.getLogger().Info(TAG + ": SetNowPlayingInfo");
         if (mediaItem == null) return;
         setTrackAndTitleText(mediaItem.getIndexNumber(), mediaItem.getName());
         setArtistAlbumTextFromBaseItem(mediaItem);
@@ -740,36 +740,36 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
 
     @Override
     public void onRemotePlayRequest(PlayRequest request, String mediaType) {
-        FileLogger.getFileLogger().Info(TAG + ": remote play request received");
+        AppLogger.getLogger().Info(TAG + ": remote play request received");
         if ("audio".equalsIgnoreCase(mediaType)) {
-            FileLogger.getFileLogger().Info(TAG + ": first item is audio.");
+            AppLogger.getLogger().Info(TAG + ": first item is audio.");
             if (mAudioService != null) {
                 mAudioService.stopMedia();
                 MB3Application.getInstance().PlayerQueue = new Playlist();
                 addItemsToPlaylist(request.getItemIds());
-                FileLogger.getFileLogger().Info(TAG + ": audio service stopped");
+                AppLogger.getLogger().Info(TAG + ": audio service stopped");
                 mAudioService.playMedia();
             }
-            FileLogger.getFileLogger().Info(TAG + ": finished audio play request");
+            AppLogger.getLogger().Info(TAG + ": finished audio play request");
         } else if ("video".equalsIgnoreCase(mediaType)) {
-            FileLogger.getFileLogger().Info(TAG + ": first item is video");
+            AppLogger.getLogger().Info(TAG + ": first item is video");
             if (mAudioService != null) {
                 mAudioService.stopMedia();
-                FileLogger.getFileLogger().Info(TAG + ": audio service killed");
+                AppLogger.getLogger().Info(TAG + ": audio service killed");
             }
             MB3Application.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
             Intent intent = new Intent(this, PlaybackActivity.class);
             startActivity(intent);
             this.finish();
-            FileLogger.getFileLogger().Info(TAG + ": finished video play request");
+            AppLogger.getLogger().Info(TAG + ": finished video play request");
         } else {
-            FileLogger.getFileLogger().Info(TAG + ": unable to process play request. Unsupported media type");
+            AppLogger.getLogger().Info(TAG + ": unable to process play request. Unsupported media type");
         }
     }
 
     @Override
     public void onRemoteBrowseRequest(BaseItemDto baseItemDto) {
-        FileLogger.getFileLogger().Info(TAG + ": ignoring remote browse request due to media playback");
+        AppLogger.getLogger().Info(TAG + ": ignoring remote browse request due to media playback");
     }
 }

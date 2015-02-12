@@ -5,7 +5,7 @@ import android.widget.ViewSwitcher;
 import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public abstract class MbBackdropActivity extends MbBaseActivity {
     protected void setBackdropImages(List<String> imageUrls) {
 
         if (imageUrls == null || imageUrls.size() == 0) {
-            FileLogger.getFileLogger().Error("Error setting backdrops - imageUrls is null or empty");
+            AppLogger.getLogger().Error("Error setting backdrops - imageUrls is null or empty");
             return;
         }
         mBackdropSwitcher.removeCallbacks(CycleBackdrops);
@@ -80,7 +80,7 @@ public abstract class MbBackdropActivity extends MbBaseActivity {
     private void setBackdropImage(String imageUrl) {
 
         if (imageUrl == null || imageUrl.isEmpty()) {
-            FileLogger.getFileLogger().Error("Error setting backdrop - imageUrl is null or empty");
+            AppLogger.getLogger().Error("Error setting backdrop - imageUrl is null or empty");
             return;
         }
 

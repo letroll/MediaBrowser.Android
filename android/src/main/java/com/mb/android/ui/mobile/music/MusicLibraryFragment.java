@@ -23,7 +23,7 @@ import com.mb.android.ui.mobile.album.SongAdapter;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.listeners.ArtistOnItemClickListener;
 import com.mb.android.listeners.OverflowOnItemLongClickListener;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.widget.indexablegridview.IndexableGridView;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.entities.SortOrder;
@@ -56,14 +56,14 @@ public class MusicLibraryFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceStage) {
-        FileLogger.getFileLogger().Info(TAG + ": onCreate");
+        AppLogger.getLogger().Info(TAG + ": onCreate");
 
         View view = inflater.inflate(R.layout.fragment_library_presentation_indexable, parent, false);
 //        View view = inflater.inflate(R.layout.fragment_music_library, parent, false);
         mContentGrid = (IndexableGridView) view.findViewById(R.id.gvLibrary);
         mParentId = getArguments().getString("ParentId");
 
-        FileLogger.getFileLogger().Info(TAG + ": End onCreate");
+        AppLogger.getLogger().Info(TAG + ": End onCreate");
         return view;
     }
 
@@ -84,7 +84,7 @@ public class MusicLibraryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        FileLogger.getFileLogger().Info(TAG + ": onResume");
+        AppLogger.getLogger().Info(TAG + ": onResume");
         if (isFresh) {
             rootCategory = RootCategory.valueOf(PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance()).getString("pref_music_root", "artist"));
             switch(rootCategory) {
@@ -106,7 +106,7 @@ public class MusicLibraryFragment extends Fragment {
             }
             isFresh = false;
         }
-        FileLogger.getFileLogger().Info(TAG + ": end onResume");
+        AppLogger.getLogger().Info(TAG + ": end onResume");
     }
 
     @Override
@@ -135,7 +135,7 @@ public class MusicLibraryFragment extends Fragment {
         mItems = new ArrayList<>();
         mContentGrid.setAdapter(null);
 
-        FileLogger.getFileLogger().Info(TAG + ": Build artists query");
+        AppLogger.getLogger().Info(TAG + ": Build artists query");
         ArtistsQuery query = new ArtistsQuery();
         query.setParentId(mParentId);
         query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
@@ -155,7 +155,7 @@ public class MusicLibraryFragment extends Fragment {
         mItems = new ArrayList<>();
         mContentGrid.setAdapter(null);
 
-        FileLogger.getFileLogger().Info(TAG + ": Build album artists query");
+        AppLogger.getLogger().Info(TAG + ": Build album artists query");
         ArtistsQuery query = new ArtistsQuery();
         query.setParentId(mParentId);
         query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
@@ -175,7 +175,7 @@ public class MusicLibraryFragment extends Fragment {
         mItems = new ArrayList<>();
         mContentGrid.setAdapter(null);
 
-        FileLogger.getFileLogger().Info(TAG + ": Build albums query");
+        AppLogger.getLogger().Info(TAG + ": Build albums query");
         ItemQuery query = new ItemQuery();
         query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
         query.setRecursive(true);
@@ -196,7 +196,7 @@ public class MusicLibraryFragment extends Fragment {
         mItems = new ArrayList<>();
         mContentGrid.setAdapter(null);
 
-        FileLogger.getFileLogger().Info(TAG + ": Build songs query");
+        AppLogger.getLogger().Info(TAG + ": Build songs query");
         ItemQuery query = new ItemQuery();
         query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
         query.setRecursive(true);
@@ -216,7 +216,7 @@ public class MusicLibraryFragment extends Fragment {
         mItems = new ArrayList<>();
         mContentGrid.setAdapter(null);
 
-        FileLogger.getFileLogger().Info(TAG + ": Build genres query");
+        AppLogger.getLogger().Info(TAG + ": Build genres query");
         ItemsByNameQuery query = new ItemsByNameQuery();
         query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
         query.setParentId(mParentId);
@@ -240,7 +240,7 @@ public class MusicLibraryFragment extends Fragment {
     //******************************************************************************************************************
 
     private void initializeArtistsGrid() {
-        FileLogger.getFileLogger().Info(TAG + ": initialize artists grid");
+        AppLogger.getLogger().Info(TAG + ": initialize artists grid");
         mContentGrid.setNumColumns(MB3Application.getInstance().getResources().getInteger(R.integer.library_columns_poster));
         mContentGrid.setVerticalSpacing(10);
         mContentGrid.setAdapter(new GenericAdapterPosters(mItems, MB3Application.getInstance().getResources().getInteger(R.integer.library_columns_poster), mMusicActivity, R.drawable.default_artist));
@@ -249,7 +249,7 @@ public class MusicLibraryFragment extends Fragment {
     }
 
     private void initializeAlbumsGrid() {
-        FileLogger.getFileLogger().Info(TAG + ": initialize albums grid");
+        AppLogger.getLogger().Info(TAG + ": initialize albums grid");
         mContentGrid.setNumColumns(MB3Application.getInstance().getResources().getInteger(R.integer.library_columns_poster));
         mContentGrid.setVerticalSpacing(10);
         mContentGrid.setAdapter(new GenericAdapterPosters(mItems, getResources().getInteger(R.integer.library_columns_poster), mMusicActivity, R.drawable.music_square_bg));
@@ -258,7 +258,7 @@ public class MusicLibraryFragment extends Fragment {
     }
 
     private void initilizeSongsGrid() {
-        FileLogger.getFileLogger().Info(TAG + ": initialize songs list");
+        AppLogger.getLogger().Info(TAG + ": initialize songs list");
         mContentGrid.setNumColumns(1);
         mContentGrid.setVerticalSpacing(0);
         mContentGrid.setAdapter(new SongAdapter(mItems, mMusicActivity));
@@ -267,7 +267,7 @@ public class MusicLibraryFragment extends Fragment {
     }
 
     private void initializeGenresGrid() {
-        FileLogger.getFileLogger().Info(TAG + ": initialize genres grid");
+        AppLogger.getLogger().Info(TAG + ": initialize genres grid");
         mContentGrid.setNumColumns(getResources().getInteger(R.integer.library_columns_poster));
         mContentGrid.setVerticalSpacing(10);
         mContentGrid.setAdapter(new GenreAdapter(mItems, mMusicActivity));
@@ -292,9 +292,9 @@ public class MusicLibraryFragment extends Fragment {
         @Override
         public void onResponse(ItemsResult result) {
 
-            FileLogger.getFileLogger().Info(TAG + ": onResponse");
+            AppLogger.getLogger().Info(TAG + ": onResponse");
             if (result == null || result.getItems() == null) {
-                FileLogger.getFileLogger().Info(TAG + ": nothing to show");
+                AppLogger.getLogger().Info(TAG + ": nothing to show");
                 return;
             }
 
@@ -313,14 +313,14 @@ public class MusicLibraryFragment extends Fragment {
             GenericAdapterPosters adapter = (GenericAdapterPosters)mContentGrid.getAdapter();
 
             if (adapter != null) {
-                FileLogger.getFileLogger().Info(TAG + ": add additional content");
+                AppLogger.getLogger().Info(TAG + ": add additional content");
                 adapter.notifyDataSetChanged();
             } else {
                 initializeArtistsGrid();
             }
 
             if (result.getTotalRecordCount() > mQuery.getStartIndex() + 200) {
-                FileLogger.getFileLogger().Info(TAG + ": more items to retrieve");
+                AppLogger.getLogger().Info(TAG + ": more items to retrieve");
                 mQuery.setStartIndex(mQuery.getStartIndex() + 200);
                 if (mIsAlbumArtistQuery) {
                     MB3Application.getInstance().API.GetAlbumArtistsAsync(mQuery, this);
@@ -331,7 +331,7 @@ public class MusicLibraryFragment extends Fragment {
         }
         @Override
         public void onError(Exception e) {
-            FileLogger.getFileLogger().Info(TAG + ": error getting artists");
+            AppLogger.getLogger().Info(TAG + ": error getting artists");
         }
     }
 
@@ -346,9 +346,9 @@ public class MusicLibraryFragment extends Fragment {
         @Override
         public void onResponse(ItemsResult result) {
 
-            FileLogger.getFileLogger().Info(TAG + ": onResponse");
+            AppLogger.getLogger().Info(TAG + ": onResponse");
             if (result == null || result.getItems() == null) {
-                FileLogger.getFileLogger().Info(TAG + ": nothing to show");
+                AppLogger.getLogger().Info(TAG + ": nothing to show");
                 return;
             }
 
@@ -366,21 +366,21 @@ public class MusicLibraryFragment extends Fragment {
             GenericAdapterPosters adapter = (GenericAdapterPosters)mContentGrid.getAdapter();
 
             if (adapter != null) {
-                FileLogger.getFileLogger().Info(TAG + ": add additional content");
+                AppLogger.getLogger().Info(TAG + ": add additional content");
                 adapter.notifyDataSetChanged();
             } else {
                 initializeAlbumsGrid();
             }
 
             if (result.getTotalRecordCount() > mQuery.getStartIndex() + 200) {
-                FileLogger.getFileLogger().Info(TAG + ": more items to retrieve");
+                AppLogger.getLogger().Info(TAG + ": more items to retrieve");
                 mQuery.setStartIndex(mQuery.getStartIndex() + 200);
                 MB3Application.getInstance().API.GetItemsAsync(mQuery, this);
             }
         }
         @Override
         public void onError(Exception e) {
-            FileLogger.getFileLogger().Info(TAG + ": error getting albums");
+            AppLogger.getLogger().Info(TAG + ": error getting albums");
         }
     }
 
@@ -395,9 +395,9 @@ public class MusicLibraryFragment extends Fragment {
         @Override
         public void onResponse(ItemsResult result) {
 
-            FileLogger.getFileLogger().Info(TAG + ": onResponse");
+            AppLogger.getLogger().Info(TAG + ": onResponse");
             if (result == null || result.getItems() == null) {
-                FileLogger.getFileLogger().Info(TAG + ": nothing to show");
+                AppLogger.getLogger().Info(TAG + ": nothing to show");
                 return;
             }
 
@@ -415,21 +415,21 @@ public class MusicLibraryFragment extends Fragment {
             SongAdapter adapter = (SongAdapter) mContentGrid.getAdapter();
 
             if (adapter != null) {
-                FileLogger.getFileLogger().Info(TAG + ": add additional content");
+                AppLogger.getLogger().Info(TAG + ": add additional content");
                 adapter.notifyDataSetChanged();
             } else {
                 initilizeSongsGrid();
             }
 
             if (result.getTotalRecordCount() > mQuery.getStartIndex() + 200) {
-                FileLogger.getFileLogger().Info(TAG + ": more items to retrieve");
+                AppLogger.getLogger().Info(TAG + ": more items to retrieve");
                 mQuery.setStartIndex(mQuery.getStartIndex() + 200);
                 MB3Application.getInstance().API.GetItemsAsync(mQuery, this);
             }
         }
         @Override
         public void onError(Exception e) {
-            FileLogger.getFileLogger().Info(TAG + ": error getting songs");
+            AppLogger.getLogger().Info(TAG + ": error getting songs");
         }
     }
 
@@ -438,9 +438,9 @@ public class MusicLibraryFragment extends Fragment {
         @Override
         public void onResponse(ItemsResult result) {
 
-            FileLogger.getFileLogger().Info(TAG + ": onResponse");
+            AppLogger.getLogger().Info(TAG + ": onResponse");
             if (result == null || result.getItems() == null) {
-                FileLogger.getFileLogger().Info(TAG + ": nothing to show");
+                AppLogger.getLogger().Info(TAG + ": nothing to show");
                 return;
             }
 
@@ -458,7 +458,7 @@ public class MusicLibraryFragment extends Fragment {
             GenreAdapter adapter = (GenreAdapter) mContentGrid.getAdapter();
 
             if (adapter != null) {
-                FileLogger.getFileLogger().Info(TAG + ": add additional content");
+                AppLogger.getLogger().Info(TAG + ": add additional content");
                 adapter.notifyDataSetChanged();
             } else {
                 initializeGenresGrid();
@@ -466,7 +466,7 @@ public class MusicLibraryFragment extends Fragment {
         }
         @Override
         public void onError(Exception e) {
-            FileLogger.getFileLogger().Info(TAG + ": error getting genres");
+            AppLogger.getLogger().Info(TAG + ": error getting genres");
         }
     }
 

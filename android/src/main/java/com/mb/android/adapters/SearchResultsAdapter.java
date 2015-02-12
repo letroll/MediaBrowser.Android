@@ -20,10 +20,9 @@ import com.mb.android.MB3Application;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.ApiClient;
 import mediabrowser.model.dto.ImageOptions;
-import mediabrowser.model.extensions.StringHelper;
 import mediabrowser.model.search.SearchHint;
 import mediabrowser.model.entities.ImageType;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 
 import java.util.List;
 
@@ -63,7 +62,7 @@ public class SearchResultsAdapter extends BaseAdapter implements SectionIndexer 
                     .getDefaultSharedPreferences(MB3Application.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Error in adapter initialization", e);
+            AppLogger.getLogger().ErrorException("Error in adapter initialization", e);
         }
 
     }

@@ -29,7 +29,7 @@ import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
 import mediabrowser.model.entities.LocationType;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -256,7 +256,7 @@ public class MediaOverviewFragment extends Fragment {
                     episodeNumber.setText("Season " + String.valueOf(mItem.getParentIndexNumber()) + " Episode " + String.valueOf(mItem.getIndexNumber()));
                 }
             } catch (Exception e) {
-                FileLogger.getFileLogger().ErrorException("PopulateTvInfo - ", e);
+                AppLogger.getLogger().ErrorException("PopulateTvInfo - ", e);
                 tvInfo.setVisibility(LinearLayout.GONE);
             }
         } else {
@@ -315,7 +315,7 @@ public class MediaOverviewFragment extends Fragment {
             try {
                 rtRatingText.setText(String.valueOf((int) Math.ceil(mItem.getCriticRating())) + "%");
             } catch (Exception e) {
-                FileLogger.getFileLogger().ErrorException("MediaOverviewFragment: Error setting RT Rating value ", e);
+                AppLogger.getLogger().ErrorException("MediaOverviewFragment: Error setting RT Rating value ", e);
             }
             rtRatingImage.setVisibility(ImageView.VISIBLE);
             rtRatingText.setVisibility(TextView.VISIBLE);
@@ -414,7 +414,7 @@ public class MediaOverviewFragment extends Fragment {
     private void setBackdropImage(String imageUrl) {
 
         if (imageUrl == null || imageUrl.isEmpty()) {
-            FileLogger.getFileLogger().Error("Error setting backdrop - imageUrl is null or empty");
+            AppLogger.getLogger().Error("Error setting backdrop - imageUrl is null or empty");
             return;
         }
 

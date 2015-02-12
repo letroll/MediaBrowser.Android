@@ -28,7 +28,7 @@ import mediabrowser.apiinteraction.ConnectionResult;
 import mediabrowser.apiinteraction.Response;
 import mediabrowser.apiinteraction.android.AndroidApiClient;
 import com.mb.android.interfaces.IWebsocketEventListener;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.main.ConnectionActivity;
 import com.mb.android.ui.tv.boxset.BoxSetActivity;
 import com.mb.android.ui.tv.homescreen.HomeScreenActivity;
@@ -96,12 +96,12 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
 
         if (requestCode == ActivityResults.USER_DATA_UPDATED && resultCode == RESULT_OK) {
             if (data != null) {
-                FileLogger.getFileLogger().Debug("onActivityResult with data");
+                AppLogger.getLogger().Debug("onActivityResult with data");
                 String jsonData = data.getStringExtra("UserData");
                 UserItemDataDto userData = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, UserItemDataDto.class);
                 onUserDataUpdated(data.getStringExtra("Id"), userData);
             } else {
-                FileLogger.getFileLogger().Debug("onActivityResult without data");
+                AppLogger.getLogger().Debug("onActivityResult without data");
                 onUserDataUpdated(null, null);
             }
         } else if (requestCode == ActivityResults.PLAYBACK_COMPLETED && resultCode == RESULT_OK) {
@@ -212,7 +212,7 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
             if (ConnectionState.SignedIn.equals(result.getState())) {
                 // A server was found and the user has been signed in using previously saved credentials.
                 // Ready to browse using result.ApiClient
-                FileLogger.getFileLogger().Info("**** SIGNED IN ****");
+                AppLogger.getLogger().Info("**** SIGNED IN ****");
                 MB3Application.getInstance().API = (AndroidApiClient)result.getApiClient();
                 MB3Application.getInstance().user = new UserDto();
                 MB3Application.getInstance().user.setId(MB3Application.getInstance().API.getCurrentUserId());
@@ -231,7 +231,7 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
 
 
     private void returnToConnectionActivity() {
-        FileLogger.getFileLogger().Info("Failed to recover session after crash");
+        AppLogger.getLogger().Info("Failed to recover session after crash");
         Intent intent = new Intent(MB3Application.getInstance(), ConnectionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

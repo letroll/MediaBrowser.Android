@@ -18,7 +18,7 @@ import mediabrowser.apiinteraction.ApiClient;
 import com.mb.android.livetv.IListing;
 import com.mb.android.livetv.ListingData;
 import com.mb.android.livetv.ListingHeader;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import mediabrowser.model.livetv.ProgramInfoDto;
 import com.mb.android.utils.Utils;
 
@@ -51,7 +51,7 @@ public class ChannelListingsAdapter extends BaseAdapter {
         try {
             li = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Error in adapter initialization", e);
+            AppLogger.getLogger().ErrorException("Error in adapter initialization", e);
         }
 
     }

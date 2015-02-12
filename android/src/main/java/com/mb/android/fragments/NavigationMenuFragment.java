@@ -21,13 +21,14 @@ import com.mb.android.MenuEntity;
 import com.mb.android.Playlist;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.ChannelsActivity;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.homescreen.HomescreenActivity;
 import com.mb.android.ui.mobile.library.LibraryPresentationActivity;
 import com.mb.android.activities.mobile.PlaylistActivity;
 import com.mb.android.adapters.ViewsAdapter;
 import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.logging.FileLogger;
+
 import com.mb.android.player.AudioService;
 import com.mb.android.ui.mobile.livetv.LiveTvActivity;
 import com.mb.android.ui.main.ConnectionActivity;
@@ -278,7 +279,7 @@ public class NavigationMenuFragment extends Fragment {
 
                     Intent intent = new Intent(MB3Application.getInstance(), LibraryPresentationActivity.class);
                     intent.putExtra("ItemQuery", jsonData);
-                    FileLogger.getFileLogger().Info("Starting Library Presentation Activity");
+                    AppLogger.getLogger().Info("Starting Library Presentation Activity");
                     startActivity(intent);
                 }
             }
@@ -297,7 +298,7 @@ public class NavigationMenuFragment extends Fragment {
     private Response<LiveTvInfo> liveTvInfoResponse = new Response<LiveTvInfo>() {
         @Override
         public void onResponse(LiveTvInfo liveTvInfo) {
-            FileLogger.getFileLogger().Info(TAG + ": Live TV info response received");
+            AppLogger.getLogger().Info(TAG + ": Live TV info response received");
 
             if (liveTvInfo != null && liveTvInfo.getIsEnabled() && liveTvInfo.getEnabledUsers() != null) {
                 for (String userId : liveTvInfo.getEnabledUsers()) {
@@ -311,7 +312,7 @@ public class NavigationMenuFragment extends Fragment {
         }
         @Override
         public void onError(Exception ex) {
-            FileLogger.getFileLogger().Error(TAG + ": Error retrieving Live TV info");
+            AppLogger.getLogger().Error(TAG + ": Error retrieving Live TV info");
             requestChannels();
         }
     };
@@ -328,11 +329,11 @@ public class NavigationMenuFragment extends Fragment {
     private Response<ItemsResult> getChannelsResponse = new Response<ItemsResult>() {
         @Override
         public void onResponse(ItemsResult response) {
-            FileLogger.getFileLogger().Info(TAG + ": Channel info response received");
+            AppLogger.getLogger().Info(TAG + ": Channel info response received");
 
 //            if (response != null && response.getItems() != null && response.getItems().length > 0) {
             if (response != null && response.getTotalRecordCount() > 0) {
-                FileLogger.getFileLogger().Info(TAG + ": Channels available");
+                AppLogger.getLogger().Info(TAG + ": Channels available");
                 mChannelsEnabled = true;
             }
 
@@ -340,7 +341,7 @@ public class NavigationMenuFragment extends Fragment {
         }
         @Override
         public void onError(Exception ex) {
-            FileLogger.getFileLogger().Error(TAG + ": Error receiving Channel info");
+            AppLogger.getLogger().Error(TAG + ": Error receiving Channel info");
             getLibraryRoot();
         }
     };
@@ -360,19 +361,19 @@ public class NavigationMenuFragment extends Fragment {
     Response<ItemsResult> getLibraryResponse = new Response<ItemsResult>() {
         @Override
         public void onResponse(ItemsResult response) {
-            FileLogger.getFileLogger().Info(TAG + ": Get library response received");
+            AppLogger.getLogger().Info(TAG + ": Get library response received");
 
             if (response != null && response.getTotalRecordCount() > 0) {
-                FileLogger.getFileLogger().Info(TAG + ": library contents available");
+                AppLogger.getLogger().Info(TAG + ": library contents available");
                 buildNavigationMenu(response.getItems());
             } else {
-                FileLogger.getFileLogger().Info(TAG + ": no library contents in response");
+                AppLogger.getLogger().Info(TAG + ": no library contents in response");
                 buildNavigationMenu(null);
             }
         }
         @Override
         public void onError(Exception ex) {
-            FileLogger.getFileLogger().Error(TAG + ": Error getting library contents");
+            AppLogger.getLogger().Error(TAG + ": Error getting library contents");
             buildNavigationMenu(null);
         }
     };

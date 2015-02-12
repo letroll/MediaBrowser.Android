@@ -1,6 +1,5 @@
 package com.mb.android.ui.tv.playback;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -8,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.mb.android.ItemListWrapper;
 import com.mb.android.MB3Application;
 import com.mb.android.PlaylistItem;
 import com.mb.android.profiles.MbAndroidProfile;
@@ -17,7 +15,7 @@ import com.mb.android.ui.tv.MbBaseActivity;
 import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.SubtitleDownloader;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.profiles.ExternalPlayerProfile;
 import com.mb.android.subtitles.FatalParsingException;
 import com.mb.android.subtitles.FormatSRT;
@@ -34,7 +32,6 @@ import mediabrowser.model.dlna.SubtitleStreamInfo;
 import mediabrowser.model.dlna.VideoOptions;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.MediaSourceInfo;
-import mediabrowser.model.extensions.StringHelper;
 import mediabrowser.model.querying.ItemsResult;
 import mediabrowser.model.session.PlayMethod;
 import mediabrowser.model.session.PlaybackProgressInfo;
@@ -153,7 +150,7 @@ public final class PlayerHelpers {
         boolean hlsEnabled = prefs.getBoolean("pref_enable_hls", true);
         boolean h264StrictModeEnabled = prefs.getBoolean("pref_h264_strict", true);
 
-        FileLogger.getFileLogger().Info("Create VideoOptions");
+        AppLogger.getLogger().Info("Create VideoOptions");
         VideoOptions options = new VideoOptions();
         options.setItemId(id);
         options.setMediaSources(mediaSources);
@@ -171,11 +168,11 @@ public final class PlayerHelpers {
             options.setMediaSourceId(mediaSourceId);
         }
 
-        FileLogger.getFileLogger().Info("Create StreamInfo");
+        AppLogger.getLogger().Info("Create StreamInfo");
         StreamInfo streamInfo = new StreamBuilder().BuildVideoItem(options);
 
         if (streamInfo == null) {
-            FileLogger.getFileLogger().Info("streamInfo is null");
+            AppLogger.getLogger().Info("streamInfo is null");
             return null;
         }
 
@@ -215,7 +212,7 @@ public final class PlayerHelpers {
         boolean hlsEnabled = prefs.getBoolean("pref_enable_hls", true);
         boolean h264StrictModeEnabled = prefs.getBoolean("pref_h264_strict", true);
 
-        FileLogger.getFileLogger().Info("Create AudioOptions");
+        AppLogger.getLogger().Info("Create AudioOptions");
         AudioOptions options = new AudioOptions();
         options.setItemId(id);
         options.setMediaSources(mediaSources);
@@ -224,11 +221,11 @@ public final class PlayerHelpers {
                 Settings.Secure.getString(MB3Application.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
-        FileLogger.getFileLogger().Info("Create StreamInfo");
+        AppLogger.getLogger().Info("Create StreamInfo");
         StreamInfo streamInfo = new StreamBuilder().BuildAudioItem(options);
 
         if (streamInfo == null) {
-            FileLogger.getFileLogger().Info("streamInfo is null");
+            AppLogger.getLogger().Info("streamInfo is null");
             return null;
         }
 
@@ -266,7 +263,7 @@ public final class PlayerHelpers {
             bitrate = prefs.getString("pref_cellular_bitrate", "450000");
         }
 
-        FileLogger.getFileLogger().Info("Create VideoOptions");
+        AppLogger.getLogger().Info("Create VideoOptions");
         VideoOptions options = new VideoOptions();
         options.setItemId(id);
         options.setMediaSources(mediaSources);
@@ -286,11 +283,11 @@ public final class PlayerHelpers {
 //            }
 //        }
 
-        FileLogger.getFileLogger().Info("Create StreamInfo");
+        AppLogger.getLogger().Info("Create StreamInfo");
         StreamInfo streamInfo = new StreamBuilder().BuildVideoItem(options);
 
         if (streamInfo == null) {
-            FileLogger.getFileLogger().Info("streamInfo is null");
+            AppLogger.getLogger().Info("streamInfo is null");
             return null;
         }
 
@@ -307,13 +304,13 @@ public final class PlayerHelpers {
 
 
     public void playItems(MbBaseActivity context) {
-        FileLogger.getFileLogger().Info("PlayerHelpers: playitems");
+        AppLogger.getLogger().Info("PlayerHelpers: playitems");
         if ("audio".equalsIgnoreCase(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
-            FileLogger.getFileLogger().Info("PlayerHelpers: calling audio player");
+            AppLogger.getLogger().Info("PlayerHelpers: calling audio player");
             Intent intent = new Intent(MB3Application.getInstance(), AudioPlayer.class);
             context.startActivity(intent);
         } else {
-            FileLogger.getFileLogger().Info("PlayerHelpers: calling video player");
+            AppLogger.getLogger().Info("PlayerHelpers: calling video player");
             Intent intent = new Intent(MB3Application.getInstance(), VideoPlayer.class);
             context.startActivityForResult(intent, ActivityResults.PLAYBACK_COMPLETED);
         }
@@ -339,7 +336,7 @@ public final class PlayerHelpers {
         if (PreferenceManager.getDefaultSharedPreferences(context)
                 .getBoolean("pref_enable_external_player", false)) {
 
-            FileLogger.getFileLogger().Info("Play requested: External player");
+            AppLogger.getLogger().Info("Play requested: External player");
 
             StreamInfo info = PlayerHelpers.buildExternalPlayerStreamInfo(
                     item.getId(),
@@ -349,7 +346,7 @@ public final class PlayerHelpers {
                     audioStreamIndex,
                     subtitleStreamIndex);
             String url = info.ToUrl(MB3Application.getInstance().API.getApiUrl());
-            FileLogger.getFileLogger().Info("External player URL: " + url);
+            AppLogger.getLogger().Info("External player URL: " + url);
             Log.d("External Player url", url);
 
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -358,7 +355,7 @@ public final class PlayerHelpers {
         Playback is to commence on the internal player
         */
         } else {
-            FileLogger.getFileLogger().Info("Play requested: Internal player");
+            AppLogger.getLogger().Info("Play requested: Internal player");
 
             if ("audio".equalsIgnoreCase(item.getMediaType())) {
                 MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
@@ -645,39 +642,39 @@ public final class PlayerHelpers {
             new SubtitleDownloader(new Response<File>() {
                 @Override
                 public void onResponse(File subFile) {
-                    FileLogger.getFileLogger().Info("Subtitle Downloader: onResponse");
+                    AppLogger.getLogger().Info("Subtitle Downloader: onResponse");
                     if (subFile != null) {
                         try {
                             InputStream is = new FileInputStream(subFile);
                             TimedTextFileFormat ttff = new FormatSRT();
                             TimedTextObject tto = ttff.parseFile(subFile.getName(), is);
                             if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(tto.warnings)) {
-                                FileLogger.getFileLogger().Info(tto.warnings);
+                                AppLogger.getLogger().Info(tto.warnings);
                             }
                             if (tto.captions == null || tto.captions.size() == 0) {
-                                FileLogger.getFileLogger().Info("Subtitle Downloader: Subtitle file parsed. Nothing to display");
+                                AppLogger.getLogger().Info("Subtitle Downloader: Subtitle file parsed. Nothing to display");
                             }
                             response.onResponse(tto);
                         } catch (FatalParsingException | IOException e) {
                             response.onError(e);
                         } finally {
                             if (!subFile.delete()) {
-                                FileLogger.getFileLogger().Info("Subtitle Downloader: Error deleting subtitle file");
+                                AppLogger.getLogger().Info("Subtitle Downloader: Error deleting subtitle file");
                             }
                         }
                     } else {
-                        FileLogger.getFileLogger().Info("Subtitle Downloader: Unable to retrieve physical file");
+                        AppLogger.getLogger().Info("Subtitle Downloader: Unable to retrieve physical file");
                     }
                 }
                 @Override
                 public void onError(Exception ex) {
-                    FileLogger.getFileLogger().Error("Error downloading subtitle file");
+                    AppLogger.getLogger().Error("Error downloading subtitle file");
                     response.onError(ex);
                 }
             }).execute(subtitles.get(0).getUrl());
 
         } else {
-            FileLogger.getFileLogger().Info("onPrepared: StreamInfo returned no subtitles");
+            AppLogger.getLogger().Info("onPrepared: StreamInfo returned no subtitles");
         }
     }
 

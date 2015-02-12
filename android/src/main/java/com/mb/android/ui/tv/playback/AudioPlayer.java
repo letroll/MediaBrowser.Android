@@ -28,10 +28,11 @@ import com.mb.android.Playlist;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import com.mb.android.interfaces.IWebsocketEventListener;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.album.BaseSongAdapter;
 import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.logging.FileLogger;
+
 import com.mb.android.utils.BackdropSlideshow;
 import com.mb.android.utils.Utils;
 import mediabrowser.model.dlna.StreamInfo;
@@ -340,7 +341,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
                 mIsPaused = false;
             }
         } catch(IllegalStateException ex) {
-            FileLogger.getFileLogger().Debug("Error toggling audio player state");
+            AppLogger.getLogger().Debug("Error toggling audio player state");
         }
     }
 
@@ -355,7 +356,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
                 onPlayButton();
             }
         } catch (IllegalStateException ex) {
-            FileLogger.getFileLogger().Debug("Error toggling audio player state");
+            AppLogger.getLogger().Debug("Error toggling audio player state");
         }
     }
 
@@ -370,7 +371,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
                 onNextButton();
             }
         } catch (IllegalStateException ex) {
-            FileLogger.getFileLogger().Debug("Error fast-forwarding audio player");
+            AppLogger.getLogger().Debug("Error fast-forwarding audio player");
         }
     }
 
@@ -380,7 +381,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
             int currentPosition = audioPlayer.getCurrentPosition();
             audioPlayer.seekTo((currentPosition - 30000 > 0) ? currentPosition - 30000 : 0);
         } catch (IllegalStateException ex) {
-            FileLogger.getFileLogger().Debug("Error rewinding audio player");
+            AppLogger.getLogger().Debug("Error rewinding audio player");
         }
     }
 
@@ -399,7 +400,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
                     itemDtoResponse);
 
         } catch(IllegalStateException ex) {
-            FileLogger.getFileLogger().Debug("Error jumping to next item");
+            AppLogger.getLogger().Debug("Error jumping to next item");
         }
     }
 
@@ -418,7 +419,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
                     itemDtoResponse);
 
         } catch(IllegalStateException ex) {
-            FileLogger.getFileLogger().Debug("Error jumping to previous item");
+            AppLogger.getLogger().Debug("Error jumping to previous item");
         }
     }
 
@@ -556,10 +557,10 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
     AdapterView.OnItemClickListener onPlaylistItemClick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            FileLogger.getFileLogger().Debug(TAG + ": playlist item clicked.");
+            AppLogger.getLogger().Debug(TAG + ": playlist item clicked.");
             if (MB3Application.getInstance().PlayerQueue.PlaylistItems == null
                     || MB3Application.getInstance().PlayerQueue.PlaylistItems.size() <= position ) {
-                FileLogger.getFileLogger().Debug(TAG + ": invalid index.");
+                AppLogger.getLogger().Debug(TAG + ": invalid index.");
                 return;
             }
 
@@ -567,14 +568,14 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
                 mAlbumImage.removeCallbacks(onEverySecond);
                 audioPlayer.reset();
             }
-            FileLogger.getFileLogger().Debug(TAG + ": audio player killed");
+            AppLogger.getLogger().Debug(TAG + ": audio player killed");
             mCurrentlyPlayingIndex = position;
             MB3Application.getInstance().API.GetItemAsync(
                     MB3Application.getInstance().PlayerQueue.PlaylistItems.get(position).Id,
                     MB3Application.getInstance().API.getCurrentUserId(),
                     itemDtoResponse
             );
-            FileLogger.getFileLogger().Debug(TAG + ": finished playlist item click");
+            AppLogger.getLogger().Debug(TAG + ": finished playlist item click");
         }
     };
 
@@ -819,35 +820,35 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
 
     @Override
     public void onRemotePlayRequest(PlayRequest request, String mediaType) {
-        FileLogger.getFileLogger().Info(TAG + ": remote play request received");
+        AppLogger.getLogger().Info(TAG + ": remote play request received");
         if ("audio".equalsIgnoreCase(mediaType)) {
-            FileLogger.getFileLogger().Info(TAG + ": first item is audio.");
+            AppLogger.getLogger().Info(TAG + ": first item is audio.");
             if (audioPlayer != null) {
                 audioPlayer.reset();
             }
             MB3Application.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
-            FileLogger.getFileLogger().Info(TAG + ": audio player killed");
+            AppLogger.getLogger().Info(TAG + ": audio player killed");
             MB3Application.getInstance().API.GetItemAsync(
                     MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
                     MB3Application.getInstance().API.getCurrentUserId(),
                     itemDtoResponse
             );
-            FileLogger.getFileLogger().Info(TAG + ": finished audio play request");
+            AppLogger.getLogger().Info(TAG + ": finished audio play request");
         } else if ("video".equalsIgnoreCase(mediaType)) {
-            FileLogger.getFileLogger().Info(TAG + ": first item is video");
+            AppLogger.getLogger().Info(TAG + ": first item is video");
             if (audioPlayer != null) {
                 audioPlayer.reset();
             }
             MB3Application.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
-            FileLogger.getFileLogger().Info(TAG + ": audio player killed");
+            AppLogger.getLogger().Info(TAG + ": audio player killed");
             Intent intent = new Intent(this, VideoPlayer.class);
             startActivity(intent);
             this.finish();
-            FileLogger.getFileLogger().Info(TAG + ": finished video play request");
+            AppLogger.getLogger().Info(TAG + ": finished video play request");
         } else {
-            FileLogger.getFileLogger().Info(TAG + ": unable to process play request. Unsupported media type");
+            AppLogger.getLogger().Info(TAG + ": unable to process play request. Unsupported media type");
         }
     }
 
@@ -858,7 +859,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
 
     @Override
     public void onRemoteBrowseRequest(BaseItemDto baseItemDto) {
-        FileLogger.getFileLogger().Info(TAG + ": ignoring remote browse request due to media playback");
+        AppLogger.getLogger().Info(TAG + ": ignoring remote browse request due to media playback");
     }
 
     @Override

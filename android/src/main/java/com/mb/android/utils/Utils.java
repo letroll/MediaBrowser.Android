@@ -5,11 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.http.HttpResponseCache;
-import android.os.Debug;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.Editable;
-import android.util.Log;
 import android.util.TypedValue;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,13 +20,10 @@ import mediabrowser.model.dlna.StreamBuilder;
 import mediabrowser.model.dlna.StreamInfo;
 import mediabrowser.model.dlna.VideoOptions;
 import mediabrowser.model.dto.BaseItemDto;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import mediabrowser.model.entities.MediaStream;
-import mediabrowser.model.extensions.StringHelper;
 
-import java.io.File;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -235,7 +230,7 @@ public class Utils {
         }
 
         if (usageInfo.length() > 0) {
-            FileLogger.getFileLogger().Info(usageInfo);
+            AppLogger.getLogger().Info(usageInfo);
         }
 
     }
@@ -380,7 +375,7 @@ public class Utils {
         boolean hlsEnabled = prefs.getBoolean("pref_enable_hls", true);
         boolean h264StrictModeEnabled = prefs.getBoolean("pref_h264_strict", true);
 
-        FileLogger.getFileLogger().Info("Create VideoOptions");
+        AppLogger.getLogger().Info("Create VideoOptions");
         VideoOptions options = new VideoOptions();
         options.setItemId(item.getId());
         options.setMediaSources(item.getMediaSources());
@@ -398,7 +393,7 @@ public class Utils {
             options.setMediaSourceId(mediaSourceId);
         }
 
-        FileLogger.getFileLogger().Info("Create StreamInfo");
+        AppLogger.getLogger().Info("Create StreamInfo");
         StreamInfo mStreamInfo;
         if (item.getType() != null && item.getType().equalsIgnoreCase("audio")) {
             mStreamInfo = new StreamBuilder().BuildAudioItem(options);
@@ -407,7 +402,7 @@ public class Utils {
         }
 
         if (mStreamInfo == null) {
-            FileLogger.getFileLogger().Info("streamInfo is null");
+            AppLogger.getLogger().Info("streamInfo is null");
             return "";
         }
 
@@ -490,7 +485,7 @@ public class Utils {
                 title = "Season " + String.valueOf(item.getParentIndexNumber()) + ", Episode " + title;
             }
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("PopulateTvInfo - ", e);
+            AppLogger.getLogger().ErrorException("PopulateTvInfo - ", e);
         }
         return title;
     }
@@ -539,7 +534,7 @@ public class Utils {
                 title += "-" + episodeEndIndex;
             }
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("PopulateTvInfo - ", e);
+            AppLogger.getLogger().ErrorException("PopulateTvInfo - ", e);
         }
         return title;
     }

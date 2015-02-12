@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.mb.android.MB3Application;
 import com.mb.android.R;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import mediabrowser.apiinteraction.Response;
 import mediabrowser.apiinteraction.android.AndroidConnectionManager;
 import mediabrowser.apiinteraction.connectionmanager.ConnectionManager;
@@ -26,7 +26,6 @@ import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.model.connect.PinCreationResult;
 import mediabrowser.model.connect.PinExchangeResult;
 import mediabrowser.model.connect.PinStatusResult;
-import mediabrowser.model.extensions.StringHelper;
 import mediabrowser.model.net.HttpException;
 
 import java.io.UnsupportedEncodingException;
@@ -50,7 +49,7 @@ public class MbConnectActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         // Always show debug logging during initial connection
-        FileLogger.getFileLogger().setDebugLoggingEnabled(true);
+        AppLogger.getLogger().setDebugLoggingEnabled(true);
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (sharedPrefs.getString("pref_application_profile", "Mobile").equalsIgnoreCase("Mobile")) {
@@ -121,7 +120,7 @@ public class MbConnectActivity extends FragmentActivity {
                     return;
                 }
             } catch (ClassCastException cce) {
-                FileLogger.getFileLogger().Error("failed to read HTTP status code for MB Connect failure");
+                AppLogger.getLogger().Error("failed to read HTTP status code for MB Connect failure");
             }
             Toast.makeText(MbConnectActivity.this, "Error logging into connect. Please try again later", Toast.LENGTH_LONG).show();
         }

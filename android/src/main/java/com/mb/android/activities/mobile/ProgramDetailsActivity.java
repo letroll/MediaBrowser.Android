@@ -25,7 +25,7 @@ import com.mb.android.MB3Application;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import com.mb.android.fragments.NavigationMenuFragment;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.player.AudioService;
 import com.mb.android.ui.mobile.playback.PlaybackActivity;
 import mediabrowser.model.dto.BaseItemDto;
@@ -490,11 +490,11 @@ public class ProgramDetailsActivity extends BaseMbMobileActivity implements View
                 if (timer == null) return;
 
                 if (timer instanceof TimerInfoDto) {
-                    FileLogger.getFileLogger().Info("Cancel Recording");
+                    AppLogger.getLogger().Info("Cancel Recording");
                     MB3Application.getInstance().API.CancelLiveTvTimerAsync(timer.getId(), new cancelRecordingResponse());
 
                 } else if (timer instanceof SeriesTimerInfoDto) {
-                    FileLogger.getFileLogger().Info("Cancel Series Recording");
+                    AppLogger.getLogger().Info("Cancel Series Recording");
                     MB3Application.getInstance().API.CancelLiveTvSeriesTimerAsync(timer.getId(), new cancelRecordingResponse());
                 }
 
@@ -523,7 +523,7 @@ public class ProgramDetailsActivity extends BaseMbMobileActivity implements View
         @Override
         public void onError(Exception ex) {
             Toast.makeText(ProgramDetailsActivity.this, "Error cancelling scheduled recording", Toast.LENGTH_LONG).show();
-            FileLogger.getFileLogger().ErrorException("Error cancelling scheduled recording", ex);
+            AppLogger.getLogger().ErrorException("Error cancelling scheduled recording", ex);
             ProgramDetailsActivity.this.finish();
         }
     }

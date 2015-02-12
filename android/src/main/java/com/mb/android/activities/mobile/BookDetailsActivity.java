@@ -37,7 +37,7 @@ import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.dto.UserItemDataDto;
 import mediabrowser.model.entities.ImageType;
 import mediabrowser.model.library.PlayAccess;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 
 import java.io.File;
 
@@ -295,17 +295,17 @@ public class BookDetailsActivity extends BaseMbMobileActivity {
     public void updateFavoriteVisibleIcons() {
 
         Log.i("", "updateFavoriteVisibleIcons called");
-        FileLogger.getFileLogger().Info("Update favorite visible icons");
+        AppLogger.getLogger().Info("Update favorite visible icons");
 
         if (mItem.getUserData() != null && mItem.getUserData().getIsFavorite()) {
 
-            FileLogger.getFileLogger().Info("Show remove favorite");
+            AppLogger.getLogger().Info("Show remove favorite");
             // only show the remove favorite
             mAddFavoriteMenuItemVisible = false;
             mRemoveFavoriteMenuItemVisible = true;
 
         } else {
-            FileLogger.getFileLogger().Info("Show add favorite");
+            AppLogger.getLogger().Info("Show add favorite");
             // only show the add favorite
             mAddFavoriteMenuItemVisible = true;
             mRemoveFavoriteMenuItemVisible = false;

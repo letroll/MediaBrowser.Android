@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.utils.Utils;
 
 import java.util.Date;
@@ -92,7 +92,7 @@ public class HorizontalAdapterTitledPosters extends BaseAdapter implements Secti
                 }
             }
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Error in adapter initialization", e);
+            AppLogger.getLogger().ErrorException("Error in adapter initialization", e);
         }
     }
 
@@ -337,7 +337,7 @@ public class HorizontalAdapterTitledPosters extends BaseAdapter implements Secti
             }
         } catch (Exception e) {
             holder.playedProgress.setVisibility(View.GONE);
-            FileLogger.getFileLogger().ErrorException("Error setting progressbar value", e);
+            AppLogger.getLogger().ErrorException("Error setting progressbar value", e);
         }
 
         return convertView;

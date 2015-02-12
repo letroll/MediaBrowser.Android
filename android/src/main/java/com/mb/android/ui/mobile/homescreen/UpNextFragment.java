@@ -22,7 +22,7 @@ import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.querying.ItemsResult;
 import mediabrowser.model.querying.NextUpQuery;
 import mediabrowser.model.querying.ItemFields;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 
 /**
  * Created by Mark on 12/12/13.
@@ -41,7 +41,7 @@ public class UpNextFragment extends Fragment implements ICommandListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FileLogger.getFileLogger().Info(TAG + ": onCreateView");
+        AppLogger.getLogger().Info(TAG + ": onCreateView");
         View view = inflater.inflate(R.layout.fragment_homescreen_items, container, false);
 
         if (view != null) {
@@ -50,7 +50,7 @@ public class UpNextFragment extends Fragment implements ICommandListener {
             noContentText = (TextView) view.findViewById(R.id.tvNoContentWarning);
         }
 
-        FileLogger.getFileLogger().Info(TAG + "Finish onCreateView");
+        AppLogger.getLogger().Info(TAG + "Finish onCreateView");
         return view;
     }
 
@@ -58,7 +58,7 @@ public class UpNextFragment extends Fragment implements ICommandListener {
     public void onResume() {
         super.onResume();
 
-        FileLogger.getFileLogger().Info(TAG + "onResume");
+        AppLogger.getLogger().Info(TAG + "onResume");
         if (MB3Application.getInstance().API != null
                 && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getCurrentUserId())) {
 
@@ -71,7 +71,7 @@ public class UpNextFragment extends Fragment implements ICommandListener {
 
             MB3Application.getInstance().API.GetNextUpEpisodesAsync(query, getNextUpResponse);
         }
-        FileLogger.getFileLogger().Info(TAG + "finish onResume");
+        AppLogger.getLogger().Info(TAG + "finish onResume");
     }
 
     @Override
@@ -112,7 +112,7 @@ public class UpNextFragment extends Fragment implements ICommandListener {
         }
         @Override
         public void onError(Exception ex) {
-            FileLogger.getFileLogger().Info("********* ON ERROR *********");
+            AppLogger.getLogger().Info("********* ON ERROR *********");
         }
     };
 

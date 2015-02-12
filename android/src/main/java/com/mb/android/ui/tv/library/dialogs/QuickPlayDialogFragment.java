@@ -24,7 +24,7 @@ import com.mb.android.R;
 import com.mb.android.activities.mobile.SeriesViewActivity;
 import com.mb.android.ui.tv.library.interfaces.IQuickPlayDialogListener;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.tv.playback.PlayerHelpers;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
@@ -232,7 +232,7 @@ public class QuickPlayDialogFragment extends DialogFragment {
                         epTitle += mFirstUnplayedItem.getName();
                         episodeHolder.addedDate.setText(epTitle);
                     } catch (Exception e) {
-                        FileLogger.getFileLogger().ErrorException("Error setting episode text", e);
+                        AppLogger.getLogger().ErrorException("Error setting episode text", e);
                         episodeHolder.addedDate.setText(mFirstUnplayedItem.getName());
                     }
                 } else {
@@ -312,7 +312,7 @@ public class QuickPlayDialogFragment extends DialogFragment {
 
         @Override
         public void onResponse(ItemsResult result) {
-            FileLogger.getFileLogger().Info("QuickPlayDialogFragment: get all children onResponse");
+            AppLogger.getLogger().Info("QuickPlayDialogFragment: get all children onResponse");
             ArrayList<BaseItemDto> items = new ArrayList<>();
             Collections.addAll(items, result.getItems());
             if (mShuffle) {
@@ -327,7 +327,7 @@ public class QuickPlayDialogFragment extends DialogFragment {
                 if (items.size() > 0 && activity != null) {
                     activity.onQuickPlaySelectionFinished();
                 } else {
-                    FileLogger.getFileLogger().Info("QuickPlayDialogFragment: no items to add to playlist");
+                    AppLogger.getLogger().Info("QuickPlayDialogFragment: no items to add to playlist");
                 }
                 QuickPlayDialogFragment.this.dismiss();
             }
@@ -336,7 +336,7 @@ public class QuickPlayDialogFragment extends DialogFragment {
         }
         @Override
         public void onError(Exception ex) {
-            FileLogger.getFileLogger().Info("QuickPlayDialogFragment: get all children onError");
+            AppLogger.getLogger().Info("QuickPlayDialogFragment: get all children onError");
             QuickPlayDialogFragment.this.dismiss();
         }
     }

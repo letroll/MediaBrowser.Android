@@ -14,7 +14,8 @@ import com.mb.android.MB3Application;
 import com.mb.android.PlaylistItem;
 import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.logging.FileLogger;
+
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.tv.playback.PlayerHelpers;
 import com.mb.network.Connectivity;
 
@@ -131,7 +132,7 @@ public class AudioService
     @Override
     public void onCompletion(MediaPlayer mp) {
 
-        FileLogger.getFileLogger().Info("AudioService: onCompletion");
+        AppLogger.getLogger().Info("AudioService: onCompletion");
         Log.i(TAG, "onCompletion");
         Log.i(TAG, "mCurrentlyPlayingIndex: " + String.valueOf(mCurrentlyPlayingIndex));
 
@@ -224,45 +225,45 @@ public class AudioService
     public boolean onError(MediaPlayer mp, int what, int extra) {
 
         if (what == MediaPlayer.MEDIA_ERROR_IO) {
-            FileLogger.getFileLogger().Error("Playback Error: Media Error IO");
+            AppLogger.getLogger().Error("Playback Error: Media Error IO");
             Log.d("AudioService", "Playback Error: Media Error IO");
         } else if (what == MediaPlayer.MEDIA_ERROR_MALFORMED) {
-            FileLogger.getFileLogger().Error("Playback Error: Media Error Malformed");
+            AppLogger.getLogger().Error("Playback Error: Media Error Malformed");
             Log.d("AudioService", "Playback Error: Media Error Malformed");
         } else if (what == MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK) {
-            FileLogger.getFileLogger().Error("Playback Error: Media Error Not Valid For Progressive Playback");
+            AppLogger.getLogger().Error("Playback Error: Media Error Not Valid For Progressive Playback");
             Log.d("AudioService", "Playback Error: Media Error Not Valid For Progressive Playback");
         } else if (what == MediaPlayer.MEDIA_ERROR_SERVER_DIED) {
-            FileLogger.getFileLogger().Error("Playback Error: Media Error Server Died");
+            AppLogger.getLogger().Error("Playback Error: Media Error Server Died");
             Log.d("AudioService", "Playback Error: Media Error Server Died");
         } else if (what == MediaPlayer.MEDIA_ERROR_TIMED_OUT) {
-            FileLogger.getFileLogger().Error("Playback Error: Media Error Timed Out");
+            AppLogger.getLogger().Error("Playback Error: Media Error Timed Out");
             Log.d("AudioService", "Playback Error: Media Error Timed Out");
         } else if (what == MediaPlayer.MEDIA_ERROR_UNKNOWN) {
-            FileLogger.getFileLogger().Error("Playback Error: Media Error Unknown");
+            AppLogger.getLogger().Error("Playback Error: Media Error Unknown");
             Log.d("AudioService", "Playback Error: Media Error Unknown");
         } else if (what == MediaPlayer.MEDIA_ERROR_UNSUPPORTED) {
-            FileLogger.getFileLogger().Error("Playback Error: Media Error Unsupported");
+            AppLogger.getLogger().Error("Playback Error: Media Error Unsupported");
             Log.d("AudioService", "Playback Error: Media Error Unsupported");
         } else {
-            FileLogger.getFileLogger().Error("Playback Error: Unknown Error");
+            AppLogger.getLogger().Error("Playback Error: Unknown Error");
             Log.d("AudioService", "Playback Error: Unknown Error");
         }
 
         if (extra == -1004) {
-            FileLogger.getFileLogger().Error("Playback Error: -1004");
+            AppLogger.getLogger().Error("Playback Error: -1004");
             Log.d("AudioService","Playback Error: -1004" );
         } else if (extra == -1007) {
-            FileLogger.getFileLogger().Error("Playback Error: -1007");
+            AppLogger.getLogger().Error("Playback Error: -1007");
             Log.d("AudioService","Playback Error: -1007" );
         } else if (extra == -1010) {
-            FileLogger.getFileLogger().Error("Playback Error: -1010");
+            AppLogger.getLogger().Error("Playback Error: -1010");
             Log.d("AudioService", "Playback Error: -1010");
         } else if (extra == -110) {
-            FileLogger.getFileLogger().Error("Playback Error: -110");
+            AppLogger.getLogger().Error("Playback Error: -110");
             Log.d("AudioService", "Playback Error: -110");
         } else {
-            FileLogger.getFileLogger().Error("Playback Error: " + PlayerHelpers.PlayerStatusFromExtra(extra));
+            AppLogger.getLogger().Error("Playback Error: " + PlayerHelpers.PlayerStatusFromExtra(extra));
             Log.d("AudioService", "Playback Error: " + PlayerHelpers.PlayerStatusFromExtra(extra));
         }
 
@@ -589,7 +590,7 @@ public class AudioService
                 }
 
                 if (mStreamInfo != null) {
-                    FileLogger.getFileLogger().Info("Load Media into player");
+                    AppLogger.getLogger().Info("Load Media into player");
                     loadStreamInfoIntoPlayer();
                 } else {
 
@@ -639,7 +640,7 @@ public class AudioService
 
         boolean hlsEnabled = prefs.getBoolean("pref_enable_hls", true);
 
-        FileLogger.getFileLogger().Info("Create VideoOptions");
+        AppLogger.getLogger().Info("Create VideoOptions");
         AudioOptions options = new AudioOptions();
         options.setItemId(id);
         options.setMediaSources(mediaSources);
@@ -647,11 +648,11 @@ public class AudioService
         options.setDeviceId(Settings.Secure.getString(MB3Application.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
-        FileLogger.getFileLogger().Info("Create StreamInfo");
+        AppLogger.getLogger().Info("Create StreamInfo");
         mStreamInfo = new StreamBuilder().BuildAudioItem(options);
 
         if (mStreamInfo == null) {
-            FileLogger.getFileLogger().Info("streamInfo is null");
+            AppLogger.getLogger().Info("streamInfo is null");
             return false;
         }
 
@@ -671,21 +672,21 @@ public class AudioService
 
     private void loadUrlIntoPlayer(String url) {
         Log.d(TAG, "loadUrlIntoPlayer: " + url);
-        FileLogger.getFileLogger().Info("Attempt to load: " + url);
+        AppLogger.getLogger().Info("Attempt to load: " + url);
         try {
             mPlayer.setDataSource(url);
             mPlayer.prepareAsync();
         } catch (IllegalStateException e) {
-            FileLogger.getFileLogger().ErrorException("Exception handled: ", e);
+            AppLogger.getLogger().ErrorException("Exception handled: ", e);
             Log.d("loadUrlIntoPlayer", "IllegalStateException");
         } catch (IllegalArgumentException e) {
-            FileLogger.getFileLogger().ErrorException("Exception handled: ", e);
+            AppLogger.getLogger().ErrorException("Exception handled: ", e);
             Log.d("loadUrlIntoPlayer", "IllegalArgumentException");
         } catch (SecurityException e) {
-            FileLogger.getFileLogger().ErrorException("Exception handled: ", e);
+            AppLogger.getLogger().ErrorException("Exception handled: ", e);
             Log.d("loadUrlIntoPlayer", "SecurityException");
         } catch (IOException e) {
-            FileLogger.getFileLogger().ErrorException("Exception handled: ", e);
+            AppLogger.getLogger().ErrorException("Exception handled: ", e);
             Log.d("loadUrlIntoPlayer", "IOException");
         }
     }
@@ -737,7 +738,7 @@ public class AudioService
                 mPlayer.start();
             }
         } catch (IllegalStateException e) {
-            FileLogger.getFileLogger().ErrorException("Exception handled ", e);
+            AppLogger.getLogger().ErrorException("Exception handled ", e);
         }
     }
 
@@ -747,7 +748,7 @@ public class AudioService
                 mPlayer.pause();
             }
         } catch (IllegalStateException e) {
-            FileLogger.getFileLogger().ErrorException("Exception handled ", e);
+            AppLogger.getLogger().ErrorException("Exception handled ", e);
         }
     }
 
@@ -759,7 +760,7 @@ public class AudioService
             }
         } catch (IllegalStateException e) {
             Log.d(TAG, "Exception handled in Player Stop");
-            FileLogger.getFileLogger().ErrorException("Exception handled ", e);
+            AppLogger.getLogger().ErrorException("Exception handled ", e);
         }
     }
 
@@ -771,7 +772,7 @@ public class AudioService
             }
         } catch (IllegalStateException e) {
             Log.d(TAG, "Exception handled in Player Reset");
-            FileLogger.getFileLogger().ErrorException("Exception handled ", e);
+            AppLogger.getLogger().ErrorException("Exception handled ", e);
         }
     }
 
@@ -783,7 +784,7 @@ public class AudioService
                 }
             }
         } catch (IllegalStateException e) {
-            FileLogger.getFileLogger().ErrorException("Exception handled ", e);
+            AppLogger.getLogger().ErrorException("Exception handled ", e);
         }
     }
 

@@ -13,7 +13,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
@@ -38,7 +38,7 @@ public class ActorBioFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FileLogger.getFileLogger().Info(TAG + ": start Creating view");
+        AppLogger.getLogger().Info(TAG + ": start Creating view");
         View mView = inflater.inflate(R.layout.fragment_actor_bio, container, false);
 
         Bundle args = getArguments();
@@ -46,7 +46,7 @@ public class ActorBioFragment extends Fragment {
         mActorBio = (TextView) mView.findViewById(R.id.tvActorBio);
         mActorImage = (NetworkImageView) mView.findViewById(R.id.ivActorImageLarge);
 
-        FileLogger.getFileLogger().Info(TAG + ": finished creating view");
+        AppLogger.getLogger().Info(TAG + ": finished creating view");
         return mView;
     }
 
@@ -54,14 +54,14 @@ public class ActorBioFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        FileLogger.getFileLogger().Info(TAG + ": Requesting person details");
+        AppLogger.getLogger().Info(TAG + ": Requesting person details");
 
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mActorId)) {
 
             MB3Application.getInstance().API.GetItemAsync(mActorId, MB3Application.getInstance().API.getCurrentUserId(), getPersonResponse);
             int actorImageMaxHeight = (int) (360 * 1.5);
             int actorImageMaxWidth = (int) (360 * 1.5);
-            FileLogger.getFileLogger().Info(TAG + ": build actor image query");
+            AppLogger.getLogger().Info(TAG + ": build actor image query");
             // Get the Actor image
             ImageOptions actorImageOptions = new ImageOptions();
             actorImageOptions.setMaxHeight(actorImageMaxHeight);
@@ -73,7 +73,7 @@ public class ActorBioFragment extends Fragment {
 
             String imageUrl = MB3Application.getInstance().API.GetImageUrl(mActorId, actorImageOptions);
             mActorImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
-            FileLogger.getFileLogger().Info(TAG + ": image query sent");
+            AppLogger.getLogger().Info(TAG + ": image query sent");
         }
     }
 
@@ -81,7 +81,7 @@ public class ActorBioFragment extends Fragment {
 
         @Override
         public void onResponse(BaseItemDto actor) {
-            FileLogger.getFileLogger().Info(TAG + ": Actor bio response");
+            AppLogger.getLogger().Info(TAG + ": Actor bio response");
             if (actor != null) {
                 mActorBio.setText(actor.getOverview());
                 mActorBio.setMovementMethod(new ScrollingMovementMethod());

@@ -20,7 +20,7 @@ import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import com.mb.android.activities.BaseMbMobileActivity;
 import com.mb.android.fragments.NavigationMenuFragment;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.playbackmediator.widgets.MiniController;
 import com.mb.android.ui.mobile.playback.AudioPlaybackActivity;
 import com.mb.android.ui.mobile.playback.PlaybackActivity;
@@ -47,7 +47,7 @@ public class PlaylistActivity extends BaseMbMobileActivity {
 
         setContentView(R.layout.activity_playlist);
 
-        FileLogger.getFileLogger().Info(TAG + ": onCreate");
+        AppLogger.getLogger().Info(TAG + ": onCreate");
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);

@@ -14,8 +14,8 @@ import android.util.Log;
 
 import com.mb.android.MB3Application;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.logging.FileLogger;
-import mediabrowser.model.extensions.StringHelper;
+import com.mb.android.logging.AppLogger;
+
 import mediabrowser.model.querying.SessionQuery;
 import mediabrowser.model.session.SessionInfoDto;
 
@@ -92,7 +92,7 @@ public final class MediaBrowserRouteProvider extends MediaRouteProvider {
                     return;
                 }
 
-                FileLogger.getFileLogger().Info(String.valueOf(validSessions.size()) + " sessions available");
+                AppLogger.getLogger().Info(String.valueOf(validSessions.size()) + " sessions available");
                 publishRoutes(validSessions);
             }
         });
@@ -112,7 +112,7 @@ public final class MediaBrowserRouteProvider extends MediaRouteProvider {
      */
     private void publishRoutes(List<SessionInfoDto> validSessions) {
 
-        FileLogger.getFileLogger().Info("MediaBrowserRouteProvider: Build RouteDescriptors");
+        AppLogger.getLogger().Info("MediaBrowserRouteProvider: Build RouteDescriptors");
         List<MediaRouteDescriptor> routes = new ArrayList<>();
 
         for (SessionInfoDto session : validSessions) {
@@ -131,14 +131,14 @@ public final class MediaBrowserRouteProvider extends MediaRouteProvider {
                     .build();
 
             if (routeDescriptor != null) {
-                FileLogger.getFileLogger().Info("MediaBrowserRouteProvider: Adding RouteDescriptor");
+                AppLogger.getLogger().Info("MediaBrowserRouteProvider: Adding RouteDescriptor");
                 routes.add(routeDescriptor);
             } else {
-                FileLogger.getFileLogger().Info("MediaBrowserRouteProvider: Error building RouteDescriptor");
+                AppLogger.getLogger().Info("MediaBrowserRouteProvider: Error building RouteDescriptor");
             }
         }
 
-        FileLogger.getFileLogger().Info("MediaBrowserRouteProvider: " + String.valueOf(routes.size()) + " routes added");
+        AppLogger.getLogger().Info("MediaBrowserRouteProvider: " + String.valueOf(routes.size()) + " routes added");
 
         // Add the route descriptor to the provider descriptor
         MediaRouteProviderDescriptor providerDescriptor =
@@ -147,13 +147,13 @@ public final class MediaBrowserRouteProvider extends MediaRouteProvider {
                 .build();
 
         if (providerDescriptor == null) {
-            FileLogger.getFileLogger().Info("MediaBrowserRouteProvider: Error building ProviderDescriptor");
+            AppLogger.getLogger().Info("MediaBrowserRouteProvider: Error building ProviderDescriptor");
         }
 
         // Publish the descriptor to the framework
         setDescriptor(providerDescriptor);
 
-        FileLogger.getFileLogger().Info("MediaBrowserRouteProvider: ProviderDescriptor published");
+        AppLogger.getLogger().Info("MediaBrowserRouteProvider: ProviderDescriptor published");
     }
 
     /**

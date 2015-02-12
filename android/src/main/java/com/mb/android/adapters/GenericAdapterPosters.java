@@ -14,12 +14,11 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.ApiClient;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
 import mediabrowser.model.entities.LocationType;
-import mediabrowser.model.extensions.StringHelper;
 
 import java.util.List;
 
@@ -53,8 +52,8 @@ public class GenericAdapterPosters extends AbstractMediaAdapter {
 
             for (BaseItemDto item : baseItems) {
                 if (item.getHasPrimaryImage() && item.getPrimaryImageAspectRatio() != null && item.getPrimaryImageAspectRatio() > 0) {
-                    FileLogger.getFileLogger().Info("PrimaryImageAspectRation: " + String.valueOf(item.getPrimaryImageAspectRatio()));
-                    FileLogger.getFileLogger().Info("OriginalPrimaryImageAspectRation: " + String.valueOf(item.getOriginalPrimaryImageAspectRatio()));
+                    AppLogger.getLogger().Info("PrimaryImageAspectRation: " + String.valueOf(item.getPrimaryImageAspectRatio()));
+                    AppLogger.getLogger().Info("OriginalPrimaryImageAspectRation: " + String.valueOf(item.getOriginalPrimaryImageAspectRatio()));
                     combinedAspectRatio += item.getPrimaryImageAspectRatio();
                     count++;
                 }
@@ -70,7 +69,7 @@ public class GenericAdapterPosters extends AbstractMediaAdapter {
                 mImageHeight = (int)(((float)mImageWidth / 16) * 9);
 
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Error in adapter initialization", e);
+            AppLogger.getLogger().ErrorException("Error in adapter initialization", e);
         }
     }
 

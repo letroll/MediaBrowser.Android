@@ -3,7 +3,7 @@ package com.mb.android;
 import android.app.Instrumentation;
 import android.view.KeyEvent;
 
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.playback.AudioPlaybackActivity;
 import com.mb.android.ui.mobile.playback.PlaybackActivity;
 import mediabrowser.apiinteraction.ApiClient;
@@ -55,7 +55,7 @@ public class MbApiEventListener extends ApiEventListener {
 
     public void onBrowseCommand(ApiClient client, BrowseRequest command){
         if (command == null || tangible.DotNetToJavaStringHelper.isNullOrEmpty(command.getItemId())) return;
-        FileLogger.getFileLogger().Info("Processing browse command");
+        AppLogger.getLogger().Info("Processing browse command");
 
         client.GetItemAsync(command.getItemId(), MB3Application.getInstance().API.getCurrentUserId(), browseItemResponse);
     }
@@ -65,7 +65,7 @@ public class MbApiEventListener extends ApiEventListener {
                 || command.getItemIds() == null || command.getItemIds().length  < 1) {
             return;
         }
-        FileLogger.getFileLogger().Info("ApiEventListener: onPlayCommand");
+        AppLogger.getLogger().Info("ApiEventListener: onPlayCommand");
 
         MB3Application.getInstance().API.GetItemAsync(command.getItemIds()[0], client.getCurrentUserId(), new GetPlayItemTypeResponse(command));
     }
@@ -246,7 +246,7 @@ public class MbApiEventListener extends ApiEventListener {
         @Override
         public void onResponse(BaseItemDto item) {
             if (item == null) {
-                FileLogger.getFileLogger().Info("browse item response: no item returned");
+                AppLogger.getLogger().Info("browse item response: no item returned");
                 return;
             }
 

@@ -41,7 +41,7 @@ import com.mb.android.R;
 import com.mb.android.SubtitleDownloader;
 import com.mb.android.activities.BaseMbMobileActivity;
 import com.mb.android.listeners.PlaybackOptionsMenuClickListener;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.profiles.MbAndroidProfile;
 import com.mb.android.subtitles.Caption;
 import com.mb.android.subtitles.FatalParsingException;
@@ -54,14 +54,10 @@ import com.mb.network.Connectivity;
 
 import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.apiinteraction.Response;
-import mediabrowser.apiinteraction.android.profiles.AndroidProfile;
 import mediabrowser.model.dlna.DeviceProfile;
-import mediabrowser.model.dlna.DirectPlayProfile;
-import mediabrowser.model.dlna.DlnaProfileType;
 import mediabrowser.model.dlna.StreamBuilder;
 import mediabrowser.model.dlna.StreamInfo;
 import mediabrowser.model.dlna.SubtitleDeliveryMethod;
-import mediabrowser.model.dlna.SubtitleProfile;
 import mediabrowser.model.dlna.SubtitleStreamInfo;
 import mediabrowser.model.dlna.VideoOptions;
 import mediabrowser.model.dto.BaseItemDto;
@@ -82,7 +78,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -273,7 +268,7 @@ public class PlaybackActivity
     @Override
     public void onPause() {
         super.onPause();
-        FileLogger.getFileLogger().Info("Playback Activity: onPause");
+        AppLogger.getLogger().Info("Playback Activity: onPause");
         PlayerPause();
         mIsPaused = true;
         Log.i(TAG, "onPause");
@@ -284,18 +279,18 @@ public class PlaybackActivity
     public void onStop() {
         super.onStop();
         Log.i("PlaybackActivity", "onStop");
-        FileLogger.getFileLogger().Info("Playback Activity: onStop");
+        AppLogger.getLogger().Info("Playback Activity: onStop");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        FileLogger.getFileLogger().Info("Playback Activity: onDestroy");
+        AppLogger.getLogger().Info("Playback Activity: onDestroy");
         MB3Application.getInstance().PlayerQueue = new Playlist();
         try {
             sendPlaybackStoppedToServer((long) mTruePlayerPosition * 10000);
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Error sending playback stopped ", e);
+            AppLogger.getLogger().ErrorException("Error sending playback stopped ", e);
         }
 
         if (mIsStreamingHls)
@@ -311,12 +306,12 @@ public class PlaybackActivity
         if (mPlayer != null) {
             try {
                 if (isPrepared) {
-                    FileLogger.getFileLogger().Info(TAG + ": calling mPlayer.release");
+                    AppLogger.getLogger().Info(TAG + ": calling mPlayer.release");
                     mPlayer.release();
-                    FileLogger.getFileLogger().Info(TAG + ": mPlayer.release called");
+                    AppLogger.getLogger().Info(TAG + ": mPlayer.release called");
                 }
             } catch (Exception e) {
-                FileLogger.getFileLogger().Info(TAG + ": mPlayer.stop/release error");
+                AppLogger.getLogger().Info(TAG + ": mPlayer.stop/release error");
                 e.printStackTrace();
             } finally {
                 mPlayer = null;
@@ -490,35 +485,35 @@ public class PlaybackActivity
 
     @Override
     public void onRemotePlayRequest(PlayRequest request, String mediaType) {
-        FileLogger.getFileLogger().Info(TAG + ": remote play request received");
+        AppLogger.getLogger().Info(TAG + ": remote play request received");
         if ("audio".equalsIgnoreCase(mediaType)) {
-            FileLogger.getFileLogger().Info(TAG + ": first item is audio.");
+            AppLogger.getLogger().Info(TAG + ": first item is audio.");
             MB3Application.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
-            FileLogger.getFileLogger().Info(TAG + ": video player killed");
+            AppLogger.getLogger().Info(TAG + ": video player killed");
             Intent intent = new Intent(this, AudioPlaybackActivity.class);
             startActivity(intent);
             this.finish();
-            FileLogger.getFileLogger().Info(TAG + ": finished audio play request");
+            AppLogger.getLogger().Info(TAG + ": finished audio play request");
         } else if ("video".equalsIgnoreCase(mediaType)) {
             PlayerReset();
             MB3Application.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
-            FileLogger.getFileLogger().Info(TAG + ": video player killed");
+            AppLogger.getLogger().Info(TAG + ": video player killed");
             MB3Application.getInstance().API.GetItemAsync(
                     MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
                     MB3Application.getInstance().API.getCurrentUserId(),
                     getItemResponse
             );
-            FileLogger.getFileLogger().Info(TAG + ": finished video play request");
+            AppLogger.getLogger().Info(TAG + ": finished video play request");
         } else {
-            FileLogger.getFileLogger().Info(TAG + ": unable to process play request. Unsupported media type");
+            AppLogger.getLogger().Info(TAG + ": unable to process play request. Unsupported media type");
         }
     }
 
     @Override
     public void onRemoteBrowseRequest(BaseItemDto baseItemDto) {
-        FileLogger.getFileLogger().Info(TAG + ": ignoring remote browse request due to media playback");
+        AppLogger.getLogger().Info(TAG + ": ignoring remote browse request due to media playback");
     }
 
 
@@ -606,7 +601,7 @@ public class PlaybackActivity
      */
     public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
         Log.i(TAG, "surfaceChanged");
-        FileLogger.getFileLogger().Info(TAG + ": surfaceChanged");
+        AppLogger.getLogger().Info(TAG + ": surfaceChanged");
 
     }
 
@@ -619,7 +614,7 @@ public class PlaybackActivity
     public void surfaceCreated(SurfaceHolder holder) {
 
         Log.i(TAG, "begin surfaceCreated");
-        FileLogger.getFileLogger().Info(TAG + ": surfaceCreated");
+        AppLogger.getLogger().Info(TAG + ": surfaceCreated");
         Log.i(TAG, "end surfaceCreated");
     }
 
@@ -629,7 +624,7 @@ public class PlaybackActivity
      * @param holder The SurfaceHolder whose surface is being destroyed.
      */
     public void surfaceDestroyed(SurfaceHolder holder) {
-        FileLogger.getFileLogger().Info(TAG + ": surfaceDestroyed");
+        AppLogger.getLogger().Info(TAG + ": surfaceDestroyed");
         Log.i(TAG, "surfaceDestroyed");
 
     }
@@ -643,7 +638,7 @@ public class PlaybackActivity
     public void onPrepared(MediaPlayer mediaPlayer) {
 
         Log.i(TAG, "begin onPrepared");
-        FileLogger.getFileLogger().Info(TAG + ": onPrepared");
+        AppLogger.getLogger().Info(TAG + ": onPrepared");
 
         if (mWidth != 0 && mHeight != 0) {
             SetSurfaceDimensions();
@@ -679,7 +674,7 @@ public class PlaybackActivity
                 new SubtitleDownloader(new Response<File>() {
                     @Override
                     public void onResponse(File subFile) {
-                        FileLogger.getFileLogger().Info("Subtitle Downloader: onResponse");
+                        AppLogger.getLogger().Info("Subtitle Downloader: onResponse");
                         if (subFile != null) {
                             ttff = new FormatSRT();
 
@@ -687,32 +682,32 @@ public class PlaybackActivity
                                 InputStream is = new FileInputStream(subFile);
                                 tto = ttff.parseFile(subFile.getName(), is);
                                 if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(tto.warnings)) {
-                                    FileLogger.getFileLogger().Info(tto.warnings);
+                                    AppLogger.getLogger().Info(tto.warnings);
                                 }
                                 if (tto.captions == null || tto.captions.size() == 0) {
-                                    FileLogger.getFileLogger().Info("Subtitle Downloader: Subtitle file parsed. Nothing to display");
+                                    AppLogger.getLogger().Info("Subtitle Downloader: Subtitle file parsed. Nothing to display");
                                 } else {
-                                    FileLogger.getFileLogger().Info("tto caption count" + String.valueOf(tto.captions.size()));
-                                    FileLogger.getFileLogger().Info("tto caption 1" + tto.captions.firstEntry().getValue().content);
-                                    FileLogger.getFileLogger().Info("Subtitle Downloader: Create display handler");
+                                    AppLogger.getLogger().Info("tto caption count" + String.valueOf(tto.captions.size()));
+                                    AppLogger.getLogger().Info("tto caption 1" + tto.captions.firstEntry().getValue().content);
+                                    AppLogger.getLogger().Info("Subtitle Downloader: Create display handler");
                                     subtitleDisplayHandler = new Handler();
                                     subtitleDisplayHandler.post(processSubtitles);
-                                    FileLogger.getFileLogger().Info("Subtitle Downloader: Finished!");
+                                    AppLogger.getLogger().Info("Subtitle Downloader: Finished!");
                                 }
                             } catch (FatalParsingException | IOException e) {
                                 e.printStackTrace();
                             } finally {
                                 if (!subFile.delete()) {
-                                    FileLogger.getFileLogger().Info("Subtitle Downloader: Error deleting subtitle file");
+                                    AppLogger.getLogger().Info("Subtitle Downloader: Error deleting subtitle file");
                                 }
                             }
                         } else {
-                            FileLogger.getFileLogger().Info("Subtitle Downloader: Unable to retrieve physical file");
+                            AppLogger.getLogger().Info("Subtitle Downloader: Unable to retrieve physical file");
                         }
                     }
                     @Override
                     public void onError(Exception ex) {
-                        FileLogger.getFileLogger().Error("Error downloading subtitle file");
+                        AppLogger.getLogger().Error("Error downloading subtitle file");
                     }
                 }).execute(subtitles.get(0).getUrl());
 
@@ -726,7 +721,7 @@ public class PlaybackActivity
                 }
 
             } else {
-                FileLogger.getFileLogger().Info("onPrepared: StreamInfo returned no subtitles");
+                AppLogger.getLogger().Info("onPrepared: StreamInfo returned no subtitles");
             }
         }
 
@@ -775,7 +770,7 @@ public class PlaybackActivity
      * @param mp The mediaPlayer instance
      */
     public void onCompletion(MediaPlayer mp) {
-        FileLogger.getFileLogger().Info(TAG + ": onCompletion");
+        AppLogger.getLogger().Info(TAG + ": onCompletion");
         Log.i(TAG, "onCompletion");
 
         if (mIsStreamingHls)
@@ -832,7 +827,7 @@ public class PlaybackActivity
                         mPlayPauseButton.setImageResource(R.drawable.vp_pause_selector);
                     }
                 } catch (IllegalStateException e) {
-                    FileLogger.getFileLogger().ErrorException("Exception handled trying to play/pause player" , e);
+                    AppLogger.getLogger().ErrorException("Exception handled trying to play/pause player" , e);
                 }
             }
 
@@ -1004,8 +999,8 @@ public class PlaybackActivity
 
                         try {
                             String url = mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl());
-                            FileLogger.getFileLogger().Info("Fast Forward");
-                            FileLogger.getFileLogger().Info("new url: " + url);
+                            AppLogger.getLogger().Info("Fast Forward");
+                            AppLogger.getLogger().Info("new url: " + url);
                             mPlayer.setDataSource(url);
                             mPlayer.prepareAsync();
                         } catch (IOException e) {
@@ -1089,7 +1084,7 @@ public class PlaybackActivity
                 mMediaControlsOverlay.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("hidePanels - ", e);
+            AppLogger.getLogger().ErrorException("hidePanels - ", e);
         }
     }
 
@@ -1133,7 +1128,7 @@ public class PlaybackActivity
      */
     private void SetNowPlayingInfo(BaseItemDto _mediaItem) {
 
-        FileLogger.getFileLogger().Info(TAG + ": SetNowPlayingInfo");
+        AppLogger.getLogger().Info(TAG + ": SetNowPlayingInfo");
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(_mediaItem.getSeriesPrimaryImageTag()) && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(_mediaItem.getSeriesId())) {
             setCurrentItemImage(_mediaItem.getSeriesId());
         } else if (_mediaItem.getHasPrimaryImage()) {
@@ -1257,9 +1252,9 @@ public class PlaybackActivity
 //        androidProfile.setSubtitleProfiles(new SubtitleProfile[] { srtSubs });
 
         String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(androidProfile);
-        FileLogger.getFileLogger().Info(jsonData);
+        AppLogger.getLogger().Info(jsonData);
 
-        FileLogger.getFileLogger().Info("Create VideoOptions");
+        AppLogger.getLogger().Info("Create VideoOptions");
         VideoOptions options = new VideoOptions();
         options.setItemId(id);
         options.setMediaSources(mediaSources);
@@ -1277,11 +1272,11 @@ public class PlaybackActivity
             options.setMediaSourceId(mediaSourceId);
         }
 
-        FileLogger.getFileLogger().Info("Create StreamInfo");
+        AppLogger.getLogger().Info("Create StreamInfo");
         mStreamInfo = new StreamBuilder().BuildVideoItem(options);
 
         if (mStreamInfo == null) {
-            FileLogger.getFileLogger().Info("streamInfo is null");
+            AppLogger.getLogger().Info("streamInfo is null");
             return false;
         }
 
@@ -1367,39 +1362,39 @@ public class PlaybackActivity
     public boolean onError(MediaPlayer mp, int what, int extra) {
 
         if (what == MediaPlayer.MEDIA_ERROR_IO) {
-            FileLogger.getFileLogger().Error("Playback Error: Media Error IO");
+            AppLogger.getLogger().Error("Playback Error: Media Error IO");
         } else if (what == MediaPlayer.MEDIA_ERROR_MALFORMED) {
-            FileLogger.getFileLogger().Error("Playback Error: Media Error Malformed");
+            AppLogger.getLogger().Error("Playback Error: Media Error Malformed");
         } else if (what == MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK) {
-            FileLogger.getFileLogger().Error("Playback Error: Media Error Not Valid For Progressive Playback");
+            AppLogger.getLogger().Error("Playback Error: Media Error Not Valid For Progressive Playback");
         } else if (what == MediaPlayer.MEDIA_ERROR_SERVER_DIED) {
-            FileLogger.getFileLogger().Error("Playback Error: Media Error Server Died");
+            AppLogger.getLogger().Error("Playback Error: Media Error Server Died");
         } else if (what == MediaPlayer.MEDIA_ERROR_TIMED_OUT) {
-            FileLogger.getFileLogger().Error("Playback Error: Media Error Timed Out");
+            AppLogger.getLogger().Error("Playback Error: Media Error Timed Out");
         } else if (what == MediaPlayer.MEDIA_ERROR_UNKNOWN) {
-            FileLogger.getFileLogger().Error("Playback Error: Media Error Unknown");
+            AppLogger.getLogger().Error("Playback Error: Media Error Unknown");
         } else if (what == MediaPlayer.MEDIA_ERROR_UNSUPPORTED) {
-            FileLogger.getFileLogger().Error("Playback Error: Media Error Unsupported");
+            AppLogger.getLogger().Error("Playback Error: Media Error Unsupported");
         } else {
-            FileLogger.getFileLogger().Error("Playback Error: Unknown Error");
+            AppLogger.getLogger().Error("Playback Error: Unknown Error");
         }
 
         if (extra == -1004)
-            FileLogger.getFileLogger().Error("Playback Error: -1004");
+            AppLogger.getLogger().Error("Playback Error: -1004");
         else if (extra == -1007)
-            FileLogger.getFileLogger().Error("Playback Error: -1007");
+            AppLogger.getLogger().Error("Playback Error: -1007");
         else if (extra == -1010)
-            FileLogger.getFileLogger().Error("Playback Error: -1010");
+            AppLogger.getLogger().Error("Playback Error: -1010");
         else if (extra == -110)
-            FileLogger.getFileLogger().Error("Playback Error: -110");
+            AppLogger.getLogger().Error("Playback Error: -110");
         else
-            FileLogger.getFileLogger().Error("Playback Error: " + PlayerHelpers.PlayerStatusFromExtra(extra));
+            AppLogger.getLogger().Error("Playback Error: " + PlayerHelpers.PlayerStatusFromExtra(extra));
 
 //        if (mStreamInfo == null) return false;
 //
 //        if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mStreamInfo.Protocol) && mStreamInfo.Protocol.equalsIgnoreCase("hls")) {
 //
-//            FileLogger.getFileLogger().Info("Playback failed: Trying again with fragmented mp4");
+//            FileLogger.getLogger().Info("Playback failed: Trying again with fragmented mp4");
 //            Log.d(TAG, "Playback failed: Trying again with fragmented mp4");
 //
 //            mStreamInfo.Protocol = "";
@@ -1412,7 +1407,7 @@ public class PlaybackActivity
 //
 //        } else if (mStreamInfo.Container.equalsIgnoreCase("mp4")) {
 //
-//            FileLogger.getFileLogger().Info("Playback failed: Trying again with webm");
+//            FileLogger.getLogger().Info("Playback failed: Trying again with webm");
 //            Log.d(TAG, "Playback failed: Trying again with webm");
 //
 //            mStreamInfo.Container = "webm";
@@ -1433,7 +1428,7 @@ public class PlaybackActivity
      */
     private void SetSurfaceDimensions() {
 
-        FileLogger.getFileLogger().Info("SetSurfaceDimensions: " + String.valueOf(mWidth) + "x" + String.valueOf(mHeight));
+        AppLogger.getLogger().Info("SetSurfaceDimensions: " + String.valueOf(mWidth) + "x" + String.valueOf(mHeight));
         Log.i("SetSurfaceDimensions", "media Height= " + String.valueOf(mHeight) + " media Width= " + String.valueOf(mWidth));
 
         ViewGroup.LayoutParams lp = mSurface.getLayoutParams();
@@ -1463,55 +1458,55 @@ public class PlaybackActivity
         screenWidth = getScreenWidth();
         screenHeight = getScreenHeight();
 
-        FileLogger.getFileLogger().Info("calculateScaledVideoDimensions");
-        FileLogger.getFileLogger().Info("Screen Width: " + screenWidth);
-        FileLogger.getFileLogger().Info("Screen Height: " + screenHeight);
-        FileLogger.getFileLogger().Info("Reported Video Width: " + stream.getWidth());
-        FileLogger.getFileLogger().Info("Reported Video Height: " + stream.getHeight());
+        AppLogger.getLogger().Info("calculateScaledVideoDimensions");
+        AppLogger.getLogger().Info("Screen Width: " + screenWidth);
+        AppLogger.getLogger().Info("Screen Height: " + screenHeight);
+        AppLogger.getLogger().Info("Reported Video Width: " + stream.getWidth());
+        AppLogger.getLogger().Info("Reported Video Height: " + stream.getHeight());
 
         // The media info has an aspect ratio, means we can account for anamorphic video in the calculations
         if (stream.getAspectRatio() != null && !stream.getAspectRatio().isEmpty()) {
             String widthString = stream.getAspectRatio().substring(0, stream.getAspectRatio().indexOf(':'));
-            FileLogger.getFileLogger().Info("A/R width: " + widthString);
+            AppLogger.getLogger().Info("A/R width: " + widthString);
             String heightString = stream.getAspectRatio().substring(stream.getAspectRatio().indexOf(':') + 1);
-            FileLogger.getFileLogger().Info("A/R height: " + heightString);
+            AppLogger.getLogger().Info("A/R height: " + heightString);
             double arHeight = Float.valueOf(heightString);
             double arWidth = Float.valueOf(widthString);
 
             newHeight = ((float) screenWidth / (float) arWidth) * (float) arHeight;
 
             if (newHeight <= screenHeight) {
-                FileLogger.getFileLogger().Info("Scaling based on screen width");
+                AppLogger.getLogger().Info("Scaling based on screen width");
                 mWidth = screenWidth;
                 mHeight = (int) newHeight;
             } else {
-                FileLogger.getFileLogger().Info("Scaling based on screen height");
+                AppLogger.getLogger().Info("Scaling based on screen height");
                 newWidth = ((float) screenHeight / (float) arHeight) * (float) arWidth;
                 mWidth = (int) newWidth;
                 mHeight = screenHeight;
             }
             // The media info has no aspect ratio but does have height and width. We can still scale to fit the screen
         } else if (stream.getWidth() != null && stream.getHeight() != null) {
-            FileLogger.getFileLogger().Info("MediaInfo missing Aspect Ratio, working from physical dimensions");
+            AppLogger.getLogger().Info("MediaInfo missing Aspect Ratio, working from physical dimensions");
 
             newHeight = ((float) screenWidth / (float) stream.getWidth()) * (float) stream.getHeight();
 
             if (newHeight <= screenHeight) {
-                FileLogger.getFileLogger().Info("Scaling based on screen width");
+                AppLogger.getLogger().Info("Scaling based on screen width");
                 mWidth = screenWidth;
                 mHeight = (int) newHeight;
             } else {
-                FileLogger.getFileLogger().Info("Scaling based on screen height");
+                AppLogger.getLogger().Info("Scaling based on screen height");
                 newWidth = ((float) screenHeight / (float) stream.getHeight()) * (float) stream.getWidth();
                 mWidth = (int) newWidth;
                 mHeight = screenHeight;
             }
             // Video will be scaled to screen size with no regard for aspect ratio
         } else {
-            FileLogger.getFileLogger().Info("MediaInfo missing physical dimensions, attempting to fill screen");
+            AppLogger.getLogger().Info("MediaInfo missing physical dimensions, attempting to fill screen");
         }
 
-        FileLogger.getFileLogger().Info("Video scaled to: " + String.valueOf(mWidth) + "x" + String.valueOf(mHeight));
+        AppLogger.getLogger().Info("Video scaled to: " + String.valueOf(mWidth) + "x" + String.valueOf(mHeight));
     }
 
     private void loadStreamInfoIntoPlayer() {
@@ -1534,12 +1529,12 @@ public class PlaybackActivity
 
     private void loadUrlIntoPlayer(String url) {
 
-        FileLogger.getFileLogger().Info(TAG + ": attempting to play - " + url);
+        AppLogger.getLogger().Info(TAG + ": attempting to play - " + url);
         try {
             mPlayer.setDataSource(url);
             mPlayer.prepareAsync();
         } catch (IOException e) {
-            FileLogger.getFileLogger().ErrorException("Exception handled: ", e);
+            AppLogger.getLogger().ErrorException("Exception handled: ", e);
         }
     }
 
@@ -1607,7 +1602,7 @@ public class PlaybackActivity
             subtitlesText.setVisibility(View.INVISIBLE);
             return;
         }
-        FileLogger.getFileLogger().Info("onTimedText");
+        AppLogger.getLogger().Info("onTimedText");
 
         subtitlesText.setText(Html.fromHtml(text.content));
         subtitlesText.setVisibility(View.VISIBLE);
@@ -1616,25 +1611,25 @@ public class PlaybackActivity
     @Override
     public boolean onInfo(MediaPlayer mp, int what, int extra) {
         if (what == MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING) {
-            FileLogger.getFileLogger().Info("MEDIA_INFO_BAD_INTERLEAVING");
+            AppLogger.getLogger().Info("MEDIA_INFO_BAD_INTERLEAVING");
         } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START) {
-            FileLogger.getFileLogger().Info("MEDIA_INFO_BUFFERING_START");
+            AppLogger.getLogger().Info("MEDIA_INFO_BUFFERING_START");
         } else if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END) {
-            FileLogger.getFileLogger().Info("MEDIA_INFO_BUFFERING_END");
+            AppLogger.getLogger().Info("MEDIA_INFO_BUFFERING_END");
         } else if (what == MediaPlayer.MEDIA_INFO_METADATA_UPDATE) {
-            FileLogger.getFileLogger().Info("MEDIA_INFO_METADATA_UPDATE");
+            AppLogger.getLogger().Info("MEDIA_INFO_METADATA_UPDATE");
         } else if (what == MediaPlayer.MEDIA_INFO_NOT_SEEKABLE) {
-            FileLogger.getFileLogger().Info("MEDIA_INFO_NOT_SEEKABLE");
+            AppLogger.getLogger().Info("MEDIA_INFO_NOT_SEEKABLE");
         } else if (what == MediaPlayer.MEDIA_INFO_SUBTITLE_TIMED_OUT) {
-            FileLogger.getFileLogger().Info("MEDIA_INFO_SUBTITLE_TIMED_OUT");
+            AppLogger.getLogger().Info("MEDIA_INFO_SUBTITLE_TIMED_OUT");
         } else if (what == MediaPlayer.MEDIA_INFO_UNKNOWN) {
-            FileLogger.getFileLogger().Info("MEDIA_INFO_UNKNOWN");
+            AppLogger.getLogger().Info("MEDIA_INFO_UNKNOWN");
         } else if (what == MediaPlayer.MEDIA_INFO_UNSUPPORTED_SUBTITLE) {
-            FileLogger.getFileLogger().Info("MEDIA_INFO_UNSUPPORTED_SUBTITLE");
+            AppLogger.getLogger().Info("MEDIA_INFO_UNSUPPORTED_SUBTITLE");
         } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-            FileLogger.getFileLogger().Info("MEDIA_INFO_VIDEO_RENDERING_START");
+            AppLogger.getLogger().Info("MEDIA_INFO_VIDEO_RENDERING_START");
         } else if (what == MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING) {
-            FileLogger.getFileLogger().Info("MEDIA_INFO_VIDEO_TRACK_LAGGING");
+            AppLogger.getLogger().Info("MEDIA_INFO_VIDEO_TRACK_LAGGING");
         }
         return false;
     }
@@ -1791,7 +1786,7 @@ public class PlaybackActivity
         try {
             mPlayer.stop();
         } catch (IllegalStateException e) {
-            FileLogger.getFileLogger().ErrorException("Exception handled ", e);
+            AppLogger.getLogger().ErrorException("Exception handled ", e);
         }
     }
 
@@ -1799,7 +1794,7 @@ public class PlaybackActivity
         try {
             mPlayer.reset();
         } catch (IllegalStateException e) {
-            FileLogger.getFileLogger().ErrorException("Exception handled ", e);
+            AppLogger.getLogger().ErrorException("Exception handled ", e);
         }
     }
 
@@ -1817,7 +1812,7 @@ public class PlaybackActivity
         try {
             mPlayer.seekTo(mSec);
         } catch (IllegalStateException e) {
-            FileLogger.getFileLogger().ErrorException("Exception handled ", e);
+            AppLogger.getLogger().ErrorException("Exception handled ", e);
         }
     }
 
@@ -1932,23 +1927,23 @@ public class PlaybackActivity
                 mStreamInfo.setStartPositionTicks((long)seekPositionMs * 10000);
 
                 String url = mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl());
-                FileLogger.getFileLogger().Info("Seek performed");
-                FileLogger.getFileLogger().Info("new url: " + url);
+                AppLogger.getLogger().Info("Seek performed");
+                AppLogger.getLogger().Info("new url: " + url);
 
                 mPlayer.setDataSource(url);
                 mPlayer.prepareAsync();
             }
         } catch (IllegalArgumentException e) {
-            FileLogger.getFileLogger().ErrorException("onStopTrackingTouch: IllegalArgumentException", e);
+            AppLogger.getLogger().ErrorException("onStopTrackingTouch: IllegalArgumentException", e);
             e.printStackTrace();
         } catch (SecurityException e) {
-            FileLogger.getFileLogger().ErrorException("onStopTrackingTouch: SecurityException", e);
+            AppLogger.getLogger().ErrorException("onStopTrackingTouch: SecurityException", e);
             e.printStackTrace();
         } catch (IllegalStateException e) {
-            FileLogger.getFileLogger().ErrorException("onStopTrackingTouch: IllegalStateException", e);
+            AppLogger.getLogger().ErrorException("onStopTrackingTouch: IllegalStateException", e);
             e.printStackTrace();
         } catch (IOException e) {
-            FileLogger.getFileLogger().ErrorException("onStopTrackingTouch: IOException", e);
+            AppLogger.getLogger().ErrorException("onStopTrackingTouch: IOException", e);
             e.printStackTrace();
         }
     }

@@ -16,7 +16,7 @@ import com.mb.android.playbackmediator.cast.VideoCastManager;
 import com.mb.android.playbackmediator.utils.Utils;
 import com.mb.android.activities.mobile.RemoteControlActivity;
 import com.mb.android.player.AudioService;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import mediabrowser.apiinteraction.IConnectionManager;
 import mediabrowser.apiinteraction.android.AndroidApiClient;
 import mediabrowser.apiinteraction.android.AndroidConnectionManager;
@@ -24,15 +24,12 @@ import mediabrowser.apiinteraction.android.GsonJsonSerializer;
 import mediabrowser.apiinteraction.android.VolleyHttpClient;
 import mediabrowser.apiinteraction.android.profiles.AndroidProfile;
 import mediabrowser.apiinteraction.android.sync.PeriodicSync;
-import mediabrowser.model.apiclient.ServerInfo;
 import mediabrowser.model.dto.UserDto;
-import mediabrowser.model.entities.ParentalRating;
 import mediabrowser.model.serialization.IJsonSerializer;
 import mediabrowser.model.session.ClientCapabilities;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MB3Application extends Application
@@ -105,8 +102,8 @@ public class MB3Application extends Application
             connectionManager = new AndroidConnectionManager(
                     this,
                     getJsonSerializer(),
-                    FileLogger.getFileLogger(),
-                    new VolleyHttpClient(FileLogger.getFileLogger(), this),
+                    AppLogger.getLogger(),
+                    new VolleyHttpClient(AppLogger.getLogger(), this),
                     "Android",
                     getApplicationVersion(),
                     getClientCapabilities(),
@@ -163,7 +160,7 @@ public class MB3Application extends Application
         super.onCreate();
 
         _mb3Application = this;
-        FileLogger.getFileLogger().Info("Application object initialized");
+        AppLogger.getLogger().Info("Application object initialized");
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
 
         this.PlayerQueue = new Playlist();
@@ -197,14 +194,14 @@ public class MB3Application extends Application
         try {
             if (mMediaPlayer != null) {
                 mMediaPlayer.stop();
-                FileLogger.getFileLogger().Info("SeriesViewActivity: mMediaPlayer.stop called");
+                AppLogger.getLogger().Info("SeriesViewActivity: mMediaPlayer.stop called");
             }
         } catch (IllegalStateException e) {
-            FileLogger.getFileLogger().Info("SeriesViewActivity: mMediaPlayer IllegalStateException");
+            AppLogger.getLogger().Info("SeriesViewActivity: mMediaPlayer IllegalStateException");
         } finally {
             if (mMediaPlayer != null) {
                 mMediaPlayer.release();
-                FileLogger.getFileLogger().Info("SeriesViewActivity: mMediaPlayer.release called");
+                AppLogger.getLogger().Info("SeriesViewActivity: mMediaPlayer.release called");
                 mMediaPlayer = null;
             }
         }
@@ -218,7 +215,7 @@ public class MB3Application extends Application
             mediaPlayer.release();
             mediaPlayer = null;
         } catch (Exception e) {
-            FileLogger.getFileLogger().Info("SeriesViewActivity: Error releasing MediaPlayer");
+            AppLogger.getLogger().Info("SeriesViewActivity: Error releasing MediaPlayer");
         }
 
     }
@@ -305,7 +302,7 @@ public class MB3Application extends Application
 
                 // Enable/disable Dolby Audio Processing
                 mDolbyAudioProcessing.setEnabled(enable);
-                FileLogger.getFileLogger().Info("Dolby Enabled");
+                AppLogger.getLogger().Info("Dolby Enabled");
 
             } catch (IllegalStateException ex) {
                 handleIllegalStateException(ex);

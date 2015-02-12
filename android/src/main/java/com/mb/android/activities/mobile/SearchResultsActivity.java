@@ -27,7 +27,7 @@ import mediabrowser.apiinteraction.android.GsonJsonSerializer;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.search.SearchHint;
 import mediabrowser.model.search.SearchHintResult;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import mediabrowser.model.search.SearchQuery;
 
 import java.util.Arrays;
@@ -227,7 +227,7 @@ public class SearchResultsActivity extends BaseMbMobileActivity {
             startActivity(intent);
             this.finish();
         } else {
-            FileLogger.getFileLogger().Info("intent is null");
+            AppLogger.getLogger().Info("intent is null");
         }
     }
 

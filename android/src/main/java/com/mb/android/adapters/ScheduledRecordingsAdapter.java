@@ -16,7 +16,7 @@ import com.mb.android.R;
 import com.mb.android.livetv.IListing;
 import com.mb.android.livetv.ListingData;
 import com.mb.android.livetv.ListingHeader;
-import com.mb.android.logging.FileLogger;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.utils.Utils;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
@@ -47,7 +47,7 @@ public class ScheduledRecordingsAdapter extends BaseAdapter {
                     .getDefaultSharedPreferences(MB3Application.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
         } catch (Exception e) {
-            FileLogger.getFileLogger().ErrorException("Error in adapter initialization", e);
+            AppLogger.getLogger().ErrorException("Error in adapter initialization", e);
         }
     }
 
