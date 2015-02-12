@@ -187,7 +187,7 @@ public class TvSongsAdapter extends BaseAdapter implements SectionIndexer {
 //                    }
 //
 //                } catch (Exception e) {
-//                    Log.e("Exception", "Error resolving date", e);
+//                    AppLogger.getLogger().Error("Exception", "Error resolving date", e);
 //                }
 //            }
 //

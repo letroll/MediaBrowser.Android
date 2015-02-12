@@ -6,6 +6,8 @@ import android.os.Looper;
 import android.support.v7.media.MediaRouter;
 import android.util.Log;
 
+import com.mb.android.logging.AppLogger;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -49,12 +51,12 @@ public class RemoteControlClientCompat {
                     Object realValue = realField.get(null);
                     field.set(null, realValue);
                 } catch (NoSuchFieldException e) {
-                    Log.w(TAG, "Could not get real field: " + field.getName());
+                    AppLogger.getLogger().Warn(TAG, "Could not get real field: " + field.getName());
                 } catch (IllegalArgumentException e) {
-                    Log.w(TAG, "Error trying to pull field value for: " + field.getName()
+                    AppLogger.getLogger().Warn(TAG, "Error trying to pull field value for: " + field.getName()
                             + " " + e.getMessage());
                 } catch (IllegalAccessException e) {
-                    Log.w(TAG, "Error trying to pull field value for: " + field.getName()
+                    AppLogger.getLogger().Warn(TAG, "Error trying to pull field value for: " + field.getName()
                             + " " + e.getMessage());
                 }
             }

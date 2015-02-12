@@ -354,28 +354,28 @@ public class MB3Application extends Application
     /** Generic handler for IllegalStateException */
     private void handleIllegalStateException(Exception ex)
     {
-        Log.e(TAG, "Dolby Audio Processing has a wrong state");
+        AppLogger.getLogger().Error("Dolby Audio Processing has a wrong state");
         handleGenericException(ex);
     }
 
     /** Generic handler for IllegalArgumentException */
     private void handleIllegalArgumentException(Exception ex)
     {
-        Log.e(TAG,"One of the passed arguments is invalid");
+        AppLogger.getLogger().Error("One of the passed arguments is invalid");
         handleGenericException(ex);
     }
 
     /** Generic handler for RuntimeException */
     private void handleRuntimeException(Exception ex)
     {
-        Log.e(TAG, "Internal error occured in Dolby Audio Processing");
+        AppLogger.getLogger().Error("Internal error occured in Dolby Audio Processing");
         handleGenericException(ex);
     }
 
     /** Logs out the stack trace associated with the Exception*/
     private void handleGenericException(Exception ex)
     {
-        Log.e(TAG, Log.getStackTraceString(ex));
+        AppLogger.getLogger().Error(Log.getStackTraceString(ex));
     }
 
     public String getApplicationVersion() {

@@ -94,7 +94,7 @@ public class SubtitleDownloader extends AsyncTask<String, String, File> {
                     AppLogger.getLogger().Info(TAG, "Exception");
                     AppLogger.getLogger().ErrorException("Exception: ", e);
                     if (e.getMessage() != null) {
-                        Log.e(TAG, e.getMessage());
+                        AppLogger.getLogger().Error(e.getMessage());
                     }
                 } finally {
                     inStream.close();

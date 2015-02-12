@@ -250,43 +250,6 @@ public class Utils {
     }
 
     /**
-     * A utility method to validate that the appropriate version of the Google Play Services is
-     * available on the device. If not, it will open a dialog to address the issue. The dialog
-     * displays a localized message about the error and upon user confirmation (by tapping on
-     * dialog) will direct them to the Play Store if Google Play services is out of date or
-     * missing, or to system settings if Google Play services is disabled on the device.
-     *
-     * @param activity
-     * @return
-     */
-    public static boolean checkGooglePlayServices(final Activity activity) {
-        final int googlePlayServicesCheck = GooglePlayServicesUtil.isGooglePlayServicesAvailable(
-                activity);
-        switch (googlePlayServicesCheck) {
-            case ConnectionResult.SUCCESS:
-                return true;
-            default:
-                Dialog dialog = GooglePlayServicesUtil.getErrorDialog(googlePlayServicesCheck,
-                        activity, 0);
-                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialogInterface) {
-                        activity.finish();
-                    }
-                });
-                dialog.show();
-        }
-        return false;
-    }
-
-    /**
-     * @deprecated See <code>checkGooglePlayServices</code>
-     */
-    public static boolean checkGooglePlaySevices(final Activity activity) {
-        return checkGooglePlayServices(activity);
-    }
-
-    /**
      * Builds and returns a {@link android.os.Bundle} which contains a select subset of data in the
      * {@link MediaInfo}. Since {@link MediaInfo} is not {@link android.os.Parcelable}, one can use this
      * container bundle to pass around from one activity to another.

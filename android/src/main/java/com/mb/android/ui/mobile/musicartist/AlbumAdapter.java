@@ -142,7 +142,7 @@ public class AlbumAdapter extends BaseAdapter implements SectionIndexer {
 //                }
 //
 //            } catch (Exception e) {
-//                Log.e("Exception", "Error converting DateCreated", e);
+//                AppLogger.getLogger().Error("Exception", "Error converting DateCreated", e);
 //            }
 //        }
 
