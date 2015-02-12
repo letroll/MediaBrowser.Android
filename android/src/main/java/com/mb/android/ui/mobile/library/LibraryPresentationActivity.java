@@ -323,7 +323,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
     public void onDestroy() {
         super.onDestroy();
         AppLogger.getLogger().Info("Library Presentation Activity: onDestroy");
-        Log.i("LibraryPresentationFragment", "onDestroy");
+        AppLogger.getLogger().Info("LibraryPresentationFragment", "onDestroy");
     }
 
     @Override

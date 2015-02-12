@@ -90,13 +90,13 @@ public class AlbumsFragment extends Fragment {
 
         @Override
         public void onResponse(ItemsResult response) {
-            Log.i("GetAlbumsCallback", "Setup Objects");
+            AppLogger.getLogger().Info("GetAlbumsCallback", "Setup Objects");
 
             if (response != null && response.getItems() != null) {
                 mAlbums = Arrays.asList(response.getItems());
 
                 if (mAlbums.size() == 0) {
-                    Log.i("GetAlbumsCallback", "mAlbums is null or empty");
+                    AppLogger.getLogger().Info("GetAlbumsCallback", "mAlbums is null or empty");
                     AppLogger.getLogger().Error("mAlbums is null or empty");
                     return;
                 }

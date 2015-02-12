@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.mb.android.MB3Application;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.utils.Utils;
 
 import java.util.ArrayList;

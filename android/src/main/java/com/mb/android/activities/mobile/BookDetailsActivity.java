@@ -294,7 +294,7 @@ public class BookDetailsActivity extends BaseMbMobileActivity {
 
     public void updateFavoriteVisibleIcons() {
 
-        Log.i("", "updateFavoriteVisibleIcons called");
+        AppLogger.getLogger().Info("", "updateFavoriteVisibleIcons called");
         AppLogger.getLogger().Info("Update favorite visible icons");
 
         if (mItem.getUserData() != null && mItem.getUserData().getIsFavorite()) {

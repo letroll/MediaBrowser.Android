@@ -14,6 +14,8 @@ import android.widget.Adapter;
 import android.widget.GridView;
 import android.widget.SectionIndexer;
 
+import com.mb.android.logging.AppLogger;
+
 /**
  * Created by Mark on 12/12/13.
  */
@@ -176,7 +178,7 @@ public class IndexScroller {
     }
 
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
-        Log.i("IndexScroller", "onSizeChanged");
+        AppLogger.getLogger().Info("IndexScroller", "onSizeChanged");
         gridViewWidth_ = w;
         gridViewHeight_ = h;
         indexbarRect_ = new RectF(w - indexbarMargin_ - indexbarWidth_

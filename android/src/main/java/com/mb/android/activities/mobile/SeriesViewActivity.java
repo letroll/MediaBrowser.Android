@@ -387,7 +387,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
 
     public void updateFavoriteVisibleIcons() {
 
-        Log.i("", "updateFavoriteVisibleIcons called");
+        AppLogger.getLogger().Info("", "updateFavoriteVisibleIcons called");
         AppLogger.getLogger().Info("Update favorite visible icons");
 
         if (mSeries != null && mSeries.getUserData() != null && mSeries.getUserData().getIsFavorite()) {
@@ -410,7 +410,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
 
     private void updatePlaystateVisibleIcons() {
 
-        Log.i("", "updatePlaystateVisibleIcons called");
+        AppLogger.getLogger().Info("", "updatePlaystateVisibleIcons called");
         AppLogger.getLogger().Info("Update playstate visible icons");
 
         if (mSeries != null && mSeries.getUserData() != null && mSeries.getUserData().getPlayed()) {
@@ -454,11 +454,11 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
 
         @Override
         public void onResponse(BaseItemDto item) {
-            Log.i("GetInitialItemCallback", "Item Callback");
+            AppLogger.getLogger().Info("GetInitialItemCallback", "Item Callback");
             AppLogger.getLogger().Info("SeriesViewActivity: GetInitialItemCallback");
 
             if (item == null) {
-                Log.i("GetInitialItemCallback", "result is null");
+                AppLogger.getLogger().Info("GetInitialItemCallback", "result is null");
                 AppLogger.getLogger().Info("SeriesViewActivity: item is null");
                 return;
             }

@@ -472,7 +472,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
                         getArtistResponse);
 
                 if (item.getHasPrimaryImage()) {
-                    Log.i(TAG, "Has Primary Image");
+                    AppLogger.getLogger().Info(TAG, "Has Primary Image");
 
                     ImageOptions options = new ImageOptions();
                     options.setImageType(ImageType.Primary);

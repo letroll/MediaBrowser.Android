@@ -16,6 +16,8 @@ import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.ProgramDetailsActivity;
 import com.mb.android.adapters.ScheduledSeriesRecordingsAdapter;
+import com.mb.android.logging.AppLogger;
+
 import mediabrowser.apiinteraction.Response;
 import mediabrowser.model.entities.SortOrder;
 import mediabrowser.model.livetv.SeriesTimerInfoDto;

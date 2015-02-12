@@ -133,8 +133,8 @@ public class AudioService
     public void onCompletion(MediaPlayer mp) {
 
         AppLogger.getLogger().Info("AudioService: onCompletion");
-        Log.i(TAG, "onCompletion");
-        Log.i(TAG, "mCurrentlyPlayingIndex: " + String.valueOf(mCurrentlyPlayingIndex));
+        AppLogger.getLogger().Info(TAG, "onCompletion");
+        AppLogger.getLogger().Info(TAG, "mCurrentlyPlayingIndex: " + String.valueOf(mCurrentlyPlayingIndex));
 
         performPostPlaybackTasks();
 

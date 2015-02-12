@@ -19,6 +19,7 @@ import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.adapters.HorizontalAdapterBackdrops;
 import com.mb.android.adapters.HorizontalAdapterPosters;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.tv.playback.PlayerHelpers;
 import com.mb.android.utils.Utils;
 import mediabrowser.apiinteraction.Response;

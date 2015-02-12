@@ -232,7 +232,7 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
                 mArtistName.setText(mArtist.getName());
             } else {
                 if (mAlbum.getParentId() != null) {
-                    Log.i("MusicAlbumActivity", "Has ParentId");
+                    AppLogger.getLogger().Info("MusicAlbumActivity", "Has ParentId");
                     MB3Application.getInstance().API.GetItemAsync(
                             mAlbum.getParentId(),
                             MB3Application.getInstance().API.getCurrentUserId(),
@@ -394,7 +394,7 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
 
     public void updateFavoriteVisibleIcons() {
 
-        Log.i("", "updateFavoriteVisibleIcons called");
+        AppLogger.getLogger().Info("", "updateFavoriteVisibleIcons called");
         AppLogger.getLogger().Info("Update favorite visible icons");
 
         if (mAlbum.getUserData() != null && mAlbum.getUserData().getIsFavorite()) {
@@ -416,7 +416,7 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
 
     private void updatePlaystateVisibleIcons() {
 
-        Log.i("", "updatePlaystateVisibleIcons called");
+        AppLogger.getLogger().Info("", "updatePlaystateVisibleIcons called");
         AppLogger.getLogger().Info("Update playstate visible icons");
 
         if (mAlbum.getUserData() != null && mAlbum.getUserData().getPlayed()) {
@@ -436,11 +436,11 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
     }
 
     public void LoadGenreBackdrop() {
-        Log.i("MusicAlbumActivity", "Load Genre Backdrop called");
+        AppLogger.getLogger().Info("MusicAlbumActivity", "Load Genre Backdrop called");
         NetworkImageView backdrop = (NetworkImageView) findViewById(R.id.ivAlbumViewBackdrop);
 
         if (mAlbum.getBackdropCount() > 0) {
-            Log.i("MusicAlbumActivity", "Has Backdrop");
+            AppLogger.getLogger().Info("MusicAlbumActivity", "Has Backdrop");
             ImageOptions backOptions = new ImageOptions();
             backOptions.setImageType(ImageType.Backdrop);
             backOptions.setWidth(getScreenWidth() / 2);
@@ -453,11 +453,11 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
     }
 
     public void LoadArtistBackdrop() {
-        Log.i("MusicAlbumActivity", "Load Artist Backdrop called");
+        AppLogger.getLogger().Info("MusicAlbumActivity", "Load Artist Backdrop called");
         NetworkImageView backdrop = (NetworkImageView) findViewById(R.id.ivAlbumViewBackdrop);
 
         if (mArtist.getBackdropCount() > 0) {
-            Log.i("MusicAlbumActivity", "Has Backdrop");
+            AppLogger.getLogger().Info("MusicAlbumActivity", "Has Backdrop");
             ImageOptions backOptions = new ImageOptions();
             backOptions.setImageType(ImageType.Backdrop);
             backOptions.setWidth(getScreenWidth() / 2);
@@ -494,7 +494,7 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
 
         @Override
         public void onResponse(BaseItemDto response) {
-            Log.i("GetArtistCallback", "Setup Object");
+            AppLogger.getLogger().Info("GetArtistCallback", "Setup Object");
             mArtist = response;
 
             if (mArtist != null) {
@@ -516,7 +516,7 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
                 });
 
             } else {
-                Log.i("GetSongsCallback", "songs_ is null");
+                AppLogger.getLogger().Info("GetSongsCallback", "songs_ is null");
             }
         }
         @Override
@@ -530,7 +530,7 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
 
         @Override
         public void onResponse(ItemsResult response) {
-            Log.i("GetSongsCallback", "Setup Objects");
+            AppLogger.getLogger().Info("GetSongsCallback", "Setup Objects");
 
             if (response == null) {
                 AppLogger.getLogger().Debug("MusicAlbumActivity", "Error processing response");
@@ -558,7 +558,7 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
                 songList.requestFocus();
 
             } else {
-                Log.i("GetSongsCallback", "mSongs is null");
+                AppLogger.getLogger().Info("GetSongsCallback", "mSongs is null");
             }
         }
         @Override

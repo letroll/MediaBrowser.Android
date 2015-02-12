@@ -13,6 +13,8 @@ import com.mb.android.MB3Application;
 import com.mb.android.MenuEntity;
 import com.mb.android.R;
 import com.mb.android.adapters.TvSongsAdapter;
+import com.mb.android.logging.AppLogger;
+
 import mediabrowser.apiinteraction.Response;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.entities.LocationType;

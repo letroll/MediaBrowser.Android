@@ -18,6 +18,8 @@ import com.mb.android.activities.mobile.MediaDetailsActivity;
 import com.mb.android.adapters.HomeScreenItemsAdapter;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.interfaces.ICommandListener;
+import com.mb.android.logging.AppLogger;
+
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.entities.LocationType;
 import mediabrowser.model.querying.ItemsResult;
@@ -93,12 +95,12 @@ public class ResumableFragment extends Fragment implements ICommandListener {
         @Override
         public void onResponse(ItemsResult response) {
             mActivityIndicator.setVisibility(View.GONE);
-            Log.i("GetResumableItemsCallback", "data received");
+            AppLogger.getLogger().Info("GetResumableItemsCallback", "data received");
 
             if (response == null) return;
 
             if (response.getItems() != null && response.getItems().length > 0) {
-                Log.i("GetResumableItemsCallback", "data is not null");
+                AppLogger.getLogger().Info("GetResumableItemsCallback", "data is not null");
                 mItems = response.getItems();
 
                 if (mResumableItemsGrid == null) return;
@@ -121,7 +123,7 @@ public class ResumableFragment extends Fragment implements ICommandListener {
                 }
 
             } else {
-                Log.i("GetResumableItemsCallback", "data is null or empty");
+                AppLogger.getLogger().Info("GetResumableItemsCallback", "data is null or empty");
 
                 // Show a label informing the user there is no new items.
                 noContentText.setText(R.string.no_resumable_items_warning);

@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
+import com.mb.android.logging.AppLogger;
+
 import mediabrowser.apiinteraction.Response;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
@@ -120,7 +122,7 @@ public class BioFragment extends Fragment {
                 }
 
             } else {
-                Log.i("GetItemCallback", "item is null");
+                AppLogger.getLogger().Info("GetItemCallback", "item is null");
             }
         }
         @Override

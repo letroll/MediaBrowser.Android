@@ -13,6 +13,7 @@ import android.widget.GridView;
 
 import com.mb.android.MB3Application;
 import com.mb.android.R;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.person.ActorBioActivity;
 import com.mb.android.activities.mobile.MediaDetailsActivity;
 import com.mb.android.adapters.ActorAdapter;
@@ -64,7 +65,7 @@ public class MediaActorsFragment extends Fragment {
                     populateActors(mItem.getPeople());
                 } else {
                     if (mItem.getSeriesId() != null) {
-                        Log.i("", "Requesting Series: " + mItem.getSeriesId());
+                        AppLogger.getLogger().Info("", "Requesting Series: " + mItem.getSeriesId());
                         MB3Application.getInstance().API.GetItemAsync(mItem.getSeriesId(),
                                 MB3Application.getInstance().API.getCurrentUserId(),
                                 getSeriesItemResponse);
@@ -140,7 +141,7 @@ public class MediaActorsFragment extends Fragment {
                 }
 
             } else {
-                Log.i("GetItemCallback", "series is null");
+                AppLogger.getLogger().Info("GetItemCallback", "series is null");
             }
 
             if (series != null && series.getPeople() != null) {

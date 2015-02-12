@@ -177,7 +177,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
             mLibraryGrid.requestFocus();
         } else {
             AppLogger.getLogger().Info(TAG + ": No items in collection");
-            Log.i("InitializeLibraryView", "No items in collection.");
+            AppLogger.getLogger().Info("InitializeLibraryView", "No items in collection.");
         }
     }
 
@@ -185,7 +185,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
 
         public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
-            Log.i("ItemClickListener", "Position Clicked [" + position + "]");
+            AppLogger.getLogger().Info("ItemClickListener", "Position Clicked [" + position + "]");
             AppLogger.getLogger().Info("Library Presentation Fragment: Position Clicked " + position);
 
             mItem = mItems.get(position);
@@ -389,7 +389,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
 //
 //                }
             } else {
-                Log.i("GetItemCallback", "result or result.items is null");
+                AppLogger.getLogger().Info("GetItemCallback", "result or result.items is null");
                 AppLogger.getLogger().Info("Library Presentation Fragment - Get Items Callback: No items or response was null");
 
                 TextView noContentWarning = (TextView) mView.findViewById(R.id.tvNoContentWarning);

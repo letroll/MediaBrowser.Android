@@ -112,7 +112,7 @@ public class LibraryActivity
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i("CollectionItemsFragment", "onDestroy");
+        AppLogger.getLogger().Info("CollectionItemsFragment", "onDestroy");
     }
 
 

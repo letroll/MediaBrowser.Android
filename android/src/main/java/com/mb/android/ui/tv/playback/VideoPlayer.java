@@ -216,7 +216,7 @@ public class VideoPlayer extends FragmentActivity
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume");
+        AppLogger.getLogger().Info(TAG, "onResume");
         AppLogger.getLogger().Info(TAG +": onResume");
         MB3Application.getInstance().setCurrentActivity(this);
 //        mVideoView.postDelayed(onEverySecond, 1000);

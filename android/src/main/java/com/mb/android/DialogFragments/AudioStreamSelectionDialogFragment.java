@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mb.android.R;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.playback.PlaybackActivity;
 import com.mb.android.utils.Utils;
 import mediabrowser.model.dlna.StreamInfo;

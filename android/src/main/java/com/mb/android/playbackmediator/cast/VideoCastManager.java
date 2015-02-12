@@ -2624,7 +2624,7 @@ public class VideoCastManager extends BaseCastManager
                 String id = routeInfo.getId().substring(routeInfo.getId().lastIndexOf(":") + 1);
 
                 if (remoteSessions == null || remoteSessions.length == 0) {
-                    Log.i("GetClientSessionsCallback", "sessions is null or empty");
+                    AppLogger.getLogger().Info("GetClientSessionsCallback", "sessions is null or empty");
                     return;
                 }
 

@@ -19,6 +19,7 @@ package com.mb.android.playbackmediator.utils;
 import android.util.Log;
 
 import com.mb.android.BuildConfig;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.playbackmediator.cast.BaseCastManager;
 
 /**
@@ -76,11 +77,11 @@ public class LogUtils {
     }
 
     public static void LOGI(final String tag, String message) {
-        Log.i(tag, getVersionPrefix() + message);
+        AppLogger.getLogger().Info(tag, getVersionPrefix() + message);
     }
 
     public static void LOGI(final String tag, String message, Throwable cause) {
-        Log.i(tag, message, cause);
+        AppLogger.getLogger().Info(tag, message, cause);
     }
 
     public static void LOGW(final String tag, String message) {

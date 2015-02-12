@@ -326,7 +326,7 @@ public class ArtistActivity extends BaseMbMobileActivity {
      */
     public void updateFavoriteVisibleIcons() {
 
-        Log.i("", "updateFavoriteVisibleIcons called");
+        AppLogger.getLogger().Info("", "updateFavoriteVisibleIcons called");
         AppLogger.getLogger().Info("Update favorite visible icons");
         if (mArtist == null) return;
 
@@ -352,7 +352,7 @@ public class ArtistActivity extends BaseMbMobileActivity {
      */
     private void updatePlaystateVisibleIcons() {
 
-        Log.i("", "updatePlaystateVisibleIcons called");
+        AppLogger.getLogger().Info("", "updatePlaystateVisibleIcons called");
         AppLogger.getLogger().Info("Update playstate visible icons");
 
         if (mArtist == null) return;

@@ -13,6 +13,8 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.ViewHolder;
+import com.mb.android.logging.AppLogger;
+
 import mediabrowser.apiinteraction.ApiClient;
 import mediabrowser.model.dto.BaseItemPerson;
 import mediabrowser.model.dto.ImageOptions;

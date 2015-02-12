@@ -655,14 +655,14 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
         public void onResponse(BaseItemDto[] trailers) {
             if (trailers != null && trailers.length > 0) {
 
-                Log.i("GetInitialItemCallback", "Trailers found");
-                Log.i("GetInitialItemCallback", trailers[0].getId());
+                AppLogger.getLogger().Info("GetInitialItemCallback", "Trailers found");
+                AppLogger.getLogger().Info("GetInitialItemCallback", trailers[0].getId());
 
                 mPlayHelper.playItem(MediaDetailsActivity.this, trailers[0], 0L, null, null, null, true);
 
             } else {
                 if (trailers == null) {
-                    Log.i("GetItemsCallback", "result is null or no trailers");
+                    AppLogger.getLogger().Info("GetItemsCallback", "result is null or no trailers");
                     AppLogger.getLogger()
                             .Error("Error getting trailers");
                 } else {

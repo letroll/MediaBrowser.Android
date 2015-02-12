@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 
 import com.mb.android.MB3Application;
 import com.mb.android.R;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.library.LibraryPresentationActivity;
 import com.mb.android.adapters.CollectionAdapter;
 import mediabrowser.apiinteraction.Response;
@@ -85,7 +86,7 @@ public class CollectionsFragment extends Fragment implements ICommandListener {
 
             if (response != null) {
                 try {
-                    Log.i("", "Root items received.");
+                    AppLogger.getLogger().Info("", "Root items received.");
                     mItems = response.getItems();
 
                     if (mCollectionsGrid == null) return;
@@ -107,11 +108,11 @@ public class CollectionsFragment extends Fragment implements ICommandListener {
                         }
                     });
                 } catch (Exception ex) {
-                    Log.i("", "Cannot cast data to ItemsResult");
+                    AppLogger.getLogger().Info("", "Cannot cast data to ItemsResult");
                 }
 
             } else {
-                Log.i("", "Invalid response when requesting Root Items");
+                AppLogger.getLogger().Info("", "Invalid response when requesting Root Items");
             }
         }
         @Override

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MB3Application;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.utils.Utils;
 import mediabrowser.model.dto.BaseItemDto;
 

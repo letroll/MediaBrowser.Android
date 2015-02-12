@@ -138,7 +138,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         drawer.setDrawerListener(mDrawerToggle);
 
         if (getMb3Intent() == null) {
-            Log.i("MediaDetailsActivity", "intent is null");
+            AppLogger.getLogger().Info("MediaDetailsActivity", "intent is null");
             AppLogger.getLogger().Error("MediaDetailsActivity: Intent is null");
         }
 
@@ -242,7 +242,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        Log.i("MediaDetailsActivity", "Options item clicked");
+        AppLogger.getLogger().Info("MediaDetailsActivity", "Options item clicked");
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
@@ -612,7 +612,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
 
     public void updateFavoriteVisibleIcons() {
 
-        Log.i("", "updateFavoriteVisibleIcons called");
+        AppLogger.getLogger().Info("", "updateFavoriteVisibleIcons called");
         AppLogger.getLogger().Info("Update favorite visible icons");
 
         if (mItem.getUserData() != null && mItem.getUserData().getIsFavorite()) {
@@ -650,7 +650,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
 
     public void onDialogNegativeClick(DialogFragment dialog) {
 
-        Log.i("", "Cancel button pressed");
+        AppLogger.getLogger().Info("", "Cancel button pressed");
     }
 
 //    private void populateDirectors(BaseItemPerson[] people) {
@@ -718,7 +718,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
 
     private void updatePlaystateVisibleIcons() {
 
-        Log.i("", "updatePlaystateVisibleIcons called");
+        AppLogger.getLogger().Info("", "updatePlaystateVisibleIcons called");
         AppLogger.getLogger().Info("Update playstate visible icons");
 
         if (mItem.getUserData() != null && mItem.getUserData().getPlayed()) {
@@ -848,7 +848,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                 }
 
             } else {
-                Log.i("GetInitialItemCallback", "result is null");
+                AppLogger.getLogger().Info("GetInitialItemCallback", "result is null");
                 AppLogger.getLogger().Error("MediaDetailsActivity: GetItemCallback - Result is null");
             }
             isFresh = false;
@@ -915,8 +915,8 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
 
             if (trailers != null && trailers.length > 0) {
 
-                Log.i("GetInitialItemCallback", "Trailers found");
-                Log.i("GetInitialItemCallback", trailers[0].getId());
+                AppLogger.getLogger().Info("GetInitialItemCallback", "Trailers found");
+                AppLogger.getLogger().Info("GetInitialItemCallback", trailers[0].getId());
 
                 // Just in case the TV Theme is still playing
                 MB3Application.getInstance().StopMedia();
@@ -925,7 +925,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
 
             } else {
                 if (trailers == null) {
-                    Log.i("GetItemsCallback", "result is null or no trailers");
+                    AppLogger.getLogger().Info("GetItemsCallback", "result is null or no trailers");
                     AppLogger.getLogger()
                             .Error("Error getting trailers");
                 } else {

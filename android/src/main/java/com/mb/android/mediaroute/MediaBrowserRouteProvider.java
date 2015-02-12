@@ -63,12 +63,12 @@ public final class MediaBrowserRouteProvider extends MediaRouteProvider {
             public void onResponse(SessionInfoDto[] remoteSessions) {
 
                 if (remoteSessions == null) {
-                    Log.i("GetClientSessionsCallback", "sessions is null");
+                    AppLogger.getLogger().Info("GetClientSessionsCallback", "sessions is null");
                     return;
                 }
 
                 if (remoteSessions.length == 0) {
-                    Log.i("GetClientSessionsCallback", "sessions is empty");
+                    AppLogger.getLogger().Info("GetClientSessionsCallback", "sessions is empty");
                     return;
                 }
 

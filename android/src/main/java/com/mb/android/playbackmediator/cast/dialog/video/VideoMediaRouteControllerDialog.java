@@ -24,6 +24,7 @@ import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaStatus;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.mediaroute.MediaBrowserControlIntent;
 import com.mb.android.playbackmediator.cast.VideoCastManager;
 import com.mb.android.playbackmediator.cast.callbacks.VideoCastConsumerImpl;

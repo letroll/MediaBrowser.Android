@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 
 import com.mb.android.MB3Application;
 import com.mb.android.R;
+import com.mb.android.logging.AppLogger;
+
 import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.model.livetv.BaseTimerInfoDto;
 import mediabrowser.model.livetv.ProgramInfoDto;

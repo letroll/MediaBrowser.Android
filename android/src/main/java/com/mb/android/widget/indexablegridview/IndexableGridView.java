@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 
+import com.mb.android.logging.AppLogger;
+
 /**
  * Created by Mark on 12/12/13.
  */
@@ -41,7 +43,7 @@ public class IndexableGridView extends GridView {
     @Override
     public void setFastScrollEnabled(boolean enabled) {
         isFastScrollEnabled_ = enabled;
-        Log.i("IndexableGridView", "setFastScrollEnabled");
+        AppLogger.getLogger().Info("IndexableGridView", "setFastScrollEnabled");
         if (isFastScrollEnabled_) {
             if (scroller_ == null)
                 scroller_ = new IndexScroller(getContext(), this);
@@ -100,7 +102,7 @@ public class IndexableGridView extends GridView {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        Log.i("IndexableGridView", "onSizeChanged");
+        AppLogger.getLogger().Info("IndexableGridView", "onSizeChanged");
         if (scroller_ != null)
             scroller_.onSizeChanged(w, h, oldw, oldh);
     }

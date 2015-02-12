@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.mb.android.MB3Application;
 import com.mb.android.R;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.tv.playback.PlayerHelpers;
 import com.mb.android.utils.Utils;
 import com.mb.android.widget.AnimatedNetworkImageView;

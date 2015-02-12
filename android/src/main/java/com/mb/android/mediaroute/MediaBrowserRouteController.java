@@ -7,6 +7,8 @@ import android.support.v7.media.MediaRouter;
 import android.util.Log;
 
 import com.mb.android.MB3Application;
+import com.mb.android.logging.AppLogger;
+
 import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.apiinteraction.Response;
 import mediabrowser.model.querying.SessionQuery;
@@ -223,7 +225,7 @@ public class MediaBrowserRouteController extends MediaRouteProvider.RouteControl
             public void onResponse(SessionInfoDto[] remoteSessions) {
 
                 if (remoteSessions == null || remoteSessions.length == 0) {
-                    Log.i("GetClientSessionsCallback", "sessions is null or empty");
+                    AppLogger.getLogger().Info("GetClientSessionsCallback", "sessions is null or empty");
                     return;
                 }
 

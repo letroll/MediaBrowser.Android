@@ -91,7 +91,7 @@ public class SubtitleDownloader extends AsyncTask<String, String, File> {
                     return subFile;
 
                 } catch (Exception e) {
-                    Log.i(TAG, "Exception");
+                    AppLogger.getLogger().Info(TAG, "Exception");
                     AppLogger.getLogger().ErrorException("Exception: ", e);
                     if (e.getMessage() != null) {
                         Log.e(TAG, e.getMessage());
@@ -108,7 +108,7 @@ public class SubtitleDownloader extends AsyncTask<String, String, File> {
             AppLogger.getLogger().ErrorException(TAG + ", Exception handled. ", e);
 
             if (e.getMessage() != null) {
-                Log.i(TAG, e.getMessage());
+                AppLogger.getLogger().Info(TAG, e.getMessage());
             }
 
         } finally {

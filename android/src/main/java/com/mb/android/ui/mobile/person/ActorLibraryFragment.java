@@ -18,6 +18,8 @@ import com.mb.android.R;
 import com.mb.android.activities.mobile.MediaDetailsActivity;
 import com.mb.android.adapters.MediaAdapterBackdrops;
 import com.mb.android.adapters.MediaAdapterPosters;
+import com.mb.android.logging.AppLogger;
+
 import mediabrowser.apiinteraction.Response;
 import mediabrowser.model.querying.ItemsResult;
 import mediabrowser.model.querying.ItemQuery;

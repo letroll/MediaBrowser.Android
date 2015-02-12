@@ -257,7 +257,7 @@ public class PlaybackActivity
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("PlaybackActivity", "onResume");
+        AppLogger.getLogger().Info("PlaybackActivity", "onResume");
 //        if (MB3Application.getInstance().getIsConnected()) {
             buildUi();
 //        }
@@ -271,14 +271,14 @@ public class PlaybackActivity
         AppLogger.getLogger().Info("Playback Activity: onPause");
         PlayerPause();
         mIsPaused = true;
-        Log.i(TAG, "onPause");
+        AppLogger.getLogger().Info(TAG, "onPause");
         mSurface.removeCallbacks(onEverySecond);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.i("PlaybackActivity", "onStop");
+        AppLogger.getLogger().Info("PlaybackActivity", "onStop");
         AppLogger.getLogger().Info("Playback Activity: onStop");
     }
 
@@ -600,7 +600,7 @@ public class PlaybackActivity
      * @param height        The new height of the surface.
      */
     public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
-        Log.i(TAG, "surfaceChanged");
+        AppLogger.getLogger().Info(TAG, "surfaceChanged");
         AppLogger.getLogger().Info(TAG + ": surfaceChanged");
 
     }
@@ -613,9 +613,9 @@ public class PlaybackActivity
      */
     public void surfaceCreated(SurfaceHolder holder) {
 
-        Log.i(TAG, "begin surfaceCreated");
+        AppLogger.getLogger().Info(TAG, "begin surfaceCreated");
         AppLogger.getLogger().Info(TAG + ": surfaceCreated");
-        Log.i(TAG, "end surfaceCreated");
+        AppLogger.getLogger().Info(TAG, "end surfaceCreated");
     }
 
     /**
@@ -625,7 +625,7 @@ public class PlaybackActivity
      */
     public void surfaceDestroyed(SurfaceHolder holder) {
         AppLogger.getLogger().Info(TAG + ": surfaceDestroyed");
-        Log.i(TAG, "surfaceDestroyed");
+        AppLogger.getLogger().Info(TAG, "surfaceDestroyed");
 
     }
 
@@ -637,7 +637,7 @@ public class PlaybackActivity
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
 
-        Log.i(TAG, "begin onPrepared");
+        AppLogger.getLogger().Info(TAG, "begin onPrepared");
         AppLogger.getLogger().Info(TAG + ": onPrepared");
 
         if (mWidth != 0 && mHeight != 0) {
@@ -760,7 +760,7 @@ public class PlaybackActivity
         HideInitialLoadingImage();
 
         mSurface.post(onEverySecond);
-        Log.i(TAG, "end onPrepared");
+        AppLogger.getLogger().Info(TAG, "end onPrepared");
     }
 
 
@@ -771,7 +771,7 @@ public class PlaybackActivity
      */
     public void onCompletion(MediaPlayer mp) {
         AppLogger.getLogger().Info(TAG + ": onCompletion");
-        Log.i(TAG, "onCompletion");
+        AppLogger.getLogger().Info(TAG, "onCompletion");
 
         if (mIsStreamingHls)
             MB3Application.getInstance().API.StopTranscodingProcesses(MB3Application.getInstance().API.getDeviceId(), new EmptyResponse());
@@ -1429,7 +1429,7 @@ public class PlaybackActivity
     private void SetSurfaceDimensions() {
 
         AppLogger.getLogger().Info("SetSurfaceDimensions: " + String.valueOf(mWidth) + "x" + String.valueOf(mHeight));
-        Log.i("SetSurfaceDimensions", "media Height= " + String.valueOf(mHeight) + " media Width= " + String.valueOf(mWidth));
+        AppLogger.getLogger().Info("SetSurfaceDimensions", "media Height= " + String.valueOf(mHeight) + " media Width= " + String.valueOf(mWidth));
 
         ViewGroup.LayoutParams lp = mSurface.getLayoutParams();
 
@@ -1438,7 +1438,7 @@ public class PlaybackActivity
             lp.height = mHeight;
             mSurface.setLayoutParams(lp);
 
-            Log.i("SetSurfaceDimensions", "LP.Height=" + String.valueOf(lp.height) + " LP.Width=" + String.valueOf(lp.width));
+            AppLogger.getLogger().Info("SetSurfaceDimensions", "LP.Height=" + String.valueOf(lp.height) + " LP.Width=" + String.valueOf(lp.width));
         }
     }
 
