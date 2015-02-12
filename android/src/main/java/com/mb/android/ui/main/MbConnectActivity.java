@@ -19,7 +19,6 @@ import android.widget.Toast;
 import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.logging.FileLogger;
-import com.mb.android.logging.LogLevel;
 import mediabrowser.apiinteraction.Response;
 import mediabrowser.apiinteraction.android.AndroidConnectionManager;
 import mediabrowser.apiinteraction.connectionmanager.ConnectionManager;
@@ -51,7 +50,7 @@ public class MbConnectActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         // Always show debug logging during initial connection
-        FileLogger.getFileLogger().setLoggingLevel(LogLevel.Debug);
+        FileLogger.getFileLogger().setDebugLoggingEnabled(true);
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (sharedPrefs.getString("pref_application_profile", "Mobile").equalsIgnoreCase("Mobile")) {

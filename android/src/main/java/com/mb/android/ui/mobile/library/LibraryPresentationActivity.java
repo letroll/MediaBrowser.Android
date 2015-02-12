@@ -341,10 +341,11 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
         }
     }
 
+    public List<ParentalRating> ParentalRatings = new ArrayList<>();
     private void performUiSetup() {
 
         FileLogger.getFileLogger().Info(TAG + ": parsing initial query information");
-        if (MB3Application.getInstance().ParentalRatings.size() == 0) {
+        if (ParentalRatings.size() == 0) {
             MB3Application.getInstance().API.GetParentalRatingsAsync(getParentalRatingsResponse);
         }
 
@@ -476,7 +477,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
             }
 
             ParentalRating comparingRating = null;
-            for (ParentalRating r : MB3Application.getInstance().ParentalRatings) {
+            for (ParentalRating r : ParentalRatings) {
                 if (r.getName().equalsIgnoreCase(rating)) {
                     FileLogger.getFileLogger().Info("Matched: Setting comparingRating");
                     comparingRating = r;
@@ -497,7 +498,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
                 }
 
                 ParentalRating sortedComparingRating = null;
-                for (ParentalRating r : MB3Application.getInstance().ParentalRatings) {
+                for (ParentalRating r : ParentalRatings) {
                     if (r.getName().equalsIgnoreCase(sortedList.get(i))) {
                         sortedComparingRating = r;
                         break;
@@ -1110,7 +1111,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
         public void onResponse(ParentalRating[] ratings) {
 
             if (ratings != null && ratings.length > 0) {
-                MB3Application.getInstance().ParentalRatings.addAll(Arrays.asList(ratings));
+                ParentalRatings.addAll(Arrays.asList(ratings));
                 FileLogger.getFileLogger().Info("ratings returned: " + String.valueOf(ratings.length));
             } else
                 FileLogger.getFileLogger().Info("ratings response from server was null");

@@ -30,11 +30,10 @@ public class FileLogger implements ILogger {
 
     private static FileLogger mInstance;
     private String mExternalStoragePath = Environment.getExternalStorageDirectory().toString();
-    private File mAppDirectory = new File(mExternalStoragePath + "/" + "Mb3AndroidData/Logs");
+    private File mAppDirectory = new File(mExternalStoragePath + "/" + "MediaBrowser/Logs");
     private File mActiveLogFile;
     private boolean loggingEnabled;
     private int mLogLevel = 1;
-
 
     private FileLogger() {
 
@@ -44,7 +43,6 @@ public class FileLogger implements ILogger {
                 mAppDirectory.mkdirs();
             }
 
-            // Will generate a file/path naming structure like: sdcard/Mb3AndroidData/client-067e6162-3b6f-4ae2-a171-2470b63dff00.txt
             mActiveLogFile = new File(mAppDirectory.getPath() + "/client-" + UUID.randomUUID().toString() + ".txt");
 
             try {
@@ -60,9 +58,7 @@ public class FileLogger implements ILogger {
         } else {
             Log.i("", "Mediastate = " + Environment.getExternalStorageState());
         }
-
     }
-
 
     public static FileLogger getFileLogger() {
 
@@ -83,20 +79,14 @@ public class FileLogger implements ILogger {
         mLogLevel = level;
     }
 
-
-    public File GetActiveLogFile() {
-        return mActiveLogFile;
-    }
-
-
-    public String LogFilePath() {
-        if (mAppDirectory != null) {
-            return mAppDirectory.getPath();
+    public void setDebugLoggingEnabled(boolean enabled){
+        if (enabled){
+            setLoggingLevel(1);
         }
-
-        return "";
+        else{
+            setLoggingLevel(2);
+        }
     }
-
 
     private void WriteLogHeader() {
 
@@ -127,7 +117,6 @@ public class FileLogger implements ILogger {
             mInstance.LogMessage("Screen Height: " + String.valueOf(metrics.heightPixels), LogSeverity.Info);
             mInstance.LogMessage("Density: " + String.valueOf(metrics.density), LogSeverity.Info);
             mInstance.LogMessage("DensityDpi: " + String.valueOf(metrics.densityDpi), LogSeverity.Info);
-            mInstance.LogMessage("### ALWAYS PROVIDE FULL LOGS WHEN REPORTING ISSUES ###", LogSeverity.Info);
         } catch (Exception e) {
 
         }
@@ -236,57 +225,27 @@ public class FileLogger implements ILogger {
 
     private void LogMessage(String message, LogSeverity severity) {
 
-        if (logLevelIsSufficientToWriteMessage(severity)) {
-            LogRow row = new LogRow();
-            row.mMessage = message;
-            row.mTime = new Date();
-            row.mSeverity = severity;
-
-            mInstance.LogMessage(row);
-        }
-    }
-
-
-    private void LogMessage(LogRow row) {
-
         if (!loggingEnabled) return;
         try {
+
+            StringBuilder builder = new StringBuilder();
+            builder.append("[");
+            builder.append(new Date().toString());
+            builder.append("] , ");
+            builder.append(severity.toString());
+            builder.append(" , ");
+            builder.append(message);
+            builder.append(" , ");
+            builder.append(String.valueOf(Thread.currentThread().getId()));
+            builder.append(" , ");
+            builder.append(Thread.currentThread().getName());
+
             PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(mActiveLogFile, true)));
-            out.println(row.toString() + "\r");
+            out.println(builder.toString() + "\r");
             out.close();
 
         } catch (Exception e) {
             Log.i("", "Something went wrong writing file contents");
         }
-
-    }
-
-
-    private boolean logLevelIsSufficientToWriteMessage(LogSeverity severity) {
-
-        int messageLogLevel = getLogLevel(severity);
-
-        return messageLogLevel >= mLogLevel;
-    }
-
-
-    private int getLogLevel(LogSeverity severity) {
-
-        switch (severity) {
-            case Debug:
-                return LogLevel.Debug;
-            case Error:
-                return LogLevel.Error;
-            case Fatal:
-                return LogLevel.Fatal;
-            case Info:
-                return LogLevel.Info;
-            case Warn:
-                return LogLevel.Warn;
-            default:
-                throw new IllegalArgumentException("Unknown LogSeverity");
-
-        }
-
     }
 }

@@ -28,7 +28,6 @@ import com.mb.android.R;
 import com.mb.android.ui.mobile.homescreen.HomescreenActivity;
 import com.mb.android.interfaces.IServerDialogClickListener;
 import com.mb.android.logging.FileLogger;
-import com.mb.android.logging.LogLevel;
 import com.mb.android.ui.tv.homescreen.HomeScreenActivity;
 import mediabrowser.apiinteraction.ConnectionResult;
 import mediabrowser.apiinteraction.EmptyResponse;
@@ -97,7 +96,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
             connectSignInButton.setOnClickListener(onMbConnectClick);
 
             // Always show debug logging during initial connection
-            FileLogger.getFileLogger().setLoggingLevel(LogLevel.Debug);
+            FileLogger.getFileLogger().setDebugLoggingEnabled(true);
             if (showServerSelection) {
                 onServerSelection();
             } else if (showUserSelection) {
@@ -425,11 +424,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         MB3Application.getInstance().setIsConnected(true);
 
         // Restore logging to the level defined in the user preferences
-        FileLogger.getFileLogger().setLoggingLevel(
-                sharedPrefs.getBoolean("pref_debug_logging_enabled", false)
-                        ? LogLevel.Debug
-                        : LogLevel.Info
-        );
+        FileLogger.getFileLogger().setDebugLoggingEnabled(sharedPrefs.getBoolean("pref_debug_logging_enabled", false));
 
         MB3Application.getInstance().startContentSync();
 

@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import com.mb.android.logging.LogLevel;
 import com.mb.android.ui.main.ConnectionActivity;
 import com.mb.android.R;
 import com.mb.android.logging.FileLogger;
@@ -92,7 +91,7 @@ public class MainSettingsFragment extends PreferenceFragment implements SharedPr
         } else if (key.equals("pref_debug_logging_enabled")) {
             final CustomSwitchPreference csp = (CustomSwitchPreference) getPreferenceScreen().findPreference(key);
             if (csp == null) return;
-            FileLogger.getFileLogger().setLoggingLevel(csp.isChecked() ? LogLevel.Debug : LogLevel.Info);
+            FileLogger.getFileLogger().setDebugLoggingEnabled(csp.isChecked());
         }
 
     }

@@ -55,12 +55,10 @@ public class MB3Application extends Application
     public UserDto user;
     public Playlist PlayerQueue;
 //    public String LibretroNativeLibraryPath;
-    public List<ParentalRating> ParentalRatings;
     private MediaPlayer mMediaPlayer;
     private DolbyAudioProcessing mDolbyAudioProcessing = null;
     private boolean isDolbyAudioProcessingConnected = false;
     private PeriodicSync periodicSync;
-
 
     public static MB3Application getInstance() {
         return _mb3Application;
@@ -169,7 +167,6 @@ public class MB3Application extends Application
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
 
         this.PlayerQueue = new Playlist();
-        this.ParentalRatings = new ArrayList<>();
 
         Utils.saveFloatToPreference(getApplicationContext(),
                 VideoCastManager.PREFS_KEY_VOLUME_INCREMENT, (float) VOLUME_INCREMENT);
