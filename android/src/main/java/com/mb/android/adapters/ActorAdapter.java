@@ -40,7 +40,7 @@ public class ActorAdapter extends BaseAdapter {
                     .getDefaultSharedPreferences(MB3Application.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
         } catch (Exception e) {
-            Log.d("ActorAdapter", "Error getting layout inflater");
+            AppLogger.getLogger().Debug("ActorAdapter", "Error getting layout inflater");
         }
     }
 

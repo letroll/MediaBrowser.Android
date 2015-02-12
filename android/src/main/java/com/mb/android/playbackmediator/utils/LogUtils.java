@@ -52,14 +52,14 @@ public class LogUtils {
     @SuppressWarnings("unused")
     public static void LOGD(final String tag, String message) {
         if (BuildConfig.DEBUG || Log.isLoggable(tag, Log.DEBUG)) {
-            Log.d(tag, getVersionPrefix() + message);
+            AppLogger.getLogger().Debug(tag, getVersionPrefix() + message);
         }
     }
 
     @SuppressWarnings("unused")
     public static void LOGD(final String tag, String message, Throwable cause) {
         if (BuildConfig.DEBUG || Log.isLoggable(tag, Log.DEBUG)) {
-            Log.d(tag, getVersionPrefix() + message, cause);
+            AppLogger.getLogger().Debug(tag, getVersionPrefix() + message, cause);
         }
     }
 

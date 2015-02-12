@@ -92,7 +92,7 @@ public class SeasonsFragment extends Fragment {
             try {
                 mSeriesActivity = (SeriesViewActivity) activity;
             } catch (ClassCastException e) {
-                Log.d("ServerSelectionFragment", "onAttach: Exception casting activity");
+                AppLogger.getLogger().Debug("ServerSelectionFragment", "onAttach: Exception casting activity");
             }
         }
     }

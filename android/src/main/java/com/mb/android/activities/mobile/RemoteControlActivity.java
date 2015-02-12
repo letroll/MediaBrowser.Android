@@ -543,7 +543,7 @@ public class RemoteControlActivity extends BaseMbMobileActivity {
 
             isSeeking = false;
             try {
-                Log.d("RemoteControlActivity", "seek");
+                AppLogger.getLogger().Debug("RemoteControlActivity", "seek");
                 mCastManager.seek(seekValue);
             } catch (TransientNetworkDisconnectionException | NoConnectionException e) {
                 e.printStackTrace();
@@ -604,12 +604,12 @@ public class RemoteControlActivity extends BaseMbMobileActivity {
 
         @Override
         public void onDataMessageSendFailed(int errorCode) {
-            Log.d(TAG, "onDataMessageSendFailed. Error Code: " + String.valueOf(errorCode));
+            AppLogger.getLogger().Debug(TAG, "onDataMessageSendFailed. Error Code: " + String.valueOf(errorCode));
         }
 
         @Override
         public void onDataMessageReceived(String message) {
-//            Log.d(TAG, "onDataMessageReceived: " + message);
+//            AppLogger.getLogger().Debug(TAG, "onDataMessageReceived: " + message);
         }
     };
 
@@ -661,7 +661,7 @@ public class RemoteControlActivity extends BaseMbMobileActivity {
 
             if (!isSeeking && playbackStarted && !isPaused) {
                 extrapolatedPositionSeconds += 1;
-                Log.d(TAG, "extrapolatedPositionSeconds: " + String.valueOf(extrapolatedPositionSeconds));
+                AppLogger.getLogger().Debug(TAG, "extrapolatedPositionSeconds: " + String.valueOf(extrapolatedPositionSeconds));
 
                 sbProgress.setProgress((int) (extrapolatedPositionSeconds * 1000));
                 currentTime.setText(Utils.PlaybackRuntimeFromMilliseconds(extrapolatedPositionSeconds * 1000));

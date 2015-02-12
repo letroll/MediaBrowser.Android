@@ -76,12 +76,12 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
 
             if (combinedAspectRatio > 0) {
                 mImageHeight = (int) (mImageWidth / (combinedAspectRatio / count));
-                Log.d("CAR","greater than 0");
+                AppLogger.getLogger().Debug("CAR","greater than 0");
             } else {
                 mImageHeight = (int)Math.round(mImageWidth * 1.5);
             }
-            Log.d("Height", String.valueOf(mImageHeight));
-            Log.d("Width", String.valueOf(mImageWidth));
+            AppLogger.getLogger().Debug("Height", String.valueOf(mImageHeight));
+            AppLogger.getLogger().Debug("Width", String.valueOf(mImageWidth));
 
             imageEnhancersEnabled = PreferenceManager
                     .getDefaultSharedPreferences(MB3Application.getInstance())

@@ -84,7 +84,7 @@ public class OnStageFragment extends Fragment {
             try {
                 mMusicActivity = (MusicActivity) activity;
             } catch (ClassCastException e) {
-                Log.d("ServerSelectionFragment", "onAttach: Exception casting activity");
+                AppLogger.getLogger().Debug("ServerSelectionFragment", "onAttach: Exception casting activity");
             }
         }
     }

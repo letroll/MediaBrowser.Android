@@ -69,7 +69,7 @@ public class MusicSongsFragment extends Fragment {
 
                 ArrayList<BaseItemDto> songs = new ArrayList<>();
                 songs.addAll(Arrays.asList(response.getItems()));
-                Log.d("Song Count", String.valueOf(songs.size()));
+                AppLogger.getLogger().Debug("Song Count", String.valueOf(songs.size()));
                 final ListView songsGrid = (ListView) mView.findViewById(R.id.lvSongList);
                 songsGrid.setAdapter(new TvSongsAdapter(songs));
                 songsGrid.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

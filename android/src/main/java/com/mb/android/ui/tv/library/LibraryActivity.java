@@ -351,16 +351,16 @@ public class LibraryActivity
     @Override
     protected void onFastForwardButton() {
 
-//        Log.d("CollectionItemsFragment", "onRightShift");
+//        AppLogger.getLogger().Debug("CollectionItemsFragment", "onRightShift");
 //        if (mItemsGrid != null) {
-//            Log.d("CollectionItemsFragment", "mItemsGrid != null");
-//            Log.d("CollectionItemsFragment", "SelectedIndex = " + String.valueOf(mItemsGrid.getSelectedItemPosition()));
+//            AppLogger.getLogger().Debug("CollectionItemsFragment", "mItemsGrid != null");
+//            AppLogger.getLogger().Debug("CollectionItemsFragment", "SelectedIndex = " + String.valueOf(mItemsGrid.getSelectedItemPosition()));
 //            if (mItemsGrid.getSelectedItemPosition() + 12 < mItemsGrid.getCount()) {
 //                mItemsGrid.setSelection(mItemsGrid.getSelectedItemPosition() + 12);
-//                Log.d("CollectionItemsFragment", "smoothScrollToPosition");
+//                AppLogger.getLogger().Debug("CollectionItemsFragment", "smoothScrollToPosition");
 //            } else {
 //                mItemsGrid.smoothScrollToPosition(mItemsGrid.getCount() - 1);
-//                Log.d("CollectionItemsFragment", "smoothScrollToPosition");
+//                AppLogger.getLogger().Debug("CollectionItemsFragment", "smoothScrollToPosition");
 //            }
 //        }
     }
@@ -369,16 +369,16 @@ public class LibraryActivity
     @Override
     protected void onRewindButton() {
 
-//        Log.d("CollectionItemsFragment", "onLeftShift");
+//        AppLogger.getLogger().Debug("CollectionItemsFragment", "onLeftShift");
 //        if (mItemsGrid != null) {
-//            Log.d("CollectionItemsFragment", "mItemsGrid != null");
-//            Log.d("CollectionItemsFragment", "SelectedIndex = " + String.valueOf(mItemsGrid.getSelectedItemPosition()));
+//            AppLogger.getLogger().Debug("CollectionItemsFragment", "mItemsGrid != null");
+//            AppLogger.getLogger().Debug("CollectionItemsFragment", "SelectedIndex = " + String.valueOf(mItemsGrid.getSelectedItemPosition()));
 //            if (mItemsGrid.getSelectedItemPosition() - 12 >= 0) {
 //                mItemsGrid.setSelection(mItemsGrid.getSelectedItemPosition() - 12);
-//                Log.d("CollectionItemsFragment", "smoothScrollToPosition");
+//                AppLogger.getLogger().Debug("CollectionItemsFragment", "smoothScrollToPosition");
 //            } else {
 //                mItemsGrid.smoothScrollToPosition(0);
-//                Log.d("CollectionItemsFragment", "smoothScrollToPosition");
+//                AppLogger.getLogger().Debug("CollectionItemsFragment", "smoothScrollToPosition");
 //            }
 //        }
     }

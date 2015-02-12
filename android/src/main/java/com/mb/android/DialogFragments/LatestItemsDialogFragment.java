@@ -127,11 +127,11 @@ public class LatestItemsDialogFragment extends DialogFragment {
             mLatestItems = response;
 
             if (mLatestItems == null) {
-                Log.d("LatestItemsDialogFragment", "mLatestItems was null");
+                AppLogger.getLogger().Debug("LatestItemsDialogFragment", "mLatestItems was null");
                 return;
             }
 
-            Log.d("LatestItemsDialogFragment", String.valueOf(mLatestItems.length) + " Items returned");
+            AppLogger.getLogger().Debug("LatestItemsDialogFragment", String.valueOf(mLatestItems.length) + " Items returned");
 
             mLatestItemsList.setAdapter(new LatestEpisodesAdapter());
             mLatestItemsList.setOnItemClickListener(onItemClickListener);

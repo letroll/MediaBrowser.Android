@@ -89,9 +89,9 @@ public class ScheduledSeriesFragment extends Fragment {
                         intent.putExtra("timer", jsonData);
 
                         if (timers.get(i).getId() == null) {
-                            Log.d("SSF", "Id is null");
+                            AppLogger.getLogger().Debug("SSF", "Id is null");
                         } else {
-                            Log.d("SSF", "Id = " + timers.get(i).getId());
+                            AppLogger.getLogger().Debug("SSF", "Id = " + timers.get(i).getId());
                         }
 
                         startActivity(intent);

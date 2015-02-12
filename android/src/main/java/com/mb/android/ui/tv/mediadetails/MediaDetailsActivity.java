@@ -786,7 +786,7 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
                 mSimilarItems = Arrays.asList(result.getItems());
 
                 if (contentGrid == null) {
-                    Log.d("DetailsSimilarFragment", "mSimilarItemsGrid is null");
+                    AppLogger.getLogger().Debug("DetailsSimilarFragment", "mSimilarItemsGrid is null");
                     return;
                 }
 

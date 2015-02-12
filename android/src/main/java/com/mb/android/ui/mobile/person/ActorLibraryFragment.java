@@ -70,7 +70,7 @@ public class ActorLibraryFragment extends Fragment {
             try {
                 mActorBioActivity = (ActorBioActivity) activity;
             } catch (ClassCastException e) {
-                Log.d("ServerSelectionFragment", "onAttach: Exception casting activity");
+                AppLogger.getLogger().Debug("ServerSelectionFragment", "onAttach: Exception casting activity");
             }
         }
     }

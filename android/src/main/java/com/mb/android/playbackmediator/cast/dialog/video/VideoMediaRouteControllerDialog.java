@@ -335,7 +335,7 @@ public class VideoMediaRouteControllerDialog extends MediaRouteControllerDialog 
             mContentMirroring.setVisibility(View.VISIBLE);
             boolean mirrorEnabled
                     = Utils.getBooleanFromPreference(MB3Application.getInstance(), "CONTENT_MIRROR_ENABLED", false);
-            Log.d(TAG, "MIRROR ENABLED CURRENTLY SET TO " + String.valueOf(mirrorEnabled));
+            AppLogger.getLogger().Debug(TAG, "MIRROR ENABLED CURRENTLY SET TO " + String.valueOf(mirrorEnabled));
 
             if (null != mContentMirroring) {
                 mContentMirroring.setChecked(mirrorEnabled);
@@ -390,7 +390,7 @@ public class VideoMediaRouteControllerDialog extends MediaRouteControllerDialog 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                Log.d(TAG, "Mirror content being set to " + String.valueOf(isChecked ? true : null));
+                AppLogger.getLogger().Debug(TAG, "Mirror content being set to " + String.valueOf(isChecked ? true : null));
                 Utils.saveBooleanToPreference(MB3Application.getInstance(), "CONTENT_MIRROR_ENABLED", isChecked ? true : null);
             }
         });

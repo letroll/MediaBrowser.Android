@@ -333,7 +333,7 @@ public class MB3Application extends Application
     @Override
     public void onDolbyAudioProcessingClientConnected() {
         mDolbyAudioProcessing.setEnabled(true);
-        Log.d("DOLBY AUDIO PROCESSING", "DAP is enabled!");
+        AppLogger.getLogger().Debug("DOLBY AUDIO PROCESSING", "DAP is enabled!");
     }
 
     @Override

@@ -96,7 +96,7 @@ public class UpNextFragment extends Fragment implements ICommandListener {
 
             mItems = response.getItems();
 
-            Log.d("UpNextFragment", "setAdapter");
+            AppLogger.getLogger().Debug("UpNextFragment", "setAdapter");
             upNextGrid.setAdapter(new HomeScreenItemsAdapter(response.getItems()));
             upNextGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

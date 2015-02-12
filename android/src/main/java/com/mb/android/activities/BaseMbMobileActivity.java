@@ -143,7 +143,7 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
 
             @Override
             public void onConnectionSuspended(int cause) {
-                Log.d(TAG, "onConnectionSuspended() was called with cause: " + cause);
+                AppLogger.getLogger().Debug(TAG, "onConnectionSuspended() was called with cause: " + cause);
 
             }
 
@@ -159,7 +159,7 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
 
             @Override
             public void onDataMessageSendFailed(int errorCode) {
-                Log.d(TAG, "onDataMessageSendFailed. Error Code: " + String.valueOf(errorCode));
+                AppLogger.getLogger().Debug(TAG, "onDataMessageSendFailed. Error Code: " + String.valueOf(errorCode));
                 AppLogger.getLogger().Error("Error sending data message.");
             }
 

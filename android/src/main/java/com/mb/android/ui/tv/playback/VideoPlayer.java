@@ -986,7 +986,7 @@ public class VideoPlayer extends FragmentActivity
             }
             mIsPaused = false;
         } catch (IllegalStateException e) {
-            Log.d(TAG, "Error pausing player");
+            AppLogger.getLogger().Debug(TAG, "Error pausing player");
         }
     }
 
@@ -997,7 +997,7 @@ public class VideoPlayer extends FragmentActivity
             }
             mIsPaused = true;
         } catch (IllegalStateException e) {
-            Log.d(TAG, "Error pausing player");
+            AppLogger.getLogger().Debug(TAG, "Error pausing player");
         }
     }
 

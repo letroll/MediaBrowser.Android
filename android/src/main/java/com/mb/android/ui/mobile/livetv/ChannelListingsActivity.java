@@ -292,7 +292,7 @@ public class ChannelListingsActivity extends BaseMbMobileActivity {
 //
 ////                String url = info.ToUrl(MB3Application.getInstance().API.getApiUrl());
 //                FileLogger.getLogger().Info("External player URL: " + url);
-//                Log.d("External Player url", url);
+//                AppLogger.getLogger().Debug("External Player url", url);
 //
 //                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 //                startActivity(intent);

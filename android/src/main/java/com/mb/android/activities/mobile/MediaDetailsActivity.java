@@ -538,7 +538,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                     mSelectedSubtitleStreamIndex);
             String url = info.ToUrl(MB3Application.getInstance().API.getApiUrl());
             AppLogger.getLogger().Info("External player URL: " + url);
-            Log.d("External Player url", url);
+            AppLogger.getLogger().Debug("External Player url", url);
 
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 //            intent.setDataAndType(Uri.parse(url), "video/x-msvideo");

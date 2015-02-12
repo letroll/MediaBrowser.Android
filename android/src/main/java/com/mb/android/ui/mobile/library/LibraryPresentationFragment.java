@@ -157,7 +157,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
             try {
                 mLibraryActivity = (LibraryPresentationActivity) activity;
             } catch (ClassCastException e) {
-                Log.d("ServerSelectionFragment", "onAttach: Exception casting activity");
+                AppLogger.getLogger().Debug("ServerSelectionFragment", "onAttach: Exception casting activity");
             }
         }
     }

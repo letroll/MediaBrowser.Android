@@ -76,7 +76,7 @@ public class MusicLibraryFragment extends Fragment {
                 mMusicActivity = (MusicActivity) activity;
                 mMusicActivity.updateMusicLibraryFragmentReference(this);
             } catch (ClassCastException e) {
-                Log.d("ServerSelectionFragment", "onAttach: Exception casting activity");
+                AppLogger.getLogger().Debug("ServerSelectionFragment", "onAttach: Exception casting activity");
             }
         }
     }

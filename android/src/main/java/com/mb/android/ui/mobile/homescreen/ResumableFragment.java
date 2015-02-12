@@ -138,7 +138,7 @@ public class ResumableFragment extends Fragment implements ICommandListener {
                         adapter.notifyDataSetChanged();
                     }
                 } catch (Exception e) {
-                    Log.d("ResumableFragment", "Error casting adapter");
+                    AppLogger.getLogger().Debug("ResumableFragment", "Error casting adapter");
                 }
             }
         }

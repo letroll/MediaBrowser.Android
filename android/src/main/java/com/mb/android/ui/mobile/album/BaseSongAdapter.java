@@ -69,7 +69,7 @@ public class BaseSongAdapter extends BaseAdapter {
             }
         }
 
-        Log.d("BaseSongAdapter", "getItemIndex() = " + String.valueOf(index));
+        AppLogger.getLogger().Debug("BaseSongAdapter", "getItemIndex() = " + String.valueOf(index));
         return index;
     }
 

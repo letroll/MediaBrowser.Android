@@ -336,12 +336,12 @@ public class RecordSettingsDialogFragment extends DialogFragment implements Comp
             case R.id.chkDayTuesday:
 
                 if (isChecked) {
-                    Log.d("onCheckChanged", "Tuesday isChecked");
+                    AppLogger.getLogger().Debug("onCheckChanged", "Tuesday isChecked");
                     if (!((SeriesTimerInfoDto) timer).getDays().contains("Tuesday") && !mIsInitialSetup) {
                         ((SeriesTimerInfoDto) timer).getDays().add("Tuesday");
                     }
                 } else {
-                    Log.d("onCheckChanged", "Tuesday !isChecked");
+                    AppLogger.getLogger().Debug("onCheckChanged", "Tuesday !isChecked");
                     ((SeriesTimerInfoDto) timer).getDays().remove("Tuesday");
                 }
 

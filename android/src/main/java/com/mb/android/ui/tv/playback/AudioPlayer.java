@@ -493,7 +493,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
     private void setRatingIcons(UserItemDataDto userItemDataDto) {
 
         if (userItemDataDto == null) {
-            Log.d(TAG, "userItemDataDto is null");
+            AppLogger.getLogger().Debug(TAG, "userItemDataDto is null");
             return;
         }
         mIsFavorite = userItemDataDto.getIsFavorite();

@@ -106,7 +106,7 @@ public class HomeScreenActivity extends MbBackdropActivity implements IQuickPlay
 
     @Override
     public void onDestroy() {
-        Log.d("HomeScreenFragment", "onDestroy called");
+        AppLogger.getLogger().Debug("HomeScreenFragment", "onDestroy called");
         super.onDestroy();
     }
 

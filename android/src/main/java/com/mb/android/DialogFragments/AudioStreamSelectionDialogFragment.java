@@ -118,7 +118,7 @@ public class AudioStreamSelectionDialogFragment extends DialogFragment {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.d("AudioStreamListener", "OnClick");
+            AppLogger.getLogger().Debug("AudioStreamListener", "OnClick");
             try {
                 Activity activity = getActivity();
                 if (activity != null) {

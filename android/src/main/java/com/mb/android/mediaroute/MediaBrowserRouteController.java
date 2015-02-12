@@ -29,7 +29,7 @@ public class MediaBrowserRouteController extends MediaRouteProvider.RouteControl
     @Override
     public boolean onControlRequest(Intent intent, MediaRouter.ControlRequestCallback callback) {
 
-        Log.d("MediaBrowserRouteController", "onControlRequest");
+        AppLogger.getLogger().Debug("MediaBrowserRouteController", "onControlRequest");
         boolean success = false;
         String action = intent.getAction();
         Set<String> categories = intent.getCategories();
@@ -46,7 +46,7 @@ public class MediaBrowserRouteController extends MediaRouteProvider.RouteControl
                     success = handlePauseAction();
                     break;
                 case MediaControlIntent.ACTION_SEEK:
-                    Log.d("MediaBrowserRouteController", "seek");
+                    AppLogger.getLogger().Debug("MediaBrowserRouteController", "seek");
                     success = handleSeekAction(intent);
                     break;
                 case MediaControlIntent.ACTION_STOP:
@@ -171,7 +171,7 @@ public class MediaBrowserRouteController extends MediaRouteProvider.RouteControl
 
         if (seekPosition == -1L) return false;
 
-        Log.d("MediaBrowserRouteController", "valid seek value");
+        AppLogger.getLogger().Debug("MediaBrowserRouteController", "valid seek value");
         PlaystateRequest request = new PlaystateRequest();
         request.setSeekPositionTicks(seekPosition);
         request.setCommand(PlaystateCommand.Seek);

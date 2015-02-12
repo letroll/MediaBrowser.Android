@@ -533,7 +533,7 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
             Log.i("GetSongsCallback", "Setup Objects");
 
             if (response == null) {
-                Log.d("MusicAlbumActivity", "Error processing response");
+                AppLogger.getLogger().Debug("MusicAlbumActivity", "Error processing response");
                 return;
             }
 

@@ -1395,7 +1395,7 @@ public class PlaybackActivity
 //        if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mStreamInfo.Protocol) && mStreamInfo.Protocol.equalsIgnoreCase("hls")) {
 //
 //            FileLogger.getLogger().Info("Playback failed: Trying again with fragmented mp4");
-//            Log.d(TAG, "Playback failed: Trying again with fragmented mp4");
+//            AppLogger.getLogger().Debug(TAG, "Playback failed: Trying again with fragmented mp4");
 //
 //            mStreamInfo.Protocol = "";
 //            mStreamInfo.Container = "mp4";
@@ -1408,7 +1408,7 @@ public class PlaybackActivity
 //        } else if (mStreamInfo.Container.equalsIgnoreCase("mp4")) {
 //
 //            FileLogger.getLogger().Info("Playback failed: Trying again with webm");
-//            Log.d(TAG, "Playback failed: Trying again with webm");
+//            AppLogger.getLogger().Debug(TAG, "Playback failed: Trying again with webm");
 //
 //            mStreamInfo.Container = "webm";
 //            mStreamInfo.VideoCodec = "vpx";
@@ -1804,7 +1804,7 @@ public class PlaybackActivity
                 mPlayer.pause();
             }
         } catch (IllegalStateException e) {
-            Log.d(TAG, "Error pausing player");
+            AppLogger.getLogger().Debug(TAG, "Error pausing player");
         }
     }
 

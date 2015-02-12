@@ -46,14 +46,14 @@ public class SongAdapter extends BaseAdapter implements SectionIndexer {
             DisplayMetrics metrics = MB3Application.getInstance().getResources().getDisplayMetrics();
             mWidth = (int)(60 * metrics.density);
         } catch (Exception e) {
-            Log.d("SongAdapter", "Error measuring width");
+            AppLogger.getLogger().Debug("SongAdapter", "Error measuring width");
         }
         try {
             imageEnhancersEnabled = PreferenceManager
                     .getDefaultSharedPreferences(MB3Application.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
         } catch (Exception e) {
-            Log.d("AbstractMediaAdapter", "Error reading preferences");
+            AppLogger.getLogger().Debug("AbstractMediaAdapter", "Error reading preferences");
         }
     }
 

@@ -129,7 +129,7 @@ public class SubtitleStreamSelectionDialogFragment extends DialogFragment {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.d("SubtitleStreamListener", "OnClick");
+            AppLogger.getLogger().Debug("SubtitleStreamListener", "OnClick");
             Activity activity = getActivity();
             if (activity != null) {
                 ((PlaybackActivity)activity).onSubtitleStreamSelected(mStreams.get(position).getIndex());

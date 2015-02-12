@@ -136,7 +136,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
         mAudioService = MB3Application.getAudioService();
         mAudioService.addAudioPlayerListener(AudioPlaybackActivity.this);
         if (mCastManager != null) {
-            Log.d(TAG, "Adding Audio player listener");
+            AppLogger.getLogger().Debug(TAG, "Adding Audio player listener");
             mAudioService.addAudioPlayerListener(mCastManager);
         }
         songAdapter = new BaseSongAdapter(MB3Application.getInstance().PlayerQueue.PlaylistItems, this);
@@ -151,12 +151,12 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
         });
         if (mAudioService.getPlayerState().equals(AudioService.PlayerState.PLAYING) ||
                 mAudioService.getPlayerState().equals(AudioService.PlayerState.PAUSED)) {
-            Log.d(TAG, "Player is playing - Setting Now Playing Info");
+            AppLogger.getLogger().Debug(TAG, "Player is playing - Setting Now Playing Info");
             mItem = mAudioService.getCurrentItem();
             setNowPlayingInfo(mItem);
             onPlayPauseChanged(mAudioService.getPlayerState().equals(AudioService.PlayerState.PAUSED));
         } else {
-            Log.d(TAG, "Play Media");
+            AppLogger.getLogger().Debug(TAG, "Play Media");
             mAudioService.playMedia();
         }
     }
@@ -482,7 +482,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
                                 .getDefaultSharedPreferences(MB3Application.getInstance())
                                 .getBoolean("pref_enable_image_enhancers", true));
                     } catch (Exception e) {
-                        Log.d("AbstractMediaAdapter", "Error reading preferences");
+                        AppLogger.getLogger().Debug("AbstractMediaAdapter", "Error reading preferences");
                     }
                     String imageUrl = MB3Application.getInstance().API.GetImageUrl(item, options);
                     mediaImage.setDefaultImageResId(R.drawable.music_square_bg);
@@ -526,7 +526,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
         public void onResponse(UserItemDataDto data) {
 
             if (data == null) {
-                Log.d(TAG, "response or response.data is null");
+                AppLogger.getLogger().Debug(TAG, "response or response.data is null");
                 return;
             }
 
@@ -624,7 +624,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
                             // being played. Need to offset the playing indexes to account for it.
                             int newIndex = songAdapter.getItemIndex(mAudioService.getCurrentItem().getId());
                             if (newIndex == -1) {
-                                Log.d(TAG, "newIndex is -1");
+                                AppLogger.getLogger().Debug(TAG, "newIndex is -1");
                                 return;
                             }
 

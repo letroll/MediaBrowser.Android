@@ -64,7 +64,7 @@ public class GridFragment extends BaseLibraryFragment {
             try {
                 mLibraryActivity = (LibraryActivity) activity;
             } catch (ClassCastException e) {
-                Log.d(TAG, "onAttach: Exception casting activity");
+                AppLogger.getLogger().Debug(TAG, "onAttach: Exception casting activity");
             }
         }
     }

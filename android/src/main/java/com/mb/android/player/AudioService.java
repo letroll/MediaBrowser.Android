@@ -91,7 +91,7 @@ public class AudioService
     private AudioService() {}
 
     public static AudioService initialize() {
-        Log.d(TAG, "initialize()");
+        AppLogger.getLogger().Debug(TAG, "initialize()");
         if (null == sInstance) {
             sInstance = new AudioService();
         }
@@ -103,7 +103,7 @@ public class AudioService
     }
 
     public void Terminate() {
-        Log.d(TAG, "onDestroy()");
+        AppLogger.getLogger().Debug(TAG, "onDestroy()");
         mHandler.removeCallbacks(mRunnable);
         final Handler volumeHandler = new Handler();
         Runnable volumeRunnable = new Runnable() {
@@ -143,14 +143,14 @@ public class AudioService
         }
 
         if (hasMoreItemsToPlay()) {
-            Log.d(TAG, "playlist contains more items");
+            AppLogger.getLogger().Debug(TAG, "playlist contains more items");
             updateCurrentlyPlayingIndex();
             MB3Application.getInstance().API.GetItemAsync(
                     MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
                     MB3Application.getInstance().API.getCurrentUserId(),
                     getItemResponse);
         } else {
-            Log.d(TAG, "nothing left to play");
+            AppLogger.getLogger().Debug(TAG, "nothing left to play");
             mPlayerState = PlayerState.IDLE;
             notifyListenersPlaylistComplete();
         }
@@ -180,7 +180,7 @@ public class AudioService
                 mShuffledItemIds.remove(idToRemove);
             }
         } catch (Exception e) {
-            Log.d(TAG, "error removing played item");
+            AppLogger.getLogger().Debug(TAG, "error removing played item");
         }
     }
 
@@ -226,45 +226,45 @@ public class AudioService
 
         if (what == MediaPlayer.MEDIA_ERROR_IO) {
             AppLogger.getLogger().Error("Playback Error: Media Error IO");
-            Log.d("AudioService", "Playback Error: Media Error IO");
+            AppLogger.getLogger().Debug("AudioService", "Playback Error: Media Error IO");
         } else if (what == MediaPlayer.MEDIA_ERROR_MALFORMED) {
             AppLogger.getLogger().Error("Playback Error: Media Error Malformed");
-            Log.d("AudioService", "Playback Error: Media Error Malformed");
+            AppLogger.getLogger().Debug("AudioService", "Playback Error: Media Error Malformed");
         } else if (what == MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK) {
             AppLogger.getLogger().Error("Playback Error: Media Error Not Valid For Progressive Playback");
-            Log.d("AudioService", "Playback Error: Media Error Not Valid For Progressive Playback");
+            AppLogger.getLogger().Debug("AudioService", "Playback Error: Media Error Not Valid For Progressive Playback");
         } else if (what == MediaPlayer.MEDIA_ERROR_SERVER_DIED) {
             AppLogger.getLogger().Error("Playback Error: Media Error Server Died");
-            Log.d("AudioService", "Playback Error: Media Error Server Died");
+            AppLogger.getLogger().Debug("AudioService", "Playback Error: Media Error Server Died");
         } else if (what == MediaPlayer.MEDIA_ERROR_TIMED_OUT) {
             AppLogger.getLogger().Error("Playback Error: Media Error Timed Out");
-            Log.d("AudioService", "Playback Error: Media Error Timed Out");
+            AppLogger.getLogger().Debug("AudioService", "Playback Error: Media Error Timed Out");
         } else if (what == MediaPlayer.MEDIA_ERROR_UNKNOWN) {
             AppLogger.getLogger().Error("Playback Error: Media Error Unknown");
-            Log.d("AudioService", "Playback Error: Media Error Unknown");
+            AppLogger.getLogger().Debug("AudioService", "Playback Error: Media Error Unknown");
         } else if (what == MediaPlayer.MEDIA_ERROR_UNSUPPORTED) {
             AppLogger.getLogger().Error("Playback Error: Media Error Unsupported");
-            Log.d("AudioService", "Playback Error: Media Error Unsupported");
+            AppLogger.getLogger().Debug("AudioService", "Playback Error: Media Error Unsupported");
         } else {
             AppLogger.getLogger().Error("Playback Error: Unknown Error");
-            Log.d("AudioService", "Playback Error: Unknown Error");
+            AppLogger.getLogger().Debug("AudioService", "Playback Error: Unknown Error");
         }
 
         if (extra == -1004) {
             AppLogger.getLogger().Error("Playback Error: -1004");
-            Log.d("AudioService","Playback Error: -1004" );
+            AppLogger.getLogger().Debug("AudioService","Playback Error: -1004" );
         } else if (extra == -1007) {
             AppLogger.getLogger().Error("Playback Error: -1007");
-            Log.d("AudioService","Playback Error: -1007" );
+            AppLogger.getLogger().Debug("AudioService","Playback Error: -1007" );
         } else if (extra == -1010) {
             AppLogger.getLogger().Error("Playback Error: -1010");
-            Log.d("AudioService", "Playback Error: -1010");
+            AppLogger.getLogger().Debug("AudioService", "Playback Error: -1010");
         } else if (extra == -110) {
             AppLogger.getLogger().Error("Playback Error: -110");
-            Log.d("AudioService", "Playback Error: -110");
+            AppLogger.getLogger().Debug("AudioService", "Playback Error: -110");
         } else {
             AppLogger.getLogger().Error("Playback Error: " + PlayerHelpers.PlayerStatusFromExtra(extra));
-            Log.d("AudioService", "Playback Error: " + PlayerHelpers.PlayerStatusFromExtra(extra));
+            AppLogger.getLogger().Debug("AudioService", "Playback Error: " + PlayerHelpers.PlayerStatusFromExtra(extra));
         }
 
         return true;
@@ -274,7 +274,7 @@ public class AudioService
     @Override
     public void onPrepared(MediaPlayer mp) {
 
-        Log.d("AudioService", "onPrepared");
+        AppLogger.getLogger().Debug("AudioService", "onPrepared");
         playerStart();
         mPlayerState = PlayerState.PLAYING;
 
@@ -552,7 +552,7 @@ public class AudioService
         public void onResponse(BaseItemDto response) {
 
             if (response == null) {
-                Log.d(TAG, "response.data is null");
+                AppLogger.getLogger().Debug(TAG, "response.data is null");
                 return;
             }
 
@@ -584,9 +584,9 @@ public class AudioService
                 );
 
                 if (MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).SubtitleStreamIndex == null) {
-                    Log.d("MediaPlaybackFragment", "Subtitle index is null");
+                    AppLogger.getLogger().Debug("MediaPlaybackFragment", "Subtitle index is null");
                 } else {
-                    Log.d("MediaPlaybackFragment", "Subtitle index is " + String.valueOf(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).SubtitleStreamIndex));
+                    AppLogger.getLogger().Debug("MediaPlaybackFragment", "Subtitle index is " + String.valueOf(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).SubtitleStreamIndex));
                 }
 
                 if (mStreamInfo != null) {
@@ -671,23 +671,23 @@ public class AudioService
     }
 
     private void loadUrlIntoPlayer(String url) {
-        Log.d(TAG, "loadUrlIntoPlayer: " + url);
+        AppLogger.getLogger().Debug(TAG, "loadUrlIntoPlayer: " + url);
         AppLogger.getLogger().Info("Attempt to load: " + url);
         try {
             mPlayer.setDataSource(url);
             mPlayer.prepareAsync();
         } catch (IllegalStateException e) {
             AppLogger.getLogger().ErrorException("Exception handled: ", e);
-            Log.d("loadUrlIntoPlayer", "IllegalStateException");
+            AppLogger.getLogger().Debug("loadUrlIntoPlayer", "IllegalStateException");
         } catch (IllegalArgumentException e) {
             AppLogger.getLogger().ErrorException("Exception handled: ", e);
-            Log.d("loadUrlIntoPlayer", "IllegalArgumentException");
+            AppLogger.getLogger().Debug("loadUrlIntoPlayer", "IllegalArgumentException");
         } catch (SecurityException e) {
             AppLogger.getLogger().ErrorException("Exception handled: ", e);
-            Log.d("loadUrlIntoPlayer", "SecurityException");
+            AppLogger.getLogger().Debug("loadUrlIntoPlayer", "SecurityException");
         } catch (IOException e) {
             AppLogger.getLogger().ErrorException("Exception handled: ", e);
-            Log.d("loadUrlIntoPlayer", "IOException");
+            AppLogger.getLogger().Debug("loadUrlIntoPlayer", "IOException");
         }
     }
 
@@ -754,24 +754,24 @@ public class AudioService
 
     private void playerStop() {
         try {
-            Log.d(TAG, "Player Stop");
+            AppLogger.getLogger().Debug(TAG, "Player Stop");
             if (mPlayer != null) {
                 mPlayer.stop();
             }
         } catch (IllegalStateException e) {
-            Log.d(TAG, "Exception handled in Player Stop");
+            AppLogger.getLogger().Debug(TAG, "Exception handled in Player Stop");
             AppLogger.getLogger().ErrorException("Exception handled ", e);
         }
     }
 
     private void playerReset() {
         try {
-            Log.d(TAG, "Player Reset");
+            AppLogger.getLogger().Debug(TAG, "Player Reset");
             if (mPlayer != null) {
                 mPlayer.reset();
             }
         } catch (IllegalStateException e) {
-            Log.d(TAG, "Exception handled in Player Reset");
+            AppLogger.getLogger().Debug(TAG, "Exception handled in Player Reset");
             AppLogger.getLogger().ErrorException("Exception handled ", e);
         }
     }
@@ -843,22 +843,22 @@ public class AudioService
             mUiVisible = true;
         }
         if (mVisibilityCounter == 0) {
-            Log.d(TAG, "UI is no longer visible");
+            AppLogger.getLogger().Debug(TAG, "UI is no longer visible");
         } else {
-            Log.d(TAG, "UI is visible");
+            AppLogger.getLogger().Debug(TAG, "UI is visible");
         }
-        Log.d(TAG, "Visibility counter increased to " + String.valueOf(mVisibilityCounter));
+        AppLogger.getLogger().Debug(TAG, "Visibility counter increased to " + String.valueOf(mVisibilityCounter));
     }
 
     public synchronized void decrementUiCounter() {
         if (--mVisibilityCounter == 0) {
-            Log.d(TAG, "UI is no longer visible");
+            AppLogger.getLogger().Debug(TAG, "UI is no longer visible");
             if (mUiVisible) {
                 mUiVisible = false;
             }
-            Log.d(TAG, "Visibility counter decreased to " + String.valueOf(mVisibilityCounter));
+            AppLogger.getLogger().Debug(TAG, "Visibility counter decreased to " + String.valueOf(mVisibilityCounter));
         } else {
-            Log.d(TAG, "UI is visible");
+            AppLogger.getLogger().Debug(TAG, "UI is visible");
         }
     }
 

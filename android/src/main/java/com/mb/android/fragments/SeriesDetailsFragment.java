@@ -50,7 +50,7 @@ public class SeriesDetailsFragment extends Fragment {
                 mSeriesActivity = (SeriesViewActivity) activity;
                 mSeriesActivity.setSeriesDetailsFragment(this);
             } catch (ClassCastException e) {
-                Log.d("ServerSelectionFragment", "onAttach: Exception casting activity");
+                AppLogger.getLogger().Debug("ServerSelectionFragment", "onAttach: Exception casting activity");
             }
         }
     }

@@ -1359,7 +1359,7 @@ public class VideoCastManager extends BaseCastManager
 
                     });
         } else if (getRouteInfo() != null && getRouteInfo().supportsControlCategory(MediaBrowserControlIntent.CATEGORY_MEDIA_BROWSER_COMMAND)) {
-            Log.d("VideoCastManager", "seek");
+            AppLogger.getLogger().Debug("VideoCastManager", "seek");
             String id = getRouteInfo().getId().substring(getRouteInfo().getId().lastIndexOf(":") + 1);
 
             Intent intent = new Intent(MediaControlIntent.ACTION_SEEK);
@@ -2568,7 +2568,7 @@ public class VideoCastManager extends BaseCastManager
         Gson gson = new Gson();
         try {
             String messageString = gson.toJson(message);
-            Log.d(TAG, "Message String: " + messageString);
+            AppLogger.getLogger().Debug(TAG, "Message String: " + messageString);
             AppLogger.getLogger().Info("Payload string: " + messageString);
             sendDataMessage(messageString);
         } catch (TransientNetworkDisconnectionException | NoConnectionException | IllegalStateException e ) {
@@ -2718,7 +2718,7 @@ public class VideoCastManager extends BaseCastManager
                                     .getDefaultSharedPreferences(MB3Application.getInstance())
                                     .getBoolean("pref_enable_image_enhancers", true));
                         } catch (Exception e) {
-                            Log.d("AbstractMediaAdapter", "Error reading preferences");
+                            AppLogger.getLogger().Debug("AbstractMediaAdapter", "Error reading preferences");
                         }
 
                         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mLockScreenPayload.primaryImageItemId)) {
