@@ -55,7 +55,6 @@ public class MB3Application extends Application
     private MediaPlayer mMediaPlayer;
     private DolbyAudioProcessing mDolbyAudioProcessing = null;
     private boolean isDolbyAudioProcessingConnected = false;
-    private PeriodicSync periodicSync;
 
     public static MB3Application getInstance() {
         return _mb3Application;
@@ -141,18 +140,11 @@ public class MB3Application extends Application
         capabilities.setPlayableMediaTypes(playableTypes);
         capabilities.setSupportedCommands(supportedCommands);
         capabilities.setSupportsContentUploading(true);
-        if (getSyncEnabled()) {
-            capabilities.setSupportsSync(true);
-            capabilities.setDeviceProfile(new AndroidProfile(true, false));
-        }
+        //capabilities.setSupportsSync(true);
+        capabilities.setDeviceProfile(new AndroidProfile(true, false));
         capabilities.setSupportsMediaControl(true);
 
         return capabilities;
-    }
-
-    // TODO delete when feature is complete
-    public boolean getSyncEnabled() {
-        return false;
     }
 
     @Override
@@ -213,7 +205,6 @@ public class MB3Application extends Application
 
         try {
             mediaPlayer.release();
-            mediaPlayer = null;
         } catch (Exception e) {
             AppLogger.getLogger().Info("SeriesViewActivity: Error releasing MediaPlayer");
         }
@@ -416,11 +407,6 @@ public class MB3Application extends Application
     }
 
     public void startContentSync() {
-        if (getSyncEnabled()) {
-            if (periodicSync == null) {
-                periodicSync = new PeriodicSync(_mb3Application);
-                periodicSync.Create();
-            }
-        }
+        new PeriodicSync(_mb3Application).Create();
     }
 }

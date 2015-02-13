@@ -102,6 +102,9 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
                     MB3Application.getInstance().API.GetPublicUsersAsync(getPublicUsersResponse);
                 }
             } else {
+
+                showActivityDialog("Connecting");
+
                 Thread thread = new Thread() {
                     @Override
                     public void run() {
@@ -109,9 +112,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
                     }
                 };
                 thread.start();
-                showActivityDialog("Connecting");
             }
-
         }
     }
 

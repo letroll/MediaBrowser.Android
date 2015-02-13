@@ -191,12 +191,10 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             }
         }
-        if (MB3Application.getInstance().getSyncEnabled()) {
-            if (MB3Application.getInstance().user != null
-                    && MB3Application.getInstance().user.getPolicy() != null
-                    && MB3Application.getInstance().user.getPolicy().getEnableSync()) {
-                menu.add("Sync").setIcon(R.drawable.refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-            }
+        if (MB3Application.getInstance().user != null
+                && MB3Application.getInstance().user.getPolicy() != null
+                && MB3Application.getInstance().user.getPolicy().getEnableSync()) {
+            //menu.add("Sync").setIcon(R.drawable.refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
         MenuItem mRemoveFavoriteMenuItem = menu.add(getResources().getString(R.string.un_favorite_action_bar_button));
         mRemoveFavoriteMenuItem.setIcon(R.drawable.nfav);
