@@ -14,8 +14,9 @@ import android.widget.ImageView;
 
 import com.mb.android.MB3Application;
 import com.mb.android.R;
-import com.mb.android.profiles.MbAndroidProfile;
 import com.mb.network.Connectivity;
+
+import mediabrowser.apiinteraction.android.profiles.AndroidProfile;
 import mediabrowser.model.dlna.StreamBuilder;
 import mediabrowser.model.dlna.StreamInfo;
 import mediabrowser.model.dlna.VideoOptions;
@@ -193,49 +194,6 @@ public class Utils {
         return String.valueOf(maxmemory) + " MB";
     }
 
-    public static void LogMemoryUsage(Context context) {
-
-        long maxmemory = Runtime.getRuntime().maxMemory();
-        long allocated = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-        allocated = (allocated / 1024) / 1024;
-        maxmemory = (maxmemory / 1024) / 1024;
-
-        String usageInfo = "Memory Usage: ";
-        usageInfo += String.valueOf(allocated) + " MB";
-
-        usageInfo += " Maximum: " + String.valueOf(maxmemory) + " MB";
-
-
-        HttpResponseCache theCache = HttpResponseCache.getInstalled();
-
-        if (theCache != null) {
-            Long cachesize = theCache.size();
-
-            if (cachesize != null) {
-                usageInfo += " Cache Size: ";
-                if (cachesize >= 1024) {
-                    cachesize = cachesize / 1024;
-
-                    if (cachesize >= 1024) {
-                        usageInfo += String.valueOf(cachesize / 1024) + " MB";
-                    } else {
-                        usageInfo += String.valueOf(cachesize) + " KB";
-                    }
-                } else {
-                    usageInfo += String.valueOf(cachesize) + " B";
-                }
-
-                usageInfo += " Maximum: " + String.valueOf(HttpResponseCache.getInstalled().maxSize() / 1024 / 1024) + " MB";
-            }
-        }
-
-        if (usageInfo.length() > 0) {
-            AppLogger.getLogger().Info(usageInfo);
-        }
-
-    }
-
-
     public static void ShowStarRating(Float rating, ImageView imageView) {
 
         if (rating == null || imageView == null)
@@ -379,7 +337,7 @@ public class Utils {
         VideoOptions options = new VideoOptions();
         options.setItemId(item.getId());
         options.setMediaSources(item.getMediaSources());
-        options.setProfile(new MbAndroidProfile(hlsEnabled, false)
+        options.setProfile(new AndroidProfile(hlsEnabled, false)
         );
         options.setDeviceId(Settings.Secure.getString(MB3Application.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
         options.setMaxBitrate(Integer.valueOf(bitrate));
@@ -400,15 +358,6 @@ public class Utils {
         } else {
             mStreamInfo = new StreamBuilder().BuildVideoItem(options);
         }
-
-        if (mStreamInfo == null) {
-            AppLogger.getLogger().Info("streamInfo is null");
-            return "";
-        }
-
-        mStreamInfo.setMaxWidth(1920);
-        mStreamInfo.setMaxHeight(1080);
-        mStreamInfo.setMaxFramerate(30.0f);
 
         if (mStreamInfo.getProtocol() == null || !mStreamInfo.getProtocol().equalsIgnoreCase("hls")) {
             mStreamInfo.setStartPositionTicks(startPositionTicks);
@@ -537,14 +486,5 @@ public class Utils {
             AppLogger.getLogger().ErrorException("PopulateTvInfo - ", e);
         }
         return title;
-    }
-
-    public static int convertDpToPixels(float dp){
-        Resources resources = MB3Application.getInstance().getResources();
-        return (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dp,
-                resources.getDisplayMetrics()
-        );
     }
 }

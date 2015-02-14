@@ -54,7 +54,6 @@ public class AudioService
     private boolean mResume;
     private StreamInfo mStreamInfo;
     private int mCurrentlyPlayingIndex = 0;
-    private boolean mIsDirectStreaming;
     private List<String> mShuffledItemIds;
     private boolean mMuted;
     private boolean mShuffleEnabled;
@@ -576,12 +575,7 @@ public class AudioService
                         && MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks != null
                         && MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks > 0L;
 
-                buildStreamInfo(mMediaItem.getId(), mMediaItem.getMediaSources(), mResume
-                                ? mMediaItem.getUserData() != null
-                                    ? mMediaItem.getUserData().getPlaybackPositionTicks()
-                                    : 0
-                                : 0
-                );
+                buildStreamInfo(mMediaItem.getId(), mMediaItem.getMediaSources());
 
                 if (MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).SubtitleStreamIndex == null) {
                     AppLogger.getLogger().Debug("MediaPlaybackFragment", "Subtitle index is null");
@@ -622,12 +616,9 @@ public class AudioService
      *
      * @param id                  The ID of the item to be played
      * @param mediaSources        The available MediaSourceInfo's for the item being played
-     * @param startPositionTicks  The position in ticks that playback should commence from.
      * @return A String containing the formed URL.
      */
-    private boolean buildStreamInfo(String id, ArrayList<MediaSourceInfo> mediaSources, long startPositionTicks) {
-
-        mIsDirectStreaming = false;
+    private boolean buildStreamInfo(String id, ArrayList<MediaSourceInfo> mediaSources) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance());
         String bitrate;
@@ -650,14 +641,6 @@ public class AudioService
 
         AppLogger.getLogger().Info("Create StreamInfo");
         mStreamInfo = new StreamBuilder().BuildAudioItem(options);
-
-        if (mStreamInfo == null) {
-            AppLogger.getLogger().Info("streamInfo is null");
-            return false;
-        }
-
-//            mStreamInfo.StartPositionTicks = startPositionTicks;
-        mIsDirectStreaming = mStreamInfo.getIsDirectStream();
 
         return true;
     }
@@ -778,10 +761,8 @@ public class AudioService
 
     public void playerSeekTo(int milliSeconds) {
         try {
-            if (mIsDirectStreaming) {
-                if (mPlayer != null) {
-                    mPlayer.seekTo(milliSeconds);
-                }
+            if (mPlayer != null) {
+                mPlayer.seekTo(milliSeconds);
             }
         } catch (IllegalStateException e) {
             AppLogger.getLogger().ErrorException("Exception handled ", e);

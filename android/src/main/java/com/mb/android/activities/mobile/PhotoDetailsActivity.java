@@ -153,8 +153,6 @@ public class PhotoDetailsActivity extends BaseMbMobileActivity {
         photoName.setText(_photos[index].getName());
 
         setImageDetails(photo);
-
-        Utils.LogMemoryUsage(this);
     }
 
     private void setImageDetails(BaseItemDto photo) {

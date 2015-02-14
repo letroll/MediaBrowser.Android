@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.mb.android.MB3Application;
 import com.mb.android.PlaylistItem;
-import com.mb.android.profiles.MbAndroidProfile;
 import com.mb.android.ui.tv.ActivityResults;
 import com.mb.android.ui.tv.MbBaseActivity;
 import mediabrowser.apiinteraction.EmptyResponse;
@@ -154,7 +153,7 @@ public final class PlayerHelpers {
         VideoOptions options = new VideoOptions();
         options.setItemId(id);
         options.setMediaSources(mediaSources);
-        options.setProfile(new MbAndroidProfile(hlsEnabled, false));
+        options.setProfile(new AndroidProfile(hlsEnabled, false));
         options.setDeviceId(
                 Settings.Secure.getString(MB3Application.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
         options.setMaxBitrate(Integer.valueOf(bitrate));
@@ -170,15 +169,6 @@ public final class PlayerHelpers {
 
         AppLogger.getLogger().Info("Create StreamInfo");
         StreamInfo streamInfo = new StreamBuilder().BuildVideoItem(options);
-
-        if (streamInfo == null) {
-            AppLogger.getLogger().Info("streamInfo is null");
-            return null;
-        }
-
-        streamInfo.setMaxWidth(1920);
-        streamInfo.setMaxHeight(1080);
-        streamInfo.setMaxFramerate(30.0f);
 
         if (streamInfo.getProtocol() == null || !streamInfo.getProtocol().equalsIgnoreCase("hls")) {
             streamInfo.setStartPositionTicks(startPositionTicks);
@@ -268,32 +258,11 @@ public final class PlayerHelpers {
         options.setItemId(id);
         options.setMediaSources(mediaSources);
         options.setProfile(new ExternalPlayerProfile());
-        options.setDeviceId(
-                Settings.Secure.getString(MB3Application.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
+        options.setDeviceId(Settings.Secure.getString(MB3Application.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
         options.setMaxBitrate(Integer.valueOf(bitrate));
-
-//        if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mediaSourceId)) {
-//            if (audioStreamIndex != null && audioStreamIndex != -1) {
-//                options.setAudioStreamIndex(audioStreamIndex);
-//                options.setMediaSourceId(mediaSourceId);
-//            }
-//            if (subtitleStreamIndex != null && subtitleStreamIndex != -1) {
-//                options.setSubtitleStreamIndex(subtitleStreamIndex);
-//                options.setMediaSourceId(mediaSourceId);
-//            }
-//        }
 
         AppLogger.getLogger().Info("Create StreamInfo");
         StreamInfo streamInfo = new StreamBuilder().BuildVideoItem(options);
-
-        if (streamInfo == null) {
-            AppLogger.getLogger().Info("streamInfo is null");
-            return null;
-        }
-
-        streamInfo.setMaxWidth(1920);
-        streamInfo.setMaxHeight(1080);
-        streamInfo.setMaxFramerate(30.0f);
 
         if (streamInfo.getProtocol() == null || !streamInfo.getProtocol().equalsIgnoreCase("hls")) {
             streamInfo.setStartPositionTicks(startPositionTicks);

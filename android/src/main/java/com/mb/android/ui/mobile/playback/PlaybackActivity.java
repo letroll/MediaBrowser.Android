@@ -42,7 +42,6 @@ import com.mb.android.SubtitleDownloader;
 import com.mb.android.activities.BaseMbMobileActivity;
 import com.mb.android.listeners.PlaybackOptionsMenuClickListener;
 import com.mb.android.logging.AppLogger;
-import com.mb.android.profiles.MbAndroidProfile;
 import com.mb.android.subtitles.Caption;
 import com.mb.android.subtitles.FatalParsingException;
 import com.mb.android.subtitles.FormatSRT;
@@ -54,6 +53,7 @@ import com.mb.network.Connectivity;
 
 import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.apiinteraction.Response;
+import mediabrowser.apiinteraction.android.profiles.AndroidProfile;
 import mediabrowser.model.dlna.DeviceProfile;
 import mediabrowser.model.dlna.StreamBuilder;
 import mediabrowser.model.dlna.StreamInfo;
@@ -1223,7 +1223,7 @@ public class PlaybackActivity
         boolean hlsEnabled = prefs.getBoolean("pref_enable_hls", true);
 //        boolean h264StrictModeEnabled = prefs.getBoolean("pref_h264_strict", true);
 
-        DeviceProfile androidProfile = new MbAndroidProfile(hlsEnabled, false);
+        DeviceProfile androidProfile = new AndroidProfile(hlsEnabled, false);
 
 //        DirectPlayProfile directMp4 = new DirectPlayProfile();
 //        directMp4.setContainer("mp4");
@@ -1275,14 +1275,6 @@ public class PlaybackActivity
         AppLogger.getLogger().Info("Create StreamInfo");
         mStreamInfo = new StreamBuilder().BuildVideoItem(options);
 
-        if (mStreamInfo == null) {
-            AppLogger.getLogger().Info("streamInfo is null");
-            return false;
-        }
-
-        mStreamInfo.setMaxWidth(1920);
-        mStreamInfo.setMaxHeight(1080);
-        mStreamInfo.setMaxFramerate(30.0f);
         mIsStreamingHls = mStreamInfo.getProtocol() != null && mStreamInfo.getProtocol().equalsIgnoreCase("hls");
         mIsDirectStreaming = mStreamInfo.getIsDirectStream();
 
