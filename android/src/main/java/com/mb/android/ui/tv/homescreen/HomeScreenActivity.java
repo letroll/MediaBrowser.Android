@@ -95,11 +95,9 @@ public class HomeScreenActivity extends MbBackdropActivity implements IQuickPlay
     public void onResume() {
         super.onResume();
         setOverscanValues();
-        if (MB3Application.getInstance().getIsConnected()) {
-            getHomescreenItems();
-            if (MB3Application.getInstance().user != null) {
-                MB3Application.getInstance().API.GetUserAsync(MB3Application.getInstance().API.getCurrentUserId(), getUserResponse);
-            }
+        getHomescreenItems();
+        if (MB3Application.getInstance().user != null) {
+            MB3Application.getInstance().API.GetUserAsync(MB3Application.getInstance().API.getCurrentUserId(), getUserResponse);
         }
 
     }

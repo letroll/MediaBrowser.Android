@@ -292,18 +292,16 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
     public void onResume() {
         super.onResume();
         AppLogger.getLogger().Info(TAG + ": onResume");
-        if (MB3Application.getInstance().getIsConnected()) {
-            AppLogger.getLogger().Info(TAG + ": is Connected");
-            if (mSavedInstanceState == null) {
-                if (mIsFresh) {
-                    performUiSetup();
-                    setContent();
-                    mIsFresh = false;
-                }
-            } else {
-                AppLogger.getLogger().Info(TAG + ": re-acquiring content fragment");
-                mLibraryView = (LibraryPresentationFragment) getSupportFragmentManager().findFragmentByTag("library");
+        AppLogger.getLogger().Info(TAG + ": is Connected");
+        if (mSavedInstanceState == null) {
+            if (mIsFresh) {
+                performUiSetup();
+                setContent();
+                mIsFresh = false;
             }
+        } else {
+            AppLogger.getLogger().Info(TAG + ": re-acquiring content fragment");
+            mLibraryView = (LibraryPresentationFragment) getSupportFragmentManager().findFragmentByTag("library");
         }
     }
 

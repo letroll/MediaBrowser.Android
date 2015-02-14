@@ -120,9 +120,7 @@ public class LibraryActivity
     public void onResume() {
         super.onResume();
         AppLogger.getLogger().Info(TAG + ": resuming activity");
-        if (MB3Application.getInstance().getIsConnected()) {
-            buildAndSendQuery();
-        }
+        buildAndSendQuery();
     }
 
     @Override

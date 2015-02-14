@@ -101,9 +101,7 @@ public class CoverFlowFragment extends BaseLibraryFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (MB3Application.getInstance().getIsConnected()) {
-            performInitialSetup();
-        }
+        performInitialSetup();
     }
 
     public void performInitialSetup() {

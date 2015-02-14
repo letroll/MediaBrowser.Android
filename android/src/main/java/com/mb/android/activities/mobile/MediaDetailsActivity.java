@@ -394,10 +394,11 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
 
     @Override
     public void onResume() {
+
         super.onResume();
-        if (MB3Application.getInstance().getIsConnected()) {
-            buildUi();
-        }
+
+        buildUi();
+
         if (com.mb.android.playbackmediator.utils.Utils.getBooleanFromPreference(this, "CONTENT_MIRROR_ENABLED", false)) {
             try {
                 mCastManager.displayItem(mItem);

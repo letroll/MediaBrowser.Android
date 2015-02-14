@@ -84,9 +84,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
     @Override
     public void onResume() {
         super.onResume();
-        if (MB3Application.getInstance().getIsConnected()) {
-            getParentItem();
-        }
+        getParentItem();
     }
 
     @Override

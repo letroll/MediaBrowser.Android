@@ -418,8 +418,6 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPrefs.edit().putBoolean("is_first_run", false).apply();
 
-        MB3Application.getInstance().setIsConnected(true);
-
         // Restore logging to the level defined in the user preferences
         AppLogger.getLogger().setDebugLoggingEnabled(sharedPrefs.getBoolean("pref_debug_logging_enabled", false));
 

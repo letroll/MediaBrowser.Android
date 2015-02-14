@@ -210,9 +210,7 @@ public class BookDetailsActivity extends BaseMbMobileActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (MB3Application.getInstance().getIsConnected()) {
-            getInitialItem();
-        }
+        getInitialItem();
     }
 
     @Override

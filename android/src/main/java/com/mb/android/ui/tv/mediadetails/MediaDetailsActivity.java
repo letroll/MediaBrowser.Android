@@ -135,9 +135,7 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
     @Override
     public void onResume() {
         super.onResume();
-        if (MB3Application.getInstance().getIsConnected()) {
-            getItemData();
-        }
+        getItemData();
     }
 
     @Override

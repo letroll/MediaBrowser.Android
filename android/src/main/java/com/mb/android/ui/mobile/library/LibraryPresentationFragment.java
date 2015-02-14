@@ -130,9 +130,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
         AppLogger.getLogger().Info("Library Presentation Fragment: Requesting Items");
         mProgress.setVisibility(ProgressBar.VISIBLE);
 
-        if (MB3Application.getInstance().getIsConnected()) {
-            performInitialQueries();
-        }
+        performInitialQueries();
 
         return mView;
     }

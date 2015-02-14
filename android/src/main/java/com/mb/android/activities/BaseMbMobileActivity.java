@@ -93,7 +93,6 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
         // If we've recovered from a crash, we don't want to crash again. Just restart the app normally
         if (MB3Application.getInstance().API == null) {
             AppLogger.getLogger().Info("Recovering from crash. Trying to re-acquiring server");
-            MB3Application.getInstance().setIsConnected(false);
             Thread thread = new Thread() {
                 @Override
                 public void run() {
@@ -237,7 +236,6 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
                 MB3Application.getInstance().API = (AndroidApiClient)result.getApiClient();
                 MB3Application.getInstance().user = new UserDto();
                 MB3Application.getInstance().user.setId(MB3Application.getInstance().API.getCurrentUserId());
-                MB3Application.getInstance().setIsConnected(true);
                 onConnectionRestored();
             } else {
                 returnToConnectionActivity();

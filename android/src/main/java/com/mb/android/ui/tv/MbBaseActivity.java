@@ -57,7 +57,6 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
         super.onCreate(savedInstanceState);
 
         if (MB3Application.getInstance().API == null) {
-            MB3Application.getInstance().setIsConnected(false);
             Thread thread = new Thread() {
                 @Override
                 public void run() {
@@ -216,7 +215,6 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
                 MB3Application.getInstance().API = (AndroidApiClient)result.getApiClient();
                 MB3Application.getInstance().user = new UserDto();
                 MB3Application.getInstance().user.setId(MB3Application.getInstance().API.getCurrentUserId());
-                MB3Application.getInstance().setIsConnected(true);
                 onConnectionRestored();
             } else {
                 returnToConnectionActivity();

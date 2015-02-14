@@ -105,9 +105,7 @@ public class SearchResultsActivity extends BaseMbMobileActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (MB3Application.getInstance().getIsConnected()) {
-            handleIntent(getIntent());
-        }
+        handleIntent(getIntent());
     }
     @Override
     public void onPause() {

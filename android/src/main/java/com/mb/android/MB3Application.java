@@ -394,10 +394,6 @@ public class MB3Application extends Application
         this.mCurrentActivity = mCurrentActivity;
     }
 
-    private boolean isConnected;
-    public boolean getIsConnected() { return isConnected; }
-    public void setIsConnected(boolean value) { isConnected = value; }
-
     private DisplayPreferenceManager preferenceManager;
     public DisplayPreferenceManager getPreferenceManager() {
         if (preferenceManager == null) {

@@ -106,9 +106,7 @@ public class ChannelsActivity extends BaseMbMobileActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (MB3Application.getInstance().getIsConnected()) {
-            buildAndSendQuery();
-        }
+        buildAndSendQuery();
     }
 
     @Override

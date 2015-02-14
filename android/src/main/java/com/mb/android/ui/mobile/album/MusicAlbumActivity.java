@@ -157,9 +157,7 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (MB3Application.getInstance().getIsConnected()) {
-            performInitialTasks();
-        }
+        performInitialTasks();
     }
 
     private void performInitialTasks() {

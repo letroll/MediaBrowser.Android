@@ -89,9 +89,7 @@ public class ActorDetailsActivity extends MbBackdropActivity implements ILongPre
     @Override
     public void onResume() {
         super.onResume();
-        if (MB3Application.getInstance().getIsConnected()) {
-            getActorDto();
-        }
+        getActorDto();
     }
 
     @Override

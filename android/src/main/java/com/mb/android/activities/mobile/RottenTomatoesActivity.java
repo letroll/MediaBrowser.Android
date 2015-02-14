@@ -146,9 +146,7 @@ public class RottenTomatoesActivity extends BaseMbMobileActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (MB3Application.getInstance().getIsConnected()) {
-            buildUi();
-        }
+        buildUi();
     }
 
     @Override
