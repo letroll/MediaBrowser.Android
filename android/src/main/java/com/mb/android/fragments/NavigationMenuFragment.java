@@ -269,12 +269,6 @@ public class NavigationMenuFragment extends Fragment {
                     query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.ParentId, ItemFields.SortName});
                     query.setLimit(200);
 
-                    if (MB3Application.getInstance().user != null
-                            && MB3Application.getInstance().user.getConfiguration() != null) {
-                        if (MB3Application.getInstance().user.getConfiguration().getGroupMoviesIntoBoxSets())
-                            query.setCollapseBoxSetItems(true);
-                    }
-
                     String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(query);
 
                     Intent intent = new Intent(MB3Application.getInstance(), LibraryPresentationActivity.class);

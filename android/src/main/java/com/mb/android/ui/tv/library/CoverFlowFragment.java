@@ -50,7 +50,6 @@ public class CoverFlowFragment extends BaseLibraryFragment {
     private TextView mMetaScore;
     private ImageView mOfficialRating;
     private TextView mOfficialRatingText;
-    private boolean isFresh = true;
     private PlayerHelpers mPlayHelper;
     private LinearLayout mDetailsPane;
     private Animation fadeInAnimation;
@@ -105,9 +104,7 @@ public class CoverFlowFragment extends BaseLibraryFragment {
     }
 
     public void performInitialSetup() {
-        if (isFresh) {
-            isFresh = false;
-        }
+
     }
 
 

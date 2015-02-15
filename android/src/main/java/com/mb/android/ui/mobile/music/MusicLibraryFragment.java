@@ -50,7 +50,6 @@ public class MusicLibraryFragment extends Fragment {
     private IndexableGridView mContentGrid;
     private List<BaseItemDto> mItems;
     private String mParentId;
-    private boolean isFresh = true;
     private RootCategory rootCategory = RootCategory.artist;
 
 
@@ -85,26 +84,23 @@ public class MusicLibraryFragment extends Fragment {
     public void onResume() {
         super.onResume();
         AppLogger.getLogger().Info(TAG + ": onResume");
-        if (isFresh) {
-            rootCategory = RootCategory.valueOf(PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance()).getString("pref_music_root", "artist"));
-            switch(rootCategory) {
-                case artist:
-                    displayArtists();
-                    break;
-                case albumArtist:
-                    displayAlbumArtists();
-                    break;
-                case album:
-                    displayAlbums();
-                    break;
-                case song:
-                    displaySongs();
-                    break;
-                case genre:
-                    displayGenres();
-                    break;
-            }
-            isFresh = false;
+        rootCategory = RootCategory.valueOf(PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance()).getString("pref_music_root", "artist"));
+        switch(rootCategory) {
+            case artist:
+                displayArtists();
+                break;
+            case albumArtist:
+                displayAlbumArtists();
+                break;
+            case album:
+                displayAlbums();
+                break;
+            case song:
+                displaySongs();
+                break;
+            case genre:
+                displayGenres();
+                break;
         }
         AppLogger.getLogger().Info(TAG + ": end onResume");
     }

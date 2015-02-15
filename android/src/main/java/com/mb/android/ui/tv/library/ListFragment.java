@@ -60,7 +60,6 @@ public class ListFragment extends BaseLibraryFragment {
     private TextView mMetaScore;
     private ImageView mOfficialRating;
     private TextView mOfficialRatingText;
-    private boolean isFresh = true;
     private PlayerHelpers mPlayHelper;
     private LinearLayout mDetailsPane;
     private Animation fadeInAnimation;
@@ -114,19 +113,16 @@ public class ListFragment extends BaseLibraryFragment {
     }
 
     public void performInitialSetup() {
-        if (isFresh) {
-            isFresh = false;
-            if (parent == null || !parent.getHasBanner()) {
-                banner.setVisibility(View.GONE);
-            } else {
-                ImageOptions options = new ImageOptions();
-                options.setImageType(ImageType.Banner);
-                banner.setImageUrl(
-                        MB3Application.getInstance().API.GetImageUrl(parent.getId(), options),
-                        MB3Application.getInstance().API.getImageLoader()
-                );
-                banner.setVisibility(View.VISIBLE);
-            }
+        if (parent == null || !parent.getHasBanner()) {
+            banner.setVisibility(View.GONE);
+        } else {
+            ImageOptions options = new ImageOptions();
+            options.setImageType(ImageType.Banner);
+            banner.setImageUrl(
+                    MB3Application.getInstance().API.GetImageUrl(parent.getId(), options),
+                    MB3Application.getInstance().API.getImageLoader()
+            );
+            banner.setVisibility(View.VISIBLE);
         }
     }
 

@@ -53,7 +53,6 @@ public class BookDetailsActivity extends BaseMbMobileActivity {
     private boolean mAddFavoriteMenuItemVisible;
     private boolean mRemoveFavoriteMenuItemVisible;
     private File mDownloadingFile;
-    private boolean isFresh = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -231,14 +230,11 @@ public class BookDetailsActivity extends BaseMbMobileActivity {
     }
 
     private void getInitialItem() {
-        if (isFresh) {
-            if (mItem != null && MB3Application.getInstance().API.getCurrentUserId() != null) {
-                MB3Application.getInstance().API.GetItemAsync(
-                        mItem.getId(),
-                        MB3Application.getInstance().API.getCurrentUserId(),
-                        getItemResponse);
-            }
-            isFresh = false;
+        if (mItem != null && MB3Application.getInstance().API.getCurrentUserId() != null) {
+            MB3Application.getInstance().API.GetItemAsync(
+                    mItem.getId(),
+                    MB3Application.getInstance().API.getCurrentUserId(),
+                    getItemResponse);
         }
     }
 

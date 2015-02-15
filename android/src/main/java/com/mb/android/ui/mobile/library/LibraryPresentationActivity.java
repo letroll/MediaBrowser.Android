@@ -361,17 +361,6 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
             mItemQuery.setSortOrder(SortOrder.Ascending);
             mItemQuery.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.SortName, ItemFields.DateCreated, ItemFields.Genres});
             mItemQuery.setLimit(200);
-
-            if (MB3Application.getInstance().user != null && MB3Application.getInstance().user.getConfiguration() != null) {
-                if (MB3Application.getInstance().user.getConfiguration().getDisplayMissingEpisodes())
-                    mItemQuery.setIsMissing(true);
-
-                if (MB3Application.getInstance().user.getConfiguration().getDisplayUnairedEpisodes())
-                    mItemQuery.setIsVirtualUnaired(true);
-
-                if (MB3Application.getInstance().user.getConfiguration().getGroupMoviesIntoBoxSets())
-                    mItemQuery.setCollapseBoxSetItems(true);
-            }
         }
 
         if (mItemQuery != null) {

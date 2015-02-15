@@ -67,7 +67,6 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
     private int mImageIndex = 1;
     private boolean mDying = false;
     private boolean shouldPlayThemeSong;
-    private boolean isFresh = true;
     private SeriesDetailsFragment seriesDetailsFragment;
 
     public void setSeriesDetailsFragment(SeriesDetailsFragment fragment) {
@@ -194,7 +193,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
     }
 
     private void buildUi() {
-        if (!isFresh || mSeries == null) return;
+        if (mSeries == null) return;
 
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mSeries.getId())) {
 
@@ -212,8 +211,6 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
                 );
             }
         }
-
-        isFresh = false;
     }
 
 

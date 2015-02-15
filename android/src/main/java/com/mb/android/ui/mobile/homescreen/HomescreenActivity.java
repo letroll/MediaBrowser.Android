@@ -34,7 +34,6 @@ public class HomescreenActivity extends BaseMbMobileActivity {
 
     private ActionBarDrawerToggle mDrawerToggle;
     private ViewPager mViewPager;
-    private boolean isFresh = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -144,16 +143,13 @@ public class HomescreenActivity extends BaseMbMobileActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (isFresh) {
-            buildUI();
-        }
+        buildUI();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         AppLogger.getLogger().Info("HomeScreen Activity: onPause");
-//        mMini.removeOnMiniControllerChangedListener(mCastManager);
     }
 
 
@@ -162,13 +158,6 @@ public class HomescreenActivity extends BaseMbMobileActivity {
         super.onDestroy();
         AppLogger.getLogger().Info("HomeScreen Activity: onDestroy");
         MB3Application.getAudioService().Terminate();
-//        try {
-//            if (MB3Application.getInstance().webSocketService != null
-//                    && MB3Application.getInstance().webSocketService.GetIsInitialized())
-//                MB3Application.getInstance().webSocketService.Disconnect();
-//        } catch (Exception e) {
-//            FileLogger.getLogger().ErrorException("Error disconnecting WebSocket. Possibly previously disconnected", e);
-//        }
     }
 
     @Override
@@ -177,56 +166,18 @@ public class HomescreenActivity extends BaseMbMobileActivity {
     }
 
     private void buildUI() {
-        if (isFresh) {
-            HomeScreenPagerAdapter mHomeScreenPagerAdapter = new HomeScreenPagerAdapter(getSupportFragmentManager());
-            mViewPager.setAdapter(mHomeScreenPagerAdapter);
+        HomeScreenPagerAdapter mHomeScreenPagerAdapter = new HomeScreenPagerAdapter(getSupportFragmentManager());
+        mViewPager.setAdapter(mHomeScreenPagerAdapter);
 
-            try {
-                String tabIndex = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_home_default_tab", "1");
-                mViewPager.setCurrentItem(Integer.valueOf(tabIndex), true);
-            } catch (Exception e) {
-                AppLogger.getLogger().ErrorException("Error setting view pager index", e);
-            }
-
-            mViewPager.requestFocus();
-            isFresh = false;
+        try {
+            String tabIndex = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_home_default_tab", "1");
+            mViewPager.setCurrentItem(Integer.valueOf(tabIndex), true);
+        } catch (Exception e) {
+            AppLogger.getLogger().ErrorException("Error setting view pager index", e);
         }
+
+        mViewPager.requestFocus();
     }
-
-//    @Override
-//    public boolean onKeyDown(int keycode, KeyEvent e) {
-//
-//        switch (keycode) {
-//
-//            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-//
-//                try {
-//                    if (mViewPager != null) {
-//                        ICommandListener commandListener = (ICommandListener) ((HomeScreenPagerAdapter) mViewPager.getAdapter()).getItem(mViewPager.getCurrentItem());
-//                        if (commandListener != null) {
-//                            commandListener.onPlayButton();
-//                        }
-//                    }
-//                } catch (NullPointerException | ClassCastException ex) {
-//                    FileLogger.getLogger().Debug("Error sending play request to fragment");
-//                }
-//
-//                return true;
-//            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
-//                if (mViewPager != null && mViewPager.getCurrentItem() < 5) {
-//                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-//                }
-//                return true;
-//            case KeyEvent.KEYCODE_MEDIA_REWIND:
-//                if (mViewPager != null && mViewPager.getCurrentItem() > 0) {
-//                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1);
-//                }
-//                return true;
-//        }
-//
-//        return super.onKeyDown(keycode, e);
-//    }
-
 
     public class HomeScreenPagerAdapter extends FragmentStatePagerAdapter {
 

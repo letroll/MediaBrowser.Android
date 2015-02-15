@@ -448,9 +448,7 @@ public class ProgramDetailsActivity extends BaseMbMobileActivity implements View
 
     private boolean userCanManageLiveTV() {
 
-        return MB3Application.getInstance().user != null
-                && MB3Application.getInstance().user.getConfiguration() != null
-                && MB3Application.getInstance().user.getConfiguration().getEnableLiveTvManagement();
+        return MB3Application.getInstance().user.getPolicy().getEnableLiveTvManagement();
 
     }
 
