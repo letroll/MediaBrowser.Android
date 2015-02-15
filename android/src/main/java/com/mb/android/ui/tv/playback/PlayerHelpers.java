@@ -314,7 +314,7 @@ public final class PlayerHelpers {
                     mediaSourceId,
                     audioStreamIndex,
                     subtitleStreamIndex);
-            String url = info.ToUrl(MB3Application.getInstance().API.getApiUrl());
+            String url = info.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken());
             AppLogger.getLogger().Info("External player URL: " + url);
             AppLogger.getLogger().Debug("External Player url", url);
 
@@ -605,7 +605,7 @@ public final class PlayerHelpers {
             return;
         }
         streamInfo.setSubtitleFormat("srt");
-        final List<SubtitleStreamInfo> subtitles = streamInfo.GetExternalSubtitles(MB3Application.getInstance().API.getApiUrl(), false);
+        final List<SubtitleStreamInfo> subtitles = streamInfo.GetExternalSubtitles(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken(), false);
 
         if (subtitles != null && subtitles.size() > 0) {
             new SubtitleDownloader(new Response<File>() {

@@ -535,7 +535,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                     mSelectedMediaSourceId,
                     mSelectedAudioStreamIndex,
                     mSelectedSubtitleStreamIndex);
-            String url = info.ToUrl(MB3Application.getInstance().API.getApiUrl());
+            String url = info.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken());
             AppLogger.getLogger().Info("External player URL: " + url);
             AppLogger.getLogger().Debug("External Player url", url);
 

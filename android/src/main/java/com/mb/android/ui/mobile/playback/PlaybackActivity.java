@@ -668,7 +668,7 @@ public class PlaybackActivity
 
         if (!mResume && mStreamInfo.getSubtitleDeliveryMethod().equals(SubtitleDeliveryMethod.External)) {
             mStreamInfo.setSubtitleFormat("srt");
-            final List<SubtitleStreamInfo> subtitles = mStreamInfo.GetExternalSubtitles(MB3Application.getInstance().API.getApiUrl(), false);
+            final List<SubtitleStreamInfo> subtitles = mStreamInfo.GetExternalSubtitles(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken(), false);
 
             if (subtitles != null && subtitles.size() > 0) {
                 new SubtitleDownloader(new Response<File>() {
@@ -922,7 +922,7 @@ public class PlaybackActivity
                     mPlayerPositionOffset = mTruePlayerPosition;
 
                     try {
-                        mPlayer.setDataSource(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl()));
+                        mPlayer.setDataSource(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken()));
                         mPlayer.prepareAsync();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -944,7 +944,7 @@ public class PlaybackActivity
                     mStreamInfo.setStartPositionTicks(mTruePlayerPosition);
 
                     try {
-                        mPlayer.setDataSource(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl()));
+                        mPlayer.setDataSource(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken()));
                         mPlayer.prepareAsync();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -998,7 +998,7 @@ public class PlaybackActivity
                         mPlayerPositionOffset = seekTarget;
 
                         try {
-                            String url = mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl());
+                            String url = mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken());
                             AppLogger.getLogger().Info("Fast Forward");
                             AppLogger.getLogger().Info("new url: " + url);
                             mPlayer.setDataSource(url);
@@ -1514,7 +1514,7 @@ public class PlaybackActivity
             mPlayer.setOnCompletionListener(this);
         }
         if (mPlayer != null) {
-            loadUrlIntoPlayer(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl()));
+            loadUrlIntoPlayer(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken()));
         }
     }
 
@@ -1918,7 +1918,7 @@ public class PlaybackActivity
                 mPlayerPositionOffset = seekPositionMs;
                 mStreamInfo.setStartPositionTicks((long)seekPositionMs * 10000);
 
-                String url = mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl());
+                String url = mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken());
                 AppLogger.getLogger().Info("Seek performed");
                 AppLogger.getLogger().Info("new url: " + url);
 

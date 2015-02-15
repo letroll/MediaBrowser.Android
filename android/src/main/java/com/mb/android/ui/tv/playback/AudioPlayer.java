@@ -679,7 +679,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
     };
 
     private void loadStreamInfoIntoPlayer() {
-        loadUrlIntoPlayer(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl()));
+        loadUrlIntoPlayer(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken()));
     }
 
     private void loadUrlIntoPlayer(String url) {

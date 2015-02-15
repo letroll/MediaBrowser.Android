@@ -649,7 +649,7 @@ public class AudioService
     private void loadStreamInfoIntoPlayer() {
 
         if (mPlayer != null) {
-            loadUrlIntoPlayer(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl()));
+            loadUrlIntoPlayer(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken()));
         }
     }
 

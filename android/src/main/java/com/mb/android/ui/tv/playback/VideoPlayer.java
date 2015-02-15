@@ -1003,7 +1003,7 @@ public class VideoPlayer extends FragmentActivity
 
     private void loadStreamInfoIntoPlayer() {
         if (mVideoView != null) {
-            loadUrlIntoPlayer(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl()));
+            loadUrlIntoPlayer(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken()));
         }
     }
 

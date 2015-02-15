@@ -363,7 +363,7 @@ public class Utils {
             mStreamInfo.setStartPositionTicks(startPositionTicks);
         }
 
-        return mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl());
+        return mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken());
     }
 
     public static Date convertToLocalDate(Date utcDate) {
