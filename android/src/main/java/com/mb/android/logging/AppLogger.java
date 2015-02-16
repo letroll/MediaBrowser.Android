@@ -134,31 +134,31 @@ public class AppLogger implements ILogger {
 
     @Override
     public void Info(String message, Object... paramList) {
-        internalLogger.info(message, paramList);
+        internalLogger.info(String.format(message, paramList));
     }
 
 
     @Override
     public void Error(String message, Object... paramList) {
-        internalLogger.error(message, paramList);
+        internalLogger.error(String.format(message, paramList));
     }
 
 
     @Override
     public void Warn(String message, Object... paramList) {
-        internalLogger.warn(message, paramList);
+        internalLogger.warn(String.format(message, paramList));
     }
 
 
     @Override
     public void Debug(String message, Object... paramList) {
-        internalLogger.debug(message, paramList);
+        internalLogger.debug(String.format(message, paramList));
     }
 
 
     @Override
     public void Fatal(String message, Object... paramList) {
-        internalLogger.error(message, paramList);
+        internalLogger.error(String.format(message, paramList));
     }
 
 
