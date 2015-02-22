@@ -70,6 +70,8 @@ public class AppLogger implements ILogger {
         fileAppender.start();
 
         LogcatAppender logcatAppender = new LogcatAppender();
+        logcatAppender.setEncoder(encoder1);
+        logcatAppender.setName("App");
         logcatAppender.setContext(lc);
         logcatAppender.start();
 

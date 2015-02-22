@@ -34,6 +34,7 @@ public class HomescreenActivity extends BaseMbMobileActivity {
 
     private ActionBarDrawerToggle mDrawerToggle;
     private ViewPager mViewPager;
+    private boolean isFresh = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,25 +75,8 @@ public class HomescreenActivity extends BaseMbMobileActivity {
 
         drawer.setDrawerListener(mDrawerToggle);
 
-        // RetroArch prerequisite check
-
-//        try {
-//            ApplicationInfo info = getPackageManager().getApplicationInfo("com.retroarch", 0);
-//            Toast.makeText(this, "Retroarch Installed", Toast.LENGTH_LONG).show();
-//            mApp.LibretroNativeLibraryPath = info.nativeLibraryDir;
-//        } catch (PackageManager.NameNotFoundException e) {
-//            Toast.makeText(this, "Retroarch not found", Toast.LENGTH_LONG).show();
-//            try {
-//                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.retroarch")));
-//            } catch (ActivityNotFoundException anfe) {
-//
-//            }
-//        }
-
         mMini = (MiniController) findViewById(R.id.miniController1);
         mCastManager.addMiniController(mMini);
-
-//        CodecUtils.logCodecInfo();
     }
 
     @Override
@@ -143,13 +127,16 @@ public class HomescreenActivity extends BaseMbMobileActivity {
     @Override
     public void onResume() {
         super.onResume();
-        buildUI();
+        if (isFresh) {
+            buildUI();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         AppLogger.getLogger().Info("HomeScreen Activity: onPause");
+//        mMini.removeOnMiniControllerChangedListener(mCastManager);
     }
 
 
@@ -166,17 +153,20 @@ public class HomescreenActivity extends BaseMbMobileActivity {
     }
 
     private void buildUI() {
-        HomeScreenPagerAdapter mHomeScreenPagerAdapter = new HomeScreenPagerAdapter(getSupportFragmentManager());
-        mViewPager.setAdapter(mHomeScreenPagerAdapter);
+        if (isFresh) {
+            HomeScreenPagerAdapter mHomeScreenPagerAdapter = new HomeScreenPagerAdapter(getSupportFragmentManager());
+            mViewPager.setAdapter(mHomeScreenPagerAdapter);
 
-        try {
-            String tabIndex = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_home_default_tab", "1");
-            mViewPager.setCurrentItem(Integer.valueOf(tabIndex), true);
-        } catch (Exception e) {
-            AppLogger.getLogger().ErrorException("Error setting view pager index", e);
+            try {
+                String tabIndex = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_home_default_tab", "1");
+                mViewPager.setCurrentItem(Integer.valueOf(tabIndex), true);
+            } catch (Exception e) {
+                AppLogger.getLogger().ErrorException("Error setting view pager index", e);
+            }
+
+            mViewPager.requestFocus();
+            isFresh = false;
         }
-
-        mViewPager.requestFocus();
     }
 
     public class HomeScreenPagerAdapter extends FragmentStatePagerAdapter {

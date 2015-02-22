@@ -141,11 +141,11 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
     };
 
     private void onUnavailable(ConnectionResult result) {
-        // No servers found. User must manually enter connection info.
+
+        // Connection to server failed
         AppLogger.getLogger().Info("**** UNAVAILABLE ***");
         dismissActivityDialog();
 
-        showServerSelection(result.getServers());
         Toast.makeText(this, "Server Unreachable", Toast.LENGTH_LONG).show();
     }
 
