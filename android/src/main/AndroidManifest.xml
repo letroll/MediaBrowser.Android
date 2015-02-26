@@ -216,7 +216,7 @@
         package. -->
         <provider
             android:name="mediabrowser.apiinteraction.android.sync.MediaContentProvider"
-            android:authorities="com.mediabrowser.sync"
+            android:authorities="mediabrowser.tv"
             android:exported="false"
             android:syncable="true" />
 
