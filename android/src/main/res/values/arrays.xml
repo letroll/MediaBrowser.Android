@@ -30,6 +30,25 @@
         <item>19.0 Mb/s</item>
         <item>20.0 Mb/s</item>
         <item>21.0 Mb/s</item>
+        <item>22.0 Mb/s</item>
+        <item>23.0 Mb/s</item>
+        <item>24.0 Mb/s</item>
+        <item>25.0 Mb/s</item>
+        <item>26.0 Mb/s</item>
+        <item>27.0 Mb/s</item>
+        <item>28.0 Mb/s</item>
+        <item>29.0 Mb/s</item>
+        <item>30.0 Mb/s</item>
+        <item>31.0 Mb/s</item>
+        <item>32.0 Mb/s</item>
+        <item>33.0 Mb/s</item>
+        <item>34.0 Mb/s</item>
+        <item>35.0 Mb/s</item>
+        <item>36.0 Mb/s</item>
+        <item>37.0 Mb/s</item>
+        <item>38.0 Mb/s</item>
+        <item>39.0 Mb/s</item>
+        <item>40.0 Mb/s</item>
     </string-array>
 
     <string-array name="pref_bitrate_values" translatable="false">
@@ -61,6 +80,25 @@
         <item>18872000</item>
         <item>19872000</item>
         <item>20872000</item>
+        <item>21872000</item>
+        <item>22872000</item>
+        <item>23872000</item>
+        <item>24872000</item>
+        <item>25872000</item>
+        <item>26872000</item>
+        <item>27872000</item>
+        <item>28872000</item>
+        <item>29872000</item>
+        <item>30872000</item>
+        <item>31872000</item>
+        <item>32872000</item>
+        <item>33872000</item>
+        <item>34872000</item>
+        <item>35872000</item>
+        <item>36872000</item>
+        <item>37872000</item>
+        <item>38872000</item>
+        <item>39872000</item>
     </string-array>
 
     <string-array name="pref_homescreen_tab_names">
