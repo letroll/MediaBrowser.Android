@@ -3,7 +3,7 @@ package com.mb.android.ui.tv;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 
@@ -85,10 +85,10 @@ public abstract class MbBackdropActivity extends MbBaseActivity {
         }
 
         if (mBackdropSwitcher.getDisplayedChild() == 0) {
-            mBackdropImage2.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            mBackdropImage2.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mBackdropSwitcher.showNext();
         } else {
-            mBackdropImage1.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            mBackdropImage1.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mBackdropSwitcher.showPrevious();
         }
     }
@@ -102,11 +102,11 @@ public abstract class MbBackdropActivity extends MbBaseActivity {
 
         if (mBackdropSwitcher.getDisplayedChild() == 0) {
             mBackdropImage2.setDefaultImageResId(R.drawable.default_backdrop);
-            mBackdropImage2.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+            mBackdropImage2.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
             mBackdropSwitcher.showNext();
         } else {
             mBackdropImage1.setDefaultImageResId(R.drawable.default_backdrop);
-            mBackdropImage1.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+            mBackdropImage1.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
             mBackdropSwitcher.showPrevious();
         }
 

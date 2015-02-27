@@ -6,14 +6,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.ui.mobile.library.LibraryPresentationActivity;
 import com.mb.android.activities.mobile.SeriesViewActivity;
@@ -75,12 +74,12 @@ public class SeasonsFragment extends Fragment {
 
         AppLogger.getLogger().Info("SeasonsFragment: creating query");
         SeasonQuery query = new SeasonQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setSeriesId(mSeriesid);
         query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.SortName});
 
         AppLogger.getLogger().Info("SeasonsFragment: Requesting seasons");
-        MB3Application.getInstance().API.GetSeasonsAsync(query, getItemsResponse);
+        MainApplication.getInstance().API.GetSeasonsAsync(query, getItemsResponse);
 
     }
 
@@ -113,8 +112,8 @@ public class SeasonsFragment extends Fragment {
                     seasonsList.setAdapter(
                             new MediaAdapterPosters(
                                     Arrays.asList(response.getItems()),
-                                    MB3Application.getInstance().getResources().getInteger(R.integer.library_columns_poster),
-                                    MB3Application.getInstance().API,
+                                    MainApplication.getInstance().getResources().getInteger(R.integer.library_columns_poster),
+                                    MainApplication.getInstance().API,
                                     R.drawable.default_video_portrait
                             )
                     );
@@ -129,12 +128,12 @@ public class SeasonsFragment extends Fragment {
                         Intent intent = new Intent(mSeriesActivity, LibraryPresentationActivity.class);
 
                         EpisodeQuery query = new EpisodeQuery();
-                        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+                        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
                         query.setSeriesId(mSeriesid);
                         query.setSeasonId(String.valueOf(response.getItems()[position].getId()));
                         query.setFields(new ItemFields[]{ItemFields.SortName, ItemFields.PrimaryImageAspectRatio});
 
-                        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(query);
+                        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(query);
 
                         intent.putExtra("EpisodeQuery", jsonData);
                         intent.putExtra("DisableIndexing", true);

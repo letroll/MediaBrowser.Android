@@ -3,7 +3,6 @@ package com.mb.android.ui.mobile.livetv;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.ProgramDetailsActivity;
 import com.mb.android.adapters.ScheduledSeriesRecordingsAdapter;
@@ -58,7 +57,7 @@ public class ScheduledSeriesFragment extends Fragment {
 
         SeriesTimerQuery query = new SeriesTimerQuery();
         query.setSortOrder(SortOrder.Ascending);
-        MB3Application.getInstance().API.GetLiveTvSeriesTimersAsync(query, new GetSeriesTimersResponse());
+        MainApplication.getInstance().API.GetLiveTvSeriesTimersAsync(query, new GetSeriesTimersResponse());
     }
 
     private class GetSeriesTimersResponse extends Response<SeriesTimerInfoDtoResult> {
@@ -78,7 +77,7 @@ public class ScheduledSeriesFragment extends Fragment {
             timers.addAll(Arrays.asList(result.getItems()));
 
             if (timers.size() == 0) {
-                mErrorText.setText(MB3Application.getInstance().getResources().getString(R.string.no_scheduled_recordings));
+                mErrorText.setText(MainApplication.getInstance().getResources().getString(R.string.no_scheduled_recordings));
                 mErrorText.setVisibility(View.VISIBLE);
             } else {
                 mRecordings.setAdapter(new ScheduledSeriesRecordingsAdapter(timers));
@@ -86,8 +85,8 @@ public class ScheduledSeriesFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(timers.get(i));
-                        Intent intent = new Intent(MB3Application.getInstance(), ProgramDetailsActivity.class);
+                        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(timers.get(i));
+                        Intent intent = new Intent(MainApplication.getInstance(), ProgramDetailsActivity.class);
                         intent.putExtra("timer", jsonData);
 
                         if (timers.get(i).getId() == null) {

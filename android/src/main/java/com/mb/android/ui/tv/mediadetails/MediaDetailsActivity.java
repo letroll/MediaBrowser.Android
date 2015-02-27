@@ -7,7 +7,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -26,7 +25,7 @@ import com.jess.ui.TwoWayGridView;
 import com.mb.android.DialogFragments.StreamSelectionDialogFragment;
 import com.mb.android.ItemListWrapper;
 import com.mb.android.ItemReviewsWrapper;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.adapters.HorizontalAdapterBackdrops;
 import com.mb.android.adapters.TvActorAdapter;
@@ -116,7 +115,7 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
         setContentView(R.layout.tv_activity_details);
 
         String jsonData = getIntent().getStringExtra("CurrentBaseItemDTO");
-        mItem = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
+        mItem = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
         mParentCollectionType = getIntent().getStringExtra("CollectionType");
 
         inflateControls();
@@ -145,9 +144,9 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
 
     @Override
     protected void onUserDataUpdated(String itemId, UserItemDataDto userItemDataDto) {
-        MB3Application.getInstance().API.GetItemAsync(
+        MainApplication.getInstance().API.GetItemAsync(
                 mItem.getId(),
-                MB3Application.getInstance().API.getCurrentUserId(),
+                MainApplication.getInstance().API.getCurrentUserId(),
                 new GetItemResponse(true));
     }
 
@@ -173,21 +172,21 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
 
     private void getItemData() {
         if (mIsFresh && mItem != null) {
-            MB3Application.getInstance().API.GetItemAsync(
+            MainApplication.getInstance().API.GetItemAsync(
                     mItem.getId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     new GetItemResponse(false));
 
-            MB3Application.getInstance().API.GetSpecialFeaturesAsync(
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetSpecialFeaturesAsync(
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     mItem.getId(),
                     new GetSpecialFeaturesResponse()
             );
 
-            MB3Application.getInstance().API.GetCriticReviews(mItem.getId(), 0, 25, new GetCriticReviewsResponse());
+            MainApplication.getInstance().API.GetCriticReviews(mItem.getId(), 0, 25, new GetCriticReviewsResponse());
 
             if ("movie".equalsIgnoreCase(mItem.getType()) || "episode".equalsIgnoreCase(mItem.getType())) {
-                MB3Application.getInstance().API.GetIntrosAsync(mItem.getId(), MB3Application.getInstance().API.getCurrentUserId(), new GetIntrosResponse());
+                MainApplication.getInstance().API.GetIntrosAsync(mItem.getId(), MainApplication.getInstance().API.getCurrentUserId(), new GetIntrosResponse());
             } else {
                 mQuickPlayCallbackCompleted = true;
                 mQuickPlayEnabled = false;
@@ -354,8 +353,8 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
                             mPlayHelper.playItem(MediaDetailsActivity.this, mItem, 0L, mSelectedAudioStream, mSelectedSubtitleStream, mSelectedMediaSourceId, true);
                             break;
                         case "play trailer":
-                            MB3Application.getInstance().API.GetLocalTrailersAsync(
-                                    MB3Application.getInstance().API.getCurrentUserId(), mItem.getId(),
+                            MainApplication.getInstance().API.GetLocalTrailersAsync(
+                                    MainApplication.getInstance().API.getCurrentUserId(), mItem.getId(),
                                     getLocalTrailersResponse);
                             break;
                     }
@@ -396,7 +395,7 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
         mOverview.setText(item.getOverview());
 
         if (item.getHasPrimaryImage()) {
-            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance());
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
             boolean enableImageEnhancers = true;
             if (sharedPrefs != null) {
                 enableImageEnhancers = sharedPrefs.getBoolean("pref_enable_image_enhancers", true);
@@ -407,9 +406,9 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
             options.setMaxHeight(600);
             options.setEnableImageEnhancers(enableImageEnhancers);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(item, options);
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(item, options);
 
-            mPosterImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            mPosterImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
 
         }
 
@@ -453,9 +452,9 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
             options.setMaxWidth(225);
             options.setMaxHeight(225);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mItem, options);
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem, options);
 
-            mDiscImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            mDiscImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mDiscImage.setVisibility(View.VISIBLE);
 
             Animation rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate);
@@ -485,13 +484,13 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
                 imageOptions.setMaxWidth(1280);
                 imageOptions.setImageIndex(i);
 
-                backdropUrls.add(MB3Application.getInstance().API.GetImageUrl(item, imageOptions));
+                backdropUrls.add(MainApplication.getInstance().API.GetImageUrl(item, imageOptions));
             }
 
             setBackdropImages(backdropUrls);
         }
         else if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(item.getParentBackdropItemId())) {
-            MB3Application.getInstance().API.GetItemAsync(item.getParentBackdropItemId(), MB3Application.getInstance().API.getCurrentUserId(), new Response<BaseItemDto>() {
+            MainApplication.getInstance().API.GetItemAsync(item.getParentBackdropItemId(), MainApplication.getInstance().API.getCurrentUserId(), new Response<BaseItemDto>() {
                 @Override
                 public void onResponse(BaseItemDto parentItem) {
                     if (parentItem == null) return;
@@ -509,9 +508,9 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
             options.setImageType(ImageType.Logo);
             options.setWidth(900);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mItem, options);
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem, options);
 
-            mLogo.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            mLogo.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mLogo.setVisibility(View.VISIBLE);
 
         } else {
@@ -678,7 +677,7 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
     private void setActivityResult() {
         Intent intent = new Intent();
         intent.putExtra("Id", mItem.getId());
-        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mItem.getUserData());
+        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mItem.getUserData());
         intent.putExtra("UserData", jsonData);
         setResult(RESULT_OK, intent);
     }
@@ -765,14 +764,14 @@ public class MediaDetailsActivity extends MbBackdropActivity implements ILongPre
         mSimilarItems = new ArrayList<>();
         SimilarItemsQuery query = new SimilarItemsQuery();
         query.setId(mItem.getId());
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setLimit(24);
         query.setFields(new ItemFields[]{ ItemFields.PrimaryImageAspectRatio, ItemFields.SortName });
 
         if (mItem.getType().equalsIgnoreCase("movie")) {
-            MB3Application.getInstance().API.GetSimilarMoviesAsync(query, new GetSimilarItemsResponse());
+            MainApplication.getInstance().API.GetSimilarMoviesAsync(query, new GetSimilarItemsResponse());
         } else if (mItem.getType().equalsIgnoreCase("series")) {
-            MB3Application.getInstance().API.GetSimilarSeriesAsync(query, new GetSimilarItemsResponse());
+            MainApplication.getInstance().API.GetSimilarSeriesAsync(query, new GetSimilarItemsResponse());
         }
     }
 

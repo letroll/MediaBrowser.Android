@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import mediabrowser.model.dto.BaseItemDto;
@@ -37,7 +37,7 @@ public class TvSongsAdapter extends BaseAdapter implements SectionIndexer {
         mSongs = baseItems;
 
         try {
-            li = (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            li = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         } catch (Exception e) {
             AppLogger.getLogger().ErrorException("Error in adapter initialization", e);
         }

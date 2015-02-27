@@ -3,7 +3,6 @@ package com.mb.android.ui.mobile.homescreen;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.MediaDetailsActivity;
 import com.mb.android.adapters.HomeScreenItemsAdapter;
@@ -59,17 +58,17 @@ public class UpNextFragment extends Fragment implements ICommandListener {
         super.onResume();
 
         AppLogger.getLogger().Info(TAG + "onResume");
-        if (MB3Application.getInstance().API != null
-                && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getCurrentUserId())) {
+        if (MainApplication.getInstance().API != null
+                && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getCurrentUserId())) {
 
             mActivityIndicator.setVisibility(View.VISIBLE);
 
             NextUpQuery query = new NextUpQuery();
-            query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+            query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             query.setLimit(12);
             query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.ParentId});
 
-            MB3Application.getInstance().API.GetNextUpEpisodesAsync(query, getNextUpResponse);
+            MainApplication.getInstance().API.GetNextUpEpisodesAsync(query, getNextUpResponse);
         }
         AppLogger.getLogger().Info(TAG + "finish onResume");
     }
@@ -101,9 +100,9 @@ public class UpNextFragment extends Fragment implements ICommandListener {
             upNextGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View v, int index, long id) {
-                    String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mItems[index]);
+                    String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mItems[index]);
 
-                    Intent intent = new Intent(MB3Application.getInstance(), MediaDetailsActivity.class);
+                    Intent intent = new Intent(MainApplication.getInstance(), MediaDetailsActivity.class);
                     intent.putExtra("Item", jsonData);
                     intent.putExtra("LaunchedFromHomeScreen", true);
                     startActivity(intent);

@@ -18,7 +18,6 @@ import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.PagerTitleStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +27,7 @@ import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.DialogFragments.SyncDialog;
+import com.mb.android.MainApplication;
 import com.mb.android.activities.BaseMbMobileActivity;
 import com.mb.android.adapters.ResumeDialogAdapter;
 import mediabrowser.apiinteraction.Response;
@@ -37,7 +37,6 @@ import com.mb.android.playbackmediator.cast.exceptions.NoConnectionException;
 import com.mb.android.playbackmediator.cast.exceptions.TransientNetworkDisconnectionException;
 import com.mb.android.playbackmediator.widgets.MiniController;
 import com.mb.android.DialogFragments.StreamSelectionDialogFragment;
-import com.mb.android.MB3Application;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import com.mb.android.fragments.NavigationMenuFragment;
@@ -143,7 +142,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         }
 
         String jsonData = getMb3Intent().getStringExtra("Item");
-        mItem = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
+        mItem = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
 
         mLaunchedFromHomeScreen = getMb3Intent().getBooleanExtra("LaunchedFromHomeScreen", false);
 
@@ -191,9 +190,9 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
             }
         }
-        if (MB3Application.getInstance().user != null
-                && MB3Application.getInstance().user.getPolicy() != null
-                && MB3Application.getInstance().user.getPolicy().getEnableSync()) {
+        if (MainApplication.getInstance().user != null
+                && MainApplication.getInstance().user.getPolicy() != null
+                && MainApplication.getInstance().user.getPolicy().getEnableSync()) {
             //menu.add("Sync").setIcon(R.drawable.refresh).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         }
         MenuItem mRemoveFavoriteMenuItem = menu.add(getResources().getString(R.string.un_favorite_action_bar_button));
@@ -316,8 +315,8 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                 return true;
             }
 
-            MB3Application.getInstance().API.GetLocalTrailersAsync(
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetLocalTrailersAsync(
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     mItem.getId(),
                     getLocalTrailersResponse
             );
@@ -347,9 +346,9 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.favorite_action_bar_button))) {
 
-            MB3Application.getInstance().API.UpdateFavoriteStatusAsync(
+            MainApplication.getInstance().API.UpdateFavoriteStatusAsync(
                     mItem.getId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     true,
                     new UpdateFavoriteResponse()
             );
@@ -359,7 +358,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.un_favorite_action_bar_button))) {
 
-            MB3Application.getInstance().API.UpdateFavoriteStatusAsync(mItem.getId(), MB3Application.getInstance().API.getCurrentUserId(), false,
+            MainApplication.getInstance().API.UpdateFavoriteStatusAsync(mItem.getId(), MainApplication.getInstance().API.getCurrentUserId(), false,
                     new UpdateFavoriteResponse());
 
         /*
@@ -367,9 +366,9 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.played_action_bar_button))) {
 
-            MB3Application.getInstance().API.MarkPlayedAsync(
+            MainApplication.getInstance().API.MarkPlayedAsync(
                     mItem.getId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     new Date(),
                     new UpdatePlaystateResponse()
             );
@@ -379,9 +378,9 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.un_played_action_bar_button))) {
 
-            MB3Application.getInstance().API.MarkUnplayedAsync(
+            MainApplication.getInstance().API.MarkUnplayedAsync(
                     mItem.getId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     new UpdatePlaystateResponse());
 
         } else {
@@ -407,8 +406,8 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
             }
         }
 
-        if (MB3Application.getInstance().user != null
-                && MB3Application.getInstance().user.getPolicy().getEnableSync()) {
+        if (MainApplication.getInstance().user != null
+                && MainApplication.getInstance().user.getPolicy().getEnableSync()) {
         }
 
         AppLogger.getLogger().Info("Media Details Activity: onResume");
@@ -423,7 +422,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
 
             // Only request the theme song if the feature is enabled in settings
             if (PreferenceManager.getDefaultSharedPreferences(this).getBoolean("pref_play_theme", false))
-                if (!MB3Application.getAudioService().getPlayerState().equals(AudioService.PlayerState.PLAYING)) {
+                if (!MainApplication.getAudioService().getPlayerState().equals(AudioService.PlayerState.PLAYING)) {
                     return true;
                 }
         }
@@ -455,14 +454,14 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         if (isFresh) {
             if (mItem != null) {
 
-                MB3Application.getInstance().API.GetItemAsync(
+                MainApplication.getInstance().API.GetItemAsync(
                         mItem.getId(),
-                        MB3Application.getInstance().API.getCurrentUserId(),
+                        MainApplication.getInstance().API.getCurrentUserId(),
                         getItemResponse);
 
                 if (shouldPlayThemeSong()) {
-                    MB3Application.getInstance().API.GetThemeSongsAsync(
-                            MB3Application.getInstance().API.getCurrentUserId(), mItem.getId(), true, getThemeSongsResponse);
+                    MainApplication.getInstance().API.GetThemeSongsAsync(
+                            MainApplication.getInstance().API.getCurrentUserId(), mItem.getId(), true, getThemeSongsResponse);
                 }
             }
             isFresh = false;
@@ -474,7 +473,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         if (mItem != null) {
             // We want episodes theme media to keep playing if it was started in the SeriesView activity
             if (mLaunchedFromHomeScreen || !"episode".equalsIgnoreCase(mItem.getType())) {
-                MB3Application.getInstance().StopMedia();
+                MainApplication.getInstance().StopMedia();
             }
         }
         super.onBackPressed();
@@ -500,12 +499,12 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
 
     private void handlePlayRequest(BaseItemDto item, boolean resume, boolean isTrailer) {
         // Kill audio playback
-        AudioService.PlayerState currentState = MB3Application.getAudioService().getPlayerState();
+        AudioService.PlayerState currentState = MainApplication.getAudioService().getPlayerState();
         if (currentState.equals(AudioService.PlayerState.PLAYING) || currentState.equals(AudioService.PlayerState.PAUSED)) {
-            MB3Application.getAudioService().stopMedia();
+            MainApplication.getAudioService().stopMedia();
         }
         // Just in case the TV Theme is still playing
-        MB3Application.getInstance().StopMedia();
+        MainApplication.getInstance().StopMedia();
 
         /*
         Playback is to commence on a ChromeCast device.
@@ -535,7 +534,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                     mSelectedMediaSourceId,
                     mSelectedAudioStreamIndex,
                     mSelectedSubtitleStreamIndex);
-            String url = info.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken());
+            String url = info.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken());
             AppLogger.getLogger().Info("External player URL: " + url);
             AppLogger.getLogger().Debug("External Player url", url);
 
@@ -547,14 +546,14 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         */
         } else {
             AppLogger.getLogger().Info("Play requested: Internal player");
-            MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+            MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
 
             if (isTrailer || resume) {
                 addToPlaylist(item, resume, null, null);
                 Intent intent = new Intent(this, PlaybackActivity.class);
                 startActivity(intent);
             } else {
-                MB3Application.getInstance().API.GetIntrosAsync(item.getId(), MB3Application.getInstance().API.getCurrentUserId(), new GetIntrosResponse(item, mSelectedAudioStreamIndex, mSelectedSubtitleStreamIndex));
+                MainApplication.getInstance().API.GetIntrosAsync(item.getId(), MainApplication.getInstance().API.getCurrentUserId(), new GetIntrosResponse(item, mSelectedAudioStreamIndex, mSelectedSubtitleStreamIndex));
             }
         }
     }
@@ -605,7 +604,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         if (subtitleStreamIndex != null && subtitleStreamIndex != -1) {
             playableItem.SubtitleStreamIndex = subtitleStreamIndex;
         }
-        MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
+        MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
     }
 
 
@@ -816,7 +815,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                             options.setImageType(ImageType.Backdrop);
                             //mBackdropImage1.postDelayed(CycleBackdrop, 8000);
 
-                            String imageUrl = MB3Application.getInstance().API.GetImageUrl(
+                            String imageUrl = MainApplication.getInstance().API.GetImageUrl(
                                     mItem.getParentBackdropItemId(), options);
                             mBackdropUrls.add(imageUrl);
                         }
@@ -828,7 +827,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                                 options.setMaxWidth(720);
                                 options.setImageIndex(i);
 
-                                String imageUrl = MB3Application.getInstance().API.GetImageUrl(mItem, options);
+                                String imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem, options);
                                 mBackdropUrls.add(imageUrl);
                             }
                         }
@@ -837,12 +836,12 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                     if (mBackdropUrls != null && mBackdropUrls.size() > 0) {
                         if (mBackdropUrls.size() == 1) {
                             mBackdropImage1.setImageUrl(mBackdropUrls.get(0),
-                                    MB3Application.getInstance().API.getImageLoader());
+                                    MainApplication.getInstance().API.getImageLoader());
                         } else if (mBackdropUrls.size() > 1) {
                             mBackdropSwitcher.post(CycleBackdrop);
                         }
                     } else {
-                        mBackdropImage1.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+                        mBackdropImage1.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
                     }
                 }
 
@@ -869,7 +868,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         public Fragment getItem(int position) {
 
             Bundle args = new Bundle();
-            args.putSerializable("Item", MB3Application.getInstance().getJsonSerializer().SerializeToString(mItem));
+            args.putSerializable("Item", MainApplication.getInstance().getJsonSerializer().SerializeToString(mItem));
 
             switch (position) {
 
@@ -918,7 +917,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                 AppLogger.getLogger().Info("GetInitialItemCallback", trailers[0].getId());
 
                 // Just in case the TV Theme is still playing
-                MB3Application.getInstance().StopMedia();
+                MainApplication.getInstance().StopMedia();
 
                 handlePlayRequest(trailers[0], false, true);
 
@@ -969,7 +968,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                 return;
 
             String url = Utils.buildPlaybackUrl(themeSongs.getItems()[0], 0L, null, null, null);
-            MB3Application.getInstance().PlayMedia(url);
+            MainApplication.getInstance().PlayMedia(url);
         }
         @Override
         public void onError(Exception ex) {
@@ -985,10 +984,10 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         }
 
         if (mBackdropSwitcher.getDisplayedChild() == 0) {
-            mBackdropImage2.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            mBackdropImage2.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mBackdropSwitcher.showNext();
         } else {
-            mBackdropImage1.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            mBackdropImage1.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mBackdropSwitcher.showPrevious();
         }
     }

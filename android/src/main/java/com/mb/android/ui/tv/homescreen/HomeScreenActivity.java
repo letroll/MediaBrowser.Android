@@ -2,7 +2,6 @@ package com.mb.android.ui.tv.homescreen;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -10,7 +9,7 @@ import android.widget.ViewSwitcher;
 import com.android.volley.toolbox.NetworkImageView;
 import com.jess.ui.TwoWayAdapterView;
 import com.jess.ui.TwoWayGridView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.adapters.RecordingsAdapterBackdrops;
 import com.mb.android.ui.main.SettingsActivity;
@@ -75,7 +74,7 @@ public class HomeScreenActivity extends MbBackdropActivity implements IQuickPlay
             @Override
             public void onClick(View v) {
                 SessionQuery query = new SessionQuery();
-                MB3Application.getInstance().API.GetClientSessionsAsync(query, getSessionsResponse);
+                MainApplication.getInstance().API.GetClientSessionsAsync(query, getSessionsResponse);
 
             }
         });
@@ -96,8 +95,8 @@ public class HomeScreenActivity extends MbBackdropActivity implements IQuickPlay
         super.onResume();
         setOverscanValues();
         getHomescreenItems();
-        if (MB3Application.getInstance().user != null) {
-            MB3Application.getInstance().API.GetUserAsync(MB3Application.getInstance().API.getCurrentUserId(), getUserResponse);
+        if (MainApplication.getInstance().user != null) {
+            MainApplication.getInstance().API.GetUserAsync(MainApplication.getInstance().API.getCurrentUserId(), getUserResponse);
         }
 
     }
@@ -117,7 +116,7 @@ public class HomeScreenActivity extends MbBackdropActivity implements IQuickPlay
 
             if (sessions != null) {
                 for (SessionInfoDto session : sessions) {
-                    if (MB3Application.getInstance().API.getDeviceId().equalsIgnoreCase(session.getDeviceId())) {
+                    if (MainApplication.getInstance().API.getDeviceId().equalsIgnoreCase(session.getDeviceId())) {
                         quickUserDialogFragment.setCurrentSessionInfo(session);
                     }
                 }
@@ -136,15 +135,15 @@ public class HomeScreenActivity extends MbBackdropActivity implements IQuickPlay
         @Override
         public void onResponse(UserDto user) {
             if (user == null) return;
-            MB3Application.getInstance().user = user;
+            MainApplication.getInstance().user = user;
             if (user.getHasPrimaryImage()) {
                 ImageOptions options = new ImageOptions();
                 options.setImageType(ImageType.Primary);
                 options.setMaxHeight(43);
                 options.setMaxWidth(43);
                 userImage.setImageUrl(
-                        MB3Application.getInstance().API.GetUserImageUrl(user, options),
-                        MB3Application.getInstance().API.getImageLoader()
+                        MainApplication.getInstance().API.GetUserImageUrl(user, options),
+                        MainApplication.getInstance().API.getImageLoader()
                 );
             } else {
                 userImage.setImageResource(R.drawable.default_user);
@@ -165,7 +164,7 @@ public class HomeScreenActivity extends MbBackdropActivity implements IQuickPlay
 
     private void getHomescreenItems() {
         if (!mIsFresh) return;
-        MB3Application.getInstance().API.GetUserViews(MB3Application.getInstance().user.getId(), getItemsResponse);
+        MainApplication.getInstance().API.GetUserViews(MainApplication.getInstance().user.getId(), getItemsResponse);
         mIsFresh = false;
     }
 
@@ -364,7 +363,7 @@ public class HomeScreenActivity extends MbBackdropActivity implements IQuickPlay
                 options.setImageIndex(j);
                 options.setMaxHeight(720);
 
-                String imageUrl = MB3Application.getInstance().API.GetImageUrl(item.getId(), options);
+                String imageUrl = MainApplication.getInstance().API.GetImageUrl(item.getId(), options);
                 imageUrls.add(imageUrl);
             }
 
@@ -388,7 +387,7 @@ public class HomeScreenActivity extends MbBackdropActivity implements IQuickPlay
             options.setImageType(ImageType.Backdrop);
             options.setMaxHeight(720);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(backdropItemId, options);
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(backdropItemId, options);
             List<String> imageUrls = new ArrayList<>();
             imageUrls.add(imageUrl);
             setBackdropImages(imageUrls);
@@ -397,13 +396,13 @@ public class HomeScreenActivity extends MbBackdropActivity implements IQuickPlay
 
     private void getRecentlyAddedForItem(BaseItemDto item) {
         LatestItemsQuery recentItemsQuery = new LatestItemsQuery();
-        recentItemsQuery.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        recentItemsQuery.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         recentItemsQuery.setParentId(item.getId());
         recentItemsQuery.setLimit(10);
         recentItemsQuery.setIsPlayed(false);
         recentItemsQuery.setGroupItems(true);
         recentItemsQuery.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.ParentId});
-        MB3Application.getInstance().API.GetLatestItems(recentItemsQuery, recentItemsCallback);
+        MainApplication.getInstance().API.GetLatestItems(recentItemsQuery, recentItemsCallback);
     }
 
     private Response<BaseItemDto[]> recentItemsCallback = new Response<BaseItemDto[]>() {
@@ -427,8 +426,8 @@ public class HomeScreenActivity extends MbBackdropActivity implements IQuickPlay
     private void getRecentRecordings() {
         RecordingQuery query = new RecordingQuery();
         query.setLimit(10);
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
-        MB3Application.getInstance().API.GetLiveTvRecordingsAsync(query, new GetRecordingsResponse());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
+        MainApplication.getInstance().API.GetLiveTvRecordingsAsync(query, new GetRecordingsResponse());
     }
 
     private class GetRecordingsResponse extends Response<RecordingInfoDtoResult> {

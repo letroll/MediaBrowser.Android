@@ -3,7 +3,6 @@ package com.mb.android.ui.mobile.album;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.ViewHolderSong;
 import com.mb.android.logging.AppLogger;
@@ -41,16 +40,16 @@ public class SongAdapter extends BaseAdapter implements SectionIndexer {
         mSongs = songs;
         li = c != null
                 ? LayoutInflater.from(c)
-                : (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                : (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         try {
-            DisplayMetrics metrics = MB3Application.getInstance().getResources().getDisplayMetrics();
+            DisplayMetrics metrics = MainApplication.getInstance().getResources().getDisplayMetrics();
             mWidth = (int)(60 * metrics.density);
         } catch (Exception e) {
             AppLogger.getLogger().Debug("SongAdapter", "Error measuring width");
         }
         try {
             imageEnhancersEnabled = PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
         } catch (Exception e) {
             AppLogger.getLogger().Debug("AbstractMediaAdapter", "Error reading preferences");
@@ -99,18 +98,18 @@ public class SongAdapter extends BaseAdapter implements SectionIndexer {
             options.setWidth(mWidth);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mSongs.get(position).getId(), options);
-            holder.imageView.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mSongs.get(position).getId(), options);
+            holder.imageView.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         } else if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mSongs.get(position).getAlbumPrimaryImageTag())) {
             ImageOptions options = new ImageOptions();
             options.setImageType(ImageType.Primary);
             options.setWidth(mWidth);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mSongs.get(position).getAlbumId(), options);
-            holder.imageView.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mSongs.get(position).getAlbumId(), options);
+            holder.imageView.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         } else {
-            holder.imageView.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+            holder.imageView.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
         }
 
         if (position == 6) {

@@ -16,7 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.activities.BaseMbMobileActivity;
 import com.mb.android.activities.mobile.NewsActivity;
 import com.mb.android.playbackmediator.widgets.MiniController;
@@ -144,7 +144,7 @@ public class HomescreenActivity extends BaseMbMobileActivity {
     public void onDestroy() {
         super.onDestroy();
         AppLogger.getLogger().Info("HomeScreen Activity: onDestroy");
-        MB3Application.getAudioService().Terminate();
+        MainApplication.getAudioService().Terminate();
     }
 
     @Override

@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import com.mb.android.playbackmediator.cast.VideoCastManager;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.PlaylistItem;
 import com.mb.android.player.AudioService;
 import com.mb.android.ui.mobile.playback.AudioPlaybackActivity;
@@ -28,17 +28,17 @@ public class SongOnItemClickListener implements AdapterView.OnItemClickListener 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-        VideoCastManager mCastManager = MB3Application.getCastManager(parent.getContext());
+        VideoCastManager mCastManager = MainApplication.getCastManager(parent.getContext());
         Activity activity = (Activity) view.getContext();
         mSong = (BaseItemDto) parent.getItemAtPosition(position);
 
-        AudioService.PlayerState currentState = MB3Application.getAudioService().getPlayerState();
+        AudioService.PlayerState currentState = MainApplication.getAudioService().getPlayerState();
         if (currentState.equals(AudioService.PlayerState.PLAYING) || currentState.equals(AudioService.PlayerState.PAUSED)) {
-            MB3Application.getAudioService().stopMedia();
+            MainApplication.getAudioService().stopMedia();
         }
 
         // Just in case the TV Theme is still playing
-        MB3Application.getInstance().StopMedia();
+        MainApplication.getInstance().StopMedia();
 
         if (mCastManager.isConnected()) {
             mCastManager.playItem(mSong, PlayCommand.PlayNow, 0L);
@@ -53,8 +53,8 @@ public class SongOnItemClickListener implements AdapterView.OnItemClickListener 
             playableItem.Runtime = mSong.getRunTimeTicks();
             playableItem.Type = mSong.getType();
 
-            MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
-            MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
+            MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+            MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
 
             Intent intent = new Intent(activity, AudioPlaybackActivity.class);
             activity.startActivity(intent);

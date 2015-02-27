@@ -15,7 +15,6 @@ import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.text.Html;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -34,7 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
@@ -154,11 +153,11 @@ public class PlaybackActivity
         }
 
         // Just in case the TV Theme is still playing
-        MB3Application.getInstance().StopMedia();
+        MainApplication.getInstance().StopMedia();
 
-        if (MB3Application.getInstance().PlayerQueue == null
-                || MB3Application.getInstance().PlayerQueue.PlaylistItems == null
-                || MB3Application.getInstance().PlayerQueue.PlaylistItems.size() == 0) {
+        if (MainApplication.getInstance().PlayerQueue == null
+                || MainApplication.getInstance().PlayerQueue.PlaylistItems == null
+                || MainApplication.getInstance().PlayerQueue.PlaylistItems.size() == 0) {
 
             Toast.makeText(this, "Nothing to play", Toast.LENGTH_LONG).show();
             finish();
@@ -199,7 +198,7 @@ public class PlaybackActivity
         mPlayList = (ListView) findViewById(R.id.playlist_drawer);
         mPlayList.setEmptyView(getLayoutInflater().inflate(R.layout.widget_playlist_empty_view, null));
 
-        if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > 1) {
+        if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > 1) {
             mPreviousButton.setVisibility(ImageView.VISIBLE);
             mNextButton.setVisibility(ImageView.VISIBLE);
         }
@@ -240,15 +239,15 @@ public class PlaybackActivity
         if (mHolder != null)
             mHolder.addCallback(this);
 
-        if ("Recording".equalsIgnoreCase(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
-            MB3Application.getInstance().API.GetLiveTvRecordingAsync(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Id, MB3Application.getInstance().API.getCurrentUserId(), new GetRecordingResponse());
-        } else if ("tvChannel".equalsIgnoreCase(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
-            MB3Application.getInstance().API.GetItemAsync(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Id, MB3Application.getInstance().API.getCurrentUserId(), getItemResponse);
+        if ("Recording".equalsIgnoreCase(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
+            MainApplication.getInstance().API.GetLiveTvRecordingAsync(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Id, MainApplication.getInstance().API.getCurrentUserId(), new GetRecordingResponse());
+        } else if ("tvChannel".equalsIgnoreCase(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
+            MainApplication.getInstance().API.GetItemAsync(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Id, MainApplication.getInstance().API.getCurrentUserId(), getItemResponse);
             findViewById(R.id.llTransportControls).setVisibility(View.GONE);
             mRuntimeText.setVisibility(View.GONE);
             mCurrentPositionText.setVisibility(View.GONE);
         } else {
-            MB3Application.getInstance().API.GetItemAsync(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Id, MB3Application.getInstance().API.getCurrentUserId(), getItemResponse);
+            MainApplication.getInstance().API.GetItemAsync(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Id, MainApplication.getInstance().API.getCurrentUserId(), getItemResponse);
         }
 
         hidePanels(true);
@@ -286,7 +285,7 @@ public class PlaybackActivity
     public void onDestroy() {
         super.onDestroy();
         AppLogger.getLogger().Info("Playback Activity: onDestroy");
-        MB3Application.getInstance().PlayerQueue = new Playlist();
+        MainApplication.getInstance().PlayerQueue = new Playlist();
         try {
             sendPlaybackStoppedToServer((long) mTruePlayerPosition * 10000);
         } catch (Exception e) {
@@ -294,8 +293,8 @@ public class PlaybackActivity
         }
 
         if (mIsStreamingHls)
-            MB3Application.getInstance().API.StopTranscodingProcesses(
-                    MB3Application.getInstance().API.getDeviceId(),
+            MainApplication.getInstance().API.StopTranscodingProcesses(
+                    MainApplication.getInstance().API.getDeviceId(),
                     new EmptyResponse()
             );
         if (subtitleDisplayHandler != null) {
@@ -318,7 +317,7 @@ public class PlaybackActivity
             }
         }
 
-        MB3Application.getInstance().releaseDolbyAudioProcessing();
+        MainApplication.getInstance().releaseDolbyAudioProcessing();
     }
 
     @Override
@@ -334,7 +333,7 @@ public class PlaybackActivity
     private void buildUi() {
         if (isFresh) {
 
-            mPlayList.setAdapter(new PlaylistDrawerAdapter(MB3Application.getInstance().PlayerQueue.PlaylistItems, this));
+            mPlayList.setAdapter(new PlaylistDrawerAdapter(MainApplication.getInstance().PlayerQueue.PlaylistItems, this));
             mPlayList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -343,8 +342,8 @@ public class PlaybackActivity
                         PlayerStop();
 
                         if (mIsStreamingHls)
-                            MB3Application.getInstance().API.StopTranscodingProcesses(
-                                    MB3Application.getInstance().API.getDeviceId(),
+                            MainApplication.getInstance().API.StopTranscodingProcesses(
+                                    MainApplication.getInstance().API.getDeviceId(),
                                     new EmptyResponse()
                             );
 
@@ -354,9 +353,9 @@ public class PlaybackActivity
                         // Make sure the activity knows to update the playlist
                         UpdateCurrentPlayingIndex(i);
 
-                        MB3Application.getInstance().API.GetItemAsync(
-                                MB3Application.getInstance().PlayerQueue.PlaylistItems.get(i).Id,
-                                MB3Application.getInstance().API.getCurrentUserId(),
+                        MainApplication.getInstance().API.GetItemAsync(
+                                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(i).Id,
+                                MainApplication.getInstance().API.getCurrentUserId(),
                                 getItemResponse);
                     }
                 }
@@ -367,7 +366,7 @@ public class PlaybackActivity
 
     public void UpdateCurrentPlayingIndex(int newIndex) {
 
-        if (newIndex < 0 || newIndex >= MB3Application.getInstance().PlayerQueue.PlaylistItems.size())
+        if (newIndex < 0 || newIndex >= MainApplication.getInstance().PlayerQueue.PlaylistItems.size())
             return;
 
         currentPlayingIndex = newIndex;
@@ -488,7 +487,7 @@ public class PlaybackActivity
         AppLogger.getLogger().Info(TAG + ": remote play request received");
         if ("audio".equalsIgnoreCase(mediaType)) {
             AppLogger.getLogger().Info(TAG + ": first item is audio.");
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
             AppLogger.getLogger().Info(TAG + ": video player killed");
             Intent intent = new Intent(this, AudioPlaybackActivity.class);
@@ -497,12 +496,12 @@ public class PlaybackActivity
             AppLogger.getLogger().Info(TAG + ": finished audio play request");
         } else if ("video".equalsIgnoreCase(mediaType)) {
             PlayerReset();
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
             AppLogger.getLogger().Info(TAG + ": video player killed");
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     getItemResponse
             );
             AppLogger.getLogger().Info(TAG + ": finished video play request");
@@ -668,7 +667,7 @@ public class PlaybackActivity
 
         if (!mResume && mStreamInfo.getSubtitleDeliveryMethod().equals(SubtitleDeliveryMethod.External)) {
             mStreamInfo.setSubtitleFormat("srt");
-            final List<SubtitleStreamInfo> subtitles = mStreamInfo.GetExternalSubtitles(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken(), false);
+            final List<SubtitleStreamInfo> subtitles = mStreamInfo.GetExternalSubtitles(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken(), false);
 
             if (subtitles != null && subtitles.size() > 0) {
                 new SubtitleDownloader(new Response<File>() {
@@ -774,7 +773,7 @@ public class PlaybackActivity
         AppLogger.getLogger().Info(TAG, "onCompletion");
 
         if (mIsStreamingHls)
-            MB3Application.getInstance().API.StopTranscodingProcesses(MB3Application.getInstance().API.getDeviceId(), new EmptyResponse());
+            MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), new EmptyResponse());
 
         // kill subtitles
         if (subtitleDisplayHandler != null) {
@@ -783,7 +782,7 @@ public class PlaybackActivity
             ttff = null;
         }
 
-        if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > currentlyPlayingIndex + 1) {
+        if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > currentlyPlayingIndex + 1) {
             currentlyPlayingIndex += 1;
             PlayerStop();
 
@@ -794,9 +793,9 @@ public class PlaybackActivity
             // Make sure the activity knows to update the playlist
             UpdateCurrentPlayingIndex(currentlyPlayingIndex);
 
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     getItemResponse);
         } else {
             mIsPaused = true;
@@ -865,11 +864,11 @@ public class PlaybackActivity
         @Override
         public void onClick(View view) {
 
-            if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() == 1)
+            if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() == 1)
                 return;
 
             if (currentlyPlayingIndex - 1 < 0) {
-                currentlyPlayingIndex = MB3Application.getInstance().PlayerQueue.PlaylistItems.size() - 1;
+                currentlyPlayingIndex = MainApplication.getInstance().PlayerQueue.PlaylistItems.size() - 1;
             } else {
                 currentlyPlayingIndex -= 1;
             }
@@ -877,7 +876,7 @@ public class PlaybackActivity
             PlayerStop();
 
             if (mIsStreamingHls)
-                MB3Application.getInstance().API.StopTranscodingProcesses(MB3Application.getInstance().API.getDeviceId(), new EmptyResponse());
+                MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), new EmptyResponse());
 
             sendPlaybackStoppedToServer((long) mTruePlayerPosition * 10000 );
 
@@ -886,9 +885,9 @@ public class PlaybackActivity
             // Make sure the activity knows to update the playlist
             UpdateCurrentPlayingIndex(currentlyPlayingIndex);
 
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     getItemResponse);
         }
     };
@@ -922,7 +921,7 @@ public class PlaybackActivity
                     mPlayerPositionOffset = mTruePlayerPosition;
 
                     try {
-                        mPlayer.setDataSource(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken()));
+                        mPlayer.setDataSource(mStreamInfo.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken()));
                         mPlayer.prepareAsync();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -944,7 +943,7 @@ public class PlaybackActivity
                     mStreamInfo.setStartPositionTicks(mTruePlayerPosition);
 
                     try {
-                        mPlayer.setDataSource(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken()));
+                        mPlayer.setDataSource(mStreamInfo.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken()));
                         mPlayer.prepareAsync();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -998,7 +997,7 @@ public class PlaybackActivity
                         mPlayerPositionOffset = seekTarget;
 
                         try {
-                            String url = mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken());
+                            String url = mStreamInfo.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken());
                             AppLogger.getLogger().Info("Fast Forward");
                             AppLogger.getLogger().Info("new url: " + url);
                             mPlayer.setDataSource(url);
@@ -1011,9 +1010,9 @@ public class PlaybackActivity
                     // exists
                 } else {
                     if (mIsStreamingHls) {
-                        MB3Application.getInstance().API.StopTranscodingProcesses(MB3Application.getInstance().API.getDeviceId(), new EmptyResponse());
+                        MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), new EmptyResponse());
                     }
-                    if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > 1)
+                    if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > 1)
                         onNextClick.onClick(view);
                 }
             }
@@ -1028,10 +1027,10 @@ public class PlaybackActivity
         @Override
         public void onClick(View view) {
 
-            if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() == 1)
+            if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() == 1)
                 return;
 
-            if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > currentlyPlayingIndex + 1) {
+            if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > currentlyPlayingIndex + 1) {
                 currentlyPlayingIndex += 1;
             } else {
                 currentlyPlayingIndex = 0;
@@ -1040,8 +1039,8 @@ public class PlaybackActivity
             mPlayer.stop();
 
             if (mIsStreamingHls)
-                MB3Application.getInstance().API.StopTranscodingProcesses(
-                        MB3Application.getInstance().API.getDeviceId(),
+                MainApplication.getInstance().API.StopTranscodingProcesses(
+                        MainApplication.getInstance().API.getDeviceId(),
                         new EmptyResponse()
                 );
 
@@ -1052,9 +1051,9 @@ public class PlaybackActivity
             // Make sure the activity knows to update the playlist
             UpdateCurrentPlayingIndex(currentlyPlayingIndex);
 
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     getItemResponse);
         }
     };
@@ -1135,9 +1134,9 @@ public class PlaybackActivity
             setCurrentItemImage(_mediaItem.getId());
         } else if (_mediaItem.getParentId() != null) {
             // Get the parents primary image. PITA.
-            MB3Application.getInstance().API.GetItemAsync(
+            MainApplication.getInstance().API.GetItemAsync(
                     _mediaItem.getParentId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     getItemResponse);
         } else {
             mediaImage.setVisibility(View.GONE);
@@ -1164,11 +1163,11 @@ public class PlaybackActivity
             options.setImageType(ImageType.Primary);
             options.setWidth((int) (150 * mMetrics.density));
             options.setEnableImageEnhancers(PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true));
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(imageItemId, options);
-            mediaImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(imageItemId, options);
+            mediaImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         }
     }
 
@@ -1251,7 +1250,7 @@ public class PlaybackActivity
 //
 //        androidProfile.setSubtitleProfiles(new SubtitleProfile[] { srtSubs });
 
-        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(androidProfile);
+        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(androidProfile);
         AppLogger.getLogger().Info(jsonData);
 
         AppLogger.getLogger().Info("Create VideoOptions");
@@ -1303,8 +1302,8 @@ public class PlaybackActivity
                 options = new ImageOptions();
                 options.setImageType(ImageType.Backdrop);
 
-                String imageUrl = MB3Application.getInstance().API.GetImageUrl(item.getParentBackdropItemId(), options);
-                mLoadingSplashScreen.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                String imageUrl = MainApplication.getInstance().API.GetImageUrl(item.getParentBackdropItemId(), options);
+                mLoadingSplashScreen.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             }
 
             if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(item.getSeriesName())) {
@@ -1321,8 +1320,8 @@ public class PlaybackActivity
                 options.setImageType(ImageType.Backdrop);
                 options.setWidth(getResources().getDisplayMetrics().widthPixels);
 
-                String imageUrl = MB3Application.getInstance().API.GetImageUrl(item, options);
-                mLoadingSplashScreen.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                String imageUrl = MainApplication.getInstance().API.GetImageUrl(item, options);
+                mLoadingSplashScreen.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             }
 
             mMediaTitle.setText(item.getName());
@@ -1514,7 +1513,7 @@ public class PlaybackActivity
             mPlayer.setOnCompletionListener(this);
         }
         if (mPlayer != null) {
-            loadUrlIntoPlayer(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken()));
+            loadUrlIntoPlayer(mStreamInfo.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken()));
         }
     }
 
@@ -1539,12 +1538,12 @@ public class PlaybackActivity
     }
 
     public void onAudioStreamSelected(int index) {
-        MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).AudioStreamIndex = index != -1 ? index : null;
+        MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).AudioStreamIndex = index != -1 ? index : null;
         reloadMediaDueToParamChange();
     }
 
     public void onSubtitleStreamSelected(int index) {
-        MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex = index != -1 ? index : null;
+        MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex = index != -1 ? index : null;
         reloadMediaDueToParamChange();
     }
 
@@ -1563,7 +1562,7 @@ public class PlaybackActivity
         mResume = true;
 
         if (mIsStreamingHls) {
-            MB3Application.getInstance().API.StopTranscodingProcesses(MB3Application.getInstance().API.getDeviceId(), new EmptyResponse() {
+            MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), new EmptyResponse() {
                 @Override
                 public void onResponse() {
                     reloadMediaInternal();
@@ -1580,8 +1579,8 @@ public class PlaybackActivity
                 mMediaItem.getMediaSources(),
                 (long) mPreviousPosition,
                 mMediaItem.getMediaSources().get(0).getId(),
-                MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).AudioStreamIndex,
-                MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex);
+                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).AudioStreamIndex,
+                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex);
 
         if (mStreamInfo != null) {
             loadStreamInfoIntoPlayer();
@@ -1647,12 +1646,12 @@ public class PlaybackActivity
 
             buildStreamInfo(mRecording.getId(),
                     new ArrayList<>(mRecording.getMediaSources()),
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).startPositionTicks != null
-                            ? MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).startPositionTicks
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).startPositionTicks != null
+                            ? MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).startPositionTicks
                             : 0L,
                     mRecording.getMediaSources().get(0).getId(),
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).AudioStreamIndex,
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex);
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).AudioStreamIndex,
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex);
 
             if (mStreamInfo == null) return;
 
@@ -1722,11 +1721,11 @@ public class PlaybackActivity
                 }
             } else {
                 mResume = currentlyPlayingIndex == 0
-                        && MB3Application.getInstance().PlayerQueue != null
-                        && MB3Application.getInstance().PlayerQueue.PlaylistItems != null
-                        && MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > 0
-                        && MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks != null
-                        && MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks > 0L;
+                        && MainApplication.getInstance().PlayerQueue != null
+                        && MainApplication.getInstance().PlayerQueue.PlaylistItems != null
+                        && MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > 0
+                        && MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks != null
+                        && MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks > 0L;
 
                 buildStreamInfo(mMediaItem.getId(),
                         mMediaItem.getMediaSources(),
@@ -1736,8 +1735,8 @@ public class PlaybackActivity
                                 : 0
                                 : 0,
                         mMediaItem.getMediaSources() != null && !mMediaItem.getMediaSources().isEmpty() ? mMediaItem.getMediaSources().get(0).getId() : null,
-                        MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).AudioStreamIndex,
-                        MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex);
+                        MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).AudioStreamIndex,
+                        MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex);
 
                 if (mStreamInfo != null) {
                     loadStreamInfoIntoPlayer();
@@ -1746,23 +1745,23 @@ public class PlaybackActivity
                     mOptionsMenu.setOnClickListener(new PlaybackOptionsMenuClickListener(mStreamInfo.getMediaSource(), PlaybackActivity.this));
                 } else {
 
-                    if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > currentlyPlayingIndex + 1) {
+                    if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > currentlyPlayingIndex + 1) {
                         currentlyPlayingIndex += 1;
 
                         isPrepared = false;
                         // Make sure the activity knows to update the playlist
                         UpdateCurrentPlayingIndex(currentlyPlayingIndex);
 
-                        MB3Application.getInstance().API.GetItemAsync(
-                                MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).Id,
-                                MB3Application.getInstance().API.getCurrentUserId(),
+                        MainApplication.getInstance().API.GetItemAsync(
+                                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).Id,
+                                MainApplication.getInstance().API.getCurrentUserId(),
                                 this);
-                        Toast.makeText(PlaybackActivity.this, MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex - 1).Name + " was skipped due to missing media info", Toast.LENGTH_LONG).show();
+                        Toast.makeText(PlaybackActivity.this, MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex - 1).Name + " was skipped due to missing media info", Toast.LENGTH_LONG).show();
                     } else {
                         mIsPaused = true;
                         isPrepared = false;
 
-                        Toast.makeText(PlaybackActivity.this, MB3Application.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).Name + " was skipped due to missing media info", Toast.LENGTH_LONG).show();
+                        Toast.makeText(PlaybackActivity.this, MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).Name + " was skipped due to missing media info", Toast.LENGTH_LONG).show();
                         PlaybackActivity.this.finish();
                     }
                 }
@@ -1823,7 +1822,7 @@ public class PlaybackActivity
         info.setSubtitleStreamIndex(mStreamInfo.getSubtitleStreamIndex());
         info.setVolumeLevel((int) mCurrentVolume * 100);
 
-        MB3Application.getInstance().API.ReportPlaybackStartAsync(info, new EmptyResponse());
+        MainApplication.getInstance().API.ReportPlaybackStartAsync(info, new EmptyResponse());
     }
 
     private void sendPlaybackProgressToServer(Long position) {
@@ -1840,7 +1839,7 @@ public class PlaybackActivity
         progressInfo.setSubtitleStreamIndex(mStreamInfo.getSubtitleStreamIndex());
         progressInfo.setVolumeLevel((int) mCurrentVolume * 100);
 
-        MB3Application.getInstance().API.ReportPlaybackProgressAsync(progressInfo, new EmptyResponse());
+        MainApplication.getInstance().API.ReportPlaybackProgressAsync(progressInfo, new EmptyResponse());
     }
 
     private void sendPlaybackStoppedToServer(Long position) {
@@ -1850,7 +1849,7 @@ public class PlaybackActivity
         stopInfo.setMediaSourceId(mStreamInfo.getMediaSourceId());
         stopInfo.setPositionTicks(position);
 
-        MB3Application.getInstance().API.ReportPlaybackStoppedAsync(stopInfo, new EmptyResponse());
+        MainApplication.getInstance().API.ReportPlaybackStoppedAsync(stopInfo, new EmptyResponse());
     }
 
     private String StreamDetailsFromStreamInfo() {
@@ -1879,7 +1878,7 @@ public class PlaybackActivity
         for (String id : itemIds) {
             PlaylistItem item = new PlaylistItem();
             item.Id = id;
-            MB3Application.getInstance().PlayerQueue.PlaylistItems.add(item);
+            MainApplication.getInstance().PlayerQueue.PlaylistItems.add(item);
         }
     }
 
@@ -1918,7 +1917,7 @@ public class PlaybackActivity
                 mPlayerPositionOffset = seekPositionMs;
                 mStreamInfo.setStartPositionTicks((long)seekPositionMs * 10000);
 
-                String url = mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken());
+                String url = mStreamInfo.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken());
                 AppLogger.getLogger().Info("Seek performed");
                 AppLogger.getLogger().Info("new url: " + url);
 

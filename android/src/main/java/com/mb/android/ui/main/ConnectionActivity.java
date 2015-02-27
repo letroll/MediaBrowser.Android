@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.mb.android.DialogFragments.IncognitoLoginDialogFragment;
 import com.mb.android.DialogFragments.LoginPasswordDialogFragment;
 import com.mb.android.DialogFragments.ServerConnectionDialogFragment;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.ui.mobile.homescreen.HomescreenActivity;
 import com.mb.android.interfaces.IServerDialogClickListener;
@@ -98,8 +98,8 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
             } else if (showUserSelection) {
                 mChangeServerButton.setOnClickListener(onChangeServerClick);
                 updateHeader(getResources().getString(R.string.select_mb_user), false);
-                if (MB3Application.getInstance().API != null) {
-                    MB3Application.getInstance().API.GetPublicUsersAsync(getPublicUsersResponse);
+                if (MainApplication.getInstance().API != null) {
+                    MainApplication.getInstance().API.GetPublicUsersAsync(getPublicUsersResponse);
                 }
             } else {
 
@@ -108,7 +108,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
                 Thread thread = new Thread() {
                     @Override
                     public void run() {
-                        MB3Application.getInstance().getConnectionManager().Connect(connectionResponse);
+                        MainApplication.getInstance().getConnectionManager().Connect(connectionResponse);
                     }
                 };
                 thread.start();
@@ -153,7 +153,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         // Multiple servers available
         // Display a selection screen
         AppLogger.getLogger().Info("**** SERVER SELECTION ****");
-        MB3Application.getInstance().getConnectionManager().GetAvailableServers(getAvailableServersResponse);
+        MainApplication.getInstance().getConnectionManager().GetAvailableServers(getAvailableServersResponse);
     }
 
     private void onServerSignIn(ConnectionResult result) {
@@ -170,9 +170,9 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         // Ready to browse using result.ApiClient
         AppLogger.getLogger().Info("**** SIGNED IN ****");
         dismissActivityDialog();
-        MB3Application.getInstance().API = (AndroidApiClient)result.getApiClient();
-        MB3Application.getInstance().user = new UserDto();
-        MB3Application.getInstance().user.setId(MB3Application.getInstance().API.getCurrentUserId());
+        MainApplication.getInstance().API = (AndroidApiClient)result.getApiClient();
+        MainApplication.getInstance().user = new UserDto();
+        MainApplication.getInstance().user.setId(MainApplication.getInstance().API.getCurrentUserId());
 
         proceedToHomescreen();
     }
@@ -218,7 +218,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
                 mChangeServerButton.setOnClickListener(onChangeServerClick);
                 updateHeader(getResources().getString(R.string.select_mb_user), false);
                 if (result.getApiClient() != null) {
-                    MB3Application.getInstance().API = (AndroidApiClient)result.getApiClient();
+                    MainApplication.getInstance().API = (AndroidApiClient)result.getApiClient();
                     result.getApiClient().GetPublicUsersAsync(getPublicUsersResponse);
                 }
             }
@@ -270,7 +270,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
                 return;
             }
             AppLogger.getLogger().Debug("Passing server to ConnectionManager");
-            MB3Application.getInstance().getConnectionManager().Connect(server, connectionResponse);
+            MainApplication.getInstance().getConnectionManager().Connect(server, connectionResponse);
             showActivityDialog(!tangible.DotNetToJavaStringHelper.isNullOrEmpty(server.getName()) ? "Connecting to " + server.getName() : "Connecting");
         }
     };
@@ -326,7 +326,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
     @Override
     public void onOkClick(String address) {
         AppLogger.getLogger().Debug("Attempting to manually connect to " + address);
-        MB3Application.getInstance().getConnectionManager().Connect(address, connectionResponse);
+        MainApplication.getInstance().getConnectionManager().Connect(address, connectionResponse);
     }
 
     @Override
@@ -365,7 +365,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
     public void onLoginDialogPositiveButtonClick(String username, String password) {
         try {
             AppLogger.getLogger().Debug("Attempting to log in user " + username);
-            MB3Application.getInstance().API.AuthenticateUserAsync(username, password, authenticationResultResponse);
+            MainApplication.getInstance().API.AuthenticateUserAsync(username, password, authenticationResultResponse);
             showActivityDialog("Logging In");
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
             AppLogger.getLogger().ErrorException("Error handled attempting login request: ", e);
@@ -387,7 +387,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
                 return;
             }
             dismissActivityDialog();
-            MB3Application.getInstance().user = result.getUser();
+            MainApplication.getInstance().user = result.getUser();
 
             proceedToHomescreen();
         }
@@ -421,7 +421,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         // Restore logging to the level defined in the user preferences
         AppLogger.getLogger().setDebugLoggingEnabled(sharedPrefs.getBoolean("pref_debug_logging_enabled", false));
 
-        MB3Application.getInstance().startContentSync();
+        MainApplication.getInstance().startContentSync();
 
         Intent intent;
         if (sharedPrefs.getString("pref_application_profile", "Mobile").equalsIgnoreCase("Mobile")) {
@@ -467,15 +467,12 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
 
     private void showActivityDialog(String message) {
 
-        if (tangible.DotNetToJavaStringHelper.isNullOrEmpty(message)) {
-            return;
-        }
-
         dialog = new AlertDialog.Builder(this)
                 .setTitle(getResources().getString(R.string.app_name))
                 .setMessage(message)
                 .setCancelable(false)
                 .create();
+
         dialog.show();
     }
 
@@ -483,5 +480,11 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
         }
+    }
+
+    @Override
+     public void onDestroy(){
+        super.onDestroy();
+        dismissActivityDialog();
     }
 }

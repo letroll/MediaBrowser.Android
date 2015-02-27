@@ -5,9 +5,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.util.Log;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.PlaylistItem;
 import com.mb.android.ui.tv.ActivityResults;
 import com.mb.android.ui.tv.MbBaseActivity;
@@ -75,7 +74,7 @@ public final class PlayerHelpers {
         info.setSubtitleStreamIndex(streamInfo.getSubtitleStreamIndex());
         info.setVolumeLevel((int) volume * 100);
 
-        MB3Application.getInstance().API.ReportPlaybackStartAsync(info, response);
+        MainApplication.getInstance().API.ReportPlaybackStartAsync(info, response);
     }
 
     /**
@@ -101,7 +100,7 @@ public final class PlayerHelpers {
         progressInfo.setSubtitleStreamIndex(streamInfo.getSubtitleStreamIndex());
         progressInfo.setVolumeLevel((int) volume * 100);
 
-        MB3Application.getInstance().API.ReportPlaybackProgressAsync(progressInfo, response);
+        MainApplication.getInstance().API.ReportPlaybackProgressAsync(progressInfo, response);
     }
 
     /**
@@ -117,7 +116,7 @@ public final class PlayerHelpers {
         stopInfo.setMediaSourceId(streamInfo.getMediaSourceId());
         stopInfo.setPositionTicks(position);
 
-        MB3Application.getInstance().API.ReportPlaybackStoppedAsync(stopInfo, response);
+        MainApplication.getInstance().API.ReportPlaybackStoppedAsync(stopInfo, response);
     }
 
     /**
@@ -137,10 +136,10 @@ public final class PlayerHelpers {
                                     Integer audioStreamIndex,
                                     Integer subtitleStreamIndex) {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         String bitrate;
 
-        if (Connectivity.isConnectedLAN(MB3Application.getInstance())) {
+        if (Connectivity.isConnectedLAN(MainApplication.getInstance())) {
             bitrate = prefs.getString("pref_local_bitrate", "1800000");
         } else {
             bitrate = prefs.getString("pref_cellular_bitrate", "450000");
@@ -155,7 +154,7 @@ public final class PlayerHelpers {
         options.setMediaSources(mediaSources);
         options.setProfile(new AndroidProfile(hlsEnabled, false));
         options.setDeviceId(
-                Settings.Secure.getString(MB3Application.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
+                Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         if (audioStreamIndex != null) {
@@ -190,10 +189,10 @@ public final class PlayerHelpers {
                                                   Long startPositionTicks,
                                                   String mediaSourceId) {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         String bitrate;
 
-        if (Connectivity.isConnectedLAN(MB3Application.getInstance())) {
+        if (Connectivity.isConnectedLAN(MainApplication.getInstance())) {
             bitrate = prefs.getString("pref_local_bitrate", "1800000");
         } else {
             bitrate = prefs.getString("pref_cellular_bitrate", "450000");
@@ -208,7 +207,7 @@ public final class PlayerHelpers {
         options.setMediaSources(mediaSources);
         options.setProfile(new AndroidProfile(hlsEnabled, false));
         options.setDeviceId(
-                Settings.Secure.getString(MB3Application.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
+                Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         AppLogger.getLogger().Info("Create StreamInfo");
@@ -244,10 +243,10 @@ public final class PlayerHelpers {
                                                            Integer subtitleStreamIndex) {
 
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         String bitrate;
 
-        if (Connectivity.isConnectedLAN(MB3Application.getInstance())) {
+        if (Connectivity.isConnectedLAN(MainApplication.getInstance())) {
             bitrate = prefs.getString("pref_local_bitrate", "1800000");
         } else {
             bitrate = prefs.getString("pref_cellular_bitrate", "450000");
@@ -258,7 +257,7 @@ public final class PlayerHelpers {
         options.setItemId(id);
         options.setMediaSources(mediaSources);
         options.setProfile(new ExternalPlayerProfile());
-        options.setDeviceId(Settings.Secure.getString(MB3Application.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
+        options.setDeviceId(Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         AppLogger.getLogger().Info("Create StreamInfo");
@@ -274,13 +273,13 @@ public final class PlayerHelpers {
 
     public void playItems(MbBaseActivity context) {
         AppLogger.getLogger().Info("PlayerHelpers: playitems");
-        if ("audio".equalsIgnoreCase(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
+        if ("audio".equalsIgnoreCase(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
             AppLogger.getLogger().Info("PlayerHelpers: calling audio player");
-            Intent intent = new Intent(MB3Application.getInstance(), AudioPlayer.class);
+            Intent intent = new Intent(MainApplication.getInstance(), AudioPlayer.class);
             context.startActivity(intent);
         } else {
             AppLogger.getLogger().Info("PlayerHelpers: calling video player");
-            Intent intent = new Intent(MB3Application.getInstance(), VideoPlayer.class);
+            Intent intent = new Intent(MainApplication.getInstance(), VideoPlayer.class);
             context.startActivityForResult(intent, ActivityResults.PLAYBACK_COMPLETED);
         }
     }
@@ -300,7 +299,7 @@ public final class PlayerHelpers {
 //        }
 
         // Just in case the TV Theme is still playing
-        MB3Application.getInstance().StopMedia();
+        MainApplication.getInstance().StopMedia();
 
         if (PreferenceManager.getDefaultSharedPreferences(context)
                 .getBoolean("pref_enable_external_player", false)) {
@@ -314,7 +313,7 @@ public final class PlayerHelpers {
                     mediaSourceId,
                     audioStreamIndex,
                     subtitleStreamIndex);
-            String url = info.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken());
+            String url = info.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken());
             AppLogger.getLogger().Info("External player URL: " + url);
             AppLogger.getLogger().Debug("External Player url", url);
 
@@ -327,40 +326,40 @@ public final class PlayerHelpers {
             AppLogger.getLogger().Info("Play requested: Internal player");
 
             if ("audio".equalsIgnoreCase(item.getMediaType())) {
-                MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+                MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
                 addToPlaylist(item, startPositionTicks, null, null);
-                Intent intent = new Intent(MB3Application.getInstance(), AudioPlayer.class);
+                Intent intent = new Intent(MainApplication.getInstance(), AudioPlayer.class);
                 context.startActivity(intent);
             } else if ("photo".equalsIgnoreCase(item.getMediaType())) {
-                MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+                MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
                 addToPlaylist(item, startPositionTicks, null, null);
-                Intent intent = new Intent(MB3Application.getInstance(), PhotoPlayer.class);
+                Intent intent = new Intent(MainApplication.getInstance(), PhotoPlayer.class);
                 context.startActivity(intent);
             } else {
                 if (!ignoreCinemaMode && cinemaModeSupportedMedia(item)) {
-                    MB3Application.getInstance().API.GetIntrosAsync(item.getId(), MB3Application.getInstance().user.getId(), new Response<ItemsResult>() {
+                    MainApplication.getInstance().API.GetIntrosAsync(item.getId(), MainApplication.getInstance().user.getId(), new Response<ItemsResult>() {
                         @Override
                         public void onResponse(ItemsResult result) {
-                            MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+                            MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
                             if (result != null && result.getItems() != null) {
                                 addToPlaylist(result.getItems());
                                 addToPlaylist(item, startPositionTicks, audioStreamIndex, subtitleStreamIndex);
-                                Intent intent = new Intent(MB3Application.getInstance(), VideoPlayer.class);
+                                Intent intent = new Intent(MainApplication.getInstance(), VideoPlayer.class);
                                 context.startActivityForResult(intent, ActivityResults.PLAYBACK_COMPLETED);
                             }
                         }
                         @Override
                         public void onError(Exception ex) {
-                            MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+                            MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
                             addToPlaylist(item, startPositionTicks, audioStreamIndex, subtitleStreamIndex);
-                            Intent intent = new Intent(MB3Application.getInstance(), VideoPlayer.class);
+                            Intent intent = new Intent(MainApplication.getInstance(), VideoPlayer.class);
                             context.startActivityForResult(intent, ActivityResults.PLAYBACK_COMPLETED);
                         }
                     });
                 } else {
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
                     addToPlaylist(item, startPositionTicks, audioStreamIndex, subtitleStreamIndex);
-                    Intent intent = new Intent(MB3Application.getInstance(), VideoPlayer.class);
+                    Intent intent = new Intent(MainApplication.getInstance(), VideoPlayer.class);
                     context.startActivityForResult(intent, ActivityResults.PLAYBACK_COMPLETED);
                 }
             }
@@ -418,7 +417,7 @@ public final class PlayerHelpers {
         if (subtitleStreamIndex != null) {
             playableItem.SubtitleStreamIndex = subtitleStreamIndex;
         }
-        MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
+        MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
     }
 
 
@@ -605,7 +604,7 @@ public final class PlayerHelpers {
             return;
         }
         streamInfo.setSubtitleFormat("srt");
-        final List<SubtitleStreamInfo> subtitles = streamInfo.GetExternalSubtitles(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken(), false);
+        final List<SubtitleStreamInfo> subtitles = streamInfo.GetExternalSubtitles(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken(), false);
 
         if (subtitles != null && subtitles.size() > 0) {
             new SubtitleDownloader(new Response<File>() {

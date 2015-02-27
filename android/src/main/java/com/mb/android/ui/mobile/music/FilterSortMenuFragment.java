@@ -12,7 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 
 import java.lang.ref.WeakReference;
@@ -56,7 +56,7 @@ public class FilterSortMenuFragment extends Fragment {
         if (adapter == null) {
             return;
         }
-        RootCategory rootCategory = RootCategory.valueOf(PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance()).getString("pref_music_root", "artist"));
+        RootCategory rootCategory = RootCategory.valueOf(PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance()).getString("pref_music_root", "artist"));
         switch(rootCategory) {
             case artist:
                 adapter.setSelectedIndex(0);
@@ -95,7 +95,7 @@ public class FilterSortMenuFragment extends Fragment {
         private int selectedIndex = 0;
 
         public CategoryAdapter() {
-            inflater = LayoutInflater.from(MB3Application.getInstance());
+            inflater = LayoutInflater.from(MainApplication.getInstance());
         }
 
         public void setSelectedIndex(int newIndex) {

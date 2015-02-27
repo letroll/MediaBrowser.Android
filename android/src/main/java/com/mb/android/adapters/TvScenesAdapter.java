@@ -8,14 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.utils.Utils;
 import com.mb.android.ViewHolder;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
-import mediabrowser.model.extensions.StringHelper;
 
 /**
  * Created by Mark on 12/12/13.
@@ -81,10 +80,10 @@ public class TvScenesAdapter extends BaseAdapter {
         sceneImageOptions.setImageType(ImageType.Chapter);
         sceneImageOptions.setImageIndex(position);
 
-        String sceneImageUrl = MB3Application.getInstance().API.GetImageUrl(mBaseItem, sceneImageOptions);
+        String sceneImageUrl = MainApplication.getInstance().API.GetImageUrl(mBaseItem, sceneImageOptions);
 
         holder.imageView.setDefaultImageResId(R.drawable.chapters_extras_image);
-        holder.imageView.setImageUrl(sceneImageUrl, MB3Application.getInstance().API.getImageLoader());
+        holder.imageView.setImageUrl(sceneImageUrl, MainApplication.getInstance().API.getImageLoader());
 
         return convertView;
     }

@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.utils.Utils;
@@ -44,11 +44,11 @@ public class ScheduledSeriesRecordingsAdapter extends BaseAdapter {
     public ScheduledSeriesRecordingsAdapter(List<SeriesTimerInfoDto> listings) {
 
         mBaseItems = listings;
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance());
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         try {
-            li = (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            li = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             imageEnhancersEnabled = PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
         } catch (Exception e) {
             AppLogger.getLogger().ErrorException("Error in adapter initialization", e);
@@ -85,8 +85,8 @@ public class ScheduledSeriesRecordingsAdapter extends BaseAdapter {
             options.setMaxWidth(400);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(program.getId(), options);
-            primaryImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(program.getId(), options);
+            primaryImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         }
 
         // Set title text

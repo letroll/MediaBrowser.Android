@@ -8,9 +8,8 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.util.Log;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.PlaylistItem;
 import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.apiinteraction.Response;
@@ -144,9 +143,9 @@ public class AudioService
         if (hasMoreItemsToPlay()) {
             AppLogger.getLogger().Debug(TAG, "playlist contains more items");
             updateCurrentlyPlayingIndex();
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     getItemResponse);
         } else {
             AppLogger.getLogger().Debug(TAG, "nothing left to play");
@@ -174,7 +173,7 @@ public class AudioService
             return;
         }
         try {
-            String idToRemove = MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id;
+            String idToRemove = MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id;
             if (mShuffledItemIds != null && mShuffledItemIds.size() > 0) {
                 mShuffledItemIds.remove(idToRemove);
             }
@@ -184,19 +183,19 @@ public class AudioService
     }
 
     private boolean hasMoreItemsToPlay() {
-        if (MB3Application.getInstance().PlayerQueue.PlaylistItems == null || MB3Application.getInstance().PlayerQueue.PlaylistItems.size() == 0) {
+        if (MainApplication.getInstance().PlayerQueue.PlaylistItems == null || MainApplication.getInstance().PlayerQueue.PlaylistItems.size() == 0) {
             return false;
         } else if (mShuffleEnabled) {
             return mShuffledItemIds != null && mShuffledItemIds.size() > 0;
         } else {
-            return mRepeatEnabled || MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > mCurrentlyPlayingIndex + 1;
+            return mRepeatEnabled || MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > mCurrentlyPlayingIndex + 1;
         }
     }
 
     private void updateCurrentlyPlayingIndex() {
         if (mShuffleEnabled) {
             pickRandomUnPlayedIndex();
-        } else if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > mCurrentlyPlayingIndex + 1) {
+        } else if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > mCurrentlyPlayingIndex + 1) {
             mCurrentlyPlayingIndex += 1;
         } else {
             mCurrentlyPlayingIndex = 0;
@@ -207,8 +206,8 @@ public class AudioService
         try {
             Random r = new Random();
             String selectedId = mShuffledItemIds.get(r.nextInt(mShuffledItemIds.size()));
-            for (int i = 0; i < MB3Application.getInstance().PlayerQueue.PlaylistItems.size(); i++) {
-                if (MB3Application.getInstance().PlayerQueue.PlaylistItems.get(i).Id.equalsIgnoreCase(selectedId)) {
+            for (int i = 0; i < MainApplication.getInstance().PlayerQueue.PlaylistItems.size(); i++) {
+                if (MainApplication.getInstance().PlayerQueue.PlaylistItems.get(i).Id.equalsIgnoreCase(selectedId)) {
                     mCurrentlyPlayingIndex = i;
                     return;
                 }
@@ -310,7 +309,7 @@ public class AudioService
 
     private void initMusicPlayer() {
         mPlayer = new MediaPlayer();
-        mPlayer.setWakeMode(MB3Application.getInstance(), PowerManager.PARTIAL_WAKE_LOCK);
+        mPlayer.setWakeMode(MainApplication.getInstance(), PowerManager.PARTIAL_WAKE_LOCK);
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mPlayer.setOnPreparedListener(this);
         mPlayer.setOnCompletionListener(this);
@@ -328,9 +327,9 @@ public class AudioService
         if (mPlayer == null) {
             initMusicPlayer();
         }
-        MB3Application.getInstance().API.GetItemAsync(
-                MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
-                MB3Application.getInstance().API.getCurrentUserId(),
+        MainApplication.getInstance().API.GetItemAsync(
+                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
+                MainApplication.getInstance().API.getCurrentUserId(),
                 getItemResponse);
     }
 
@@ -339,9 +338,9 @@ public class AudioService
         if (mPlayerState.equals(PlayerState.PLAYING)) {
             mCurrentlyPlayingIndex = index;
             stopMedia();
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(index).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(index).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     getItemResponse);
         }
     }
@@ -410,12 +409,12 @@ public class AudioService
     }
 
     private void createShufflePlaylist() {
-        if (MB3Application.getInstance().PlayerQueue.PlaylistItems == null
-                || MB3Application.getInstance().PlayerQueue.PlaylistItems.size() == 0) {
+        if (MainApplication.getInstance().PlayerQueue.PlaylistItems == null
+                || MainApplication.getInstance().PlayerQueue.PlaylistItems.size() == 0) {
             return;
         }
         mShuffledItemIds = new ArrayList<>();
-        for (PlaylistItem playlistItem : MB3Application.getInstance().PlayerQueue.PlaylistItems) {
+        for (PlaylistItem playlistItem : MainApplication.getInstance().PlayerQueue.PlaylistItems) {
             mShuffledItemIds.add(playlistItem.Id);
         }
 
@@ -478,9 +477,9 @@ public class AudioService
      */
     public void next() {
 
-        if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() == 1) return;
+        if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() == 1) return;
 
-        if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > mCurrentlyPlayingIndex + 1) {
+        if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > mCurrentlyPlayingIndex + 1) {
             mCurrentlyPlayingIndex += 1;
         } else {
             mCurrentlyPlayingIndex = 0;
@@ -500,9 +499,9 @@ public class AudioService
         // Make sure the activity knows to update the playlist
 //        mPlaybackActivity.UpdateCurrentPlayingIndex(currentlyPlayingIndex);
 
-        MB3Application.getInstance().API.GetItemAsync(
-                MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
-                MB3Application.getInstance().API.getCurrentUserId(),
+        MainApplication.getInstance().API.GetItemAsync(
+                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
+                MainApplication.getInstance().API.getCurrentUserId(),
                 getItemResponse);
     }
 
@@ -511,10 +510,10 @@ public class AudioService
      */
     public void previous() {
 
-        if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() == 1) return;
+        if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() == 1) return;
 
         if (mCurrentlyPlayingIndex - 1 < 0) {
-            mCurrentlyPlayingIndex = MB3Application.getInstance().PlayerQueue.PlaylistItems.size() - 1;
+            mCurrentlyPlayingIndex = MainApplication.getInstance().PlayerQueue.PlaylistItems.size() - 1;
         } else {
             mCurrentlyPlayingIndex -= 1;
         }
@@ -522,26 +521,26 @@ public class AudioService
         playerStop();
         playerReset();
 
-        MB3Application.getInstance().API.GetItemAsync(
-                MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
-                MB3Application.getInstance().API.getCurrentUserId(), getItemResponse);
+        MainApplication.getInstance().API.GetItemAsync(
+                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
+                MainApplication.getInstance().API.getCurrentUserId(), getItemResponse);
     }
 
     public void loadItemAtIndex(int index) {
 
-        if (MB3Application.getInstance().PlayerQueue.PlaylistItems == null
-                || MB3Application.getInstance().PlayerQueue.PlaylistItems.size() == 0) return;
+        if (MainApplication.getInstance().PlayerQueue.PlaylistItems == null
+                || MainApplication.getInstance().PlayerQueue.PlaylistItems.size() == 0) return;
 
-        if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > index) {
+        if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > index) {
 
             playerStop();
             playerReset();
 
             mCurrentlyPlayingIndex = index;
 
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(), getItemResponse);
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(), getItemResponse);
         }
     }
 
@@ -572,15 +571,15 @@ public class AudioService
 
             } else {
                 mResume = mCurrentlyPlayingIndex == 0
-                        && MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks != null
-                        && MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks > 0L;
+                        && MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks != null
+                        && MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks > 0L;
 
                 buildStreamInfo(mMediaItem.getId(), mMediaItem.getMediaSources());
 
-                if (MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).SubtitleStreamIndex == null) {
+                if (MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).SubtitleStreamIndex == null) {
                     AppLogger.getLogger().Debug("MediaPlaybackFragment", "Subtitle index is null");
                 } else {
-                    AppLogger.getLogger().Debug("MediaPlaybackFragment", "Subtitle index is " + String.valueOf(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).SubtitleStreamIndex));
+                    AppLogger.getLogger().Debug("MediaPlaybackFragment", "Subtitle index is " + String.valueOf(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).SubtitleStreamIndex));
                 }
 
                 if (mStreamInfo != null) {
@@ -588,15 +587,15 @@ public class AudioService
                     loadStreamInfoIntoPlayer();
                 } else {
 
-                    if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > mCurrentlyPlayingIndex + 1) {
+                    if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > mCurrentlyPlayingIndex + 1) {
                         mCurrentlyPlayingIndex += 1;
 
                         // Make sure the activity knows to update the playlist
 //                        mPlaybackActivity.UpdateCurrentPlayingIndex(currentlyPlayingIndex);
 
-                        MB3Application.getInstance().API.GetItemAsync(
-                                MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
-                                MB3Application.getInstance().API.getCurrentUserId(),
+                        MainApplication.getInstance().API.GetItemAsync(
+                                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
+                                MainApplication.getInstance().API.getCurrentUserId(),
                                 this);
                     } else {
                         mPlayerState = PlayerState.PREPARING;
@@ -620,10 +619,10 @@ public class AudioService
      */
     private boolean buildStreamInfo(String id, ArrayList<MediaSourceInfo> mediaSources) {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         String bitrate;
 
-        if (Connectivity.isConnectedLAN(MB3Application.getInstance())) {
+        if (Connectivity.isConnectedLAN(MainApplication.getInstance())) {
             bitrate = prefs.getString("pref_local_bitrate", "1800000");
         } else {
             bitrate = prefs.getString("pref_cellular_bitrate", "450000");
@@ -636,7 +635,7 @@ public class AudioService
         options.setItemId(id);
         options.setMediaSources(mediaSources);
         options.setProfile(new AndroidProfile(hlsEnabled, false));
-        options.setDeviceId(Settings.Secure.getString(MB3Application.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
+        options.setDeviceId(Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         AppLogger.getLogger().Info("Create StreamInfo");
@@ -649,7 +648,7 @@ public class AudioService
     private void loadStreamInfoIntoPlayer() {
 
         if (mPlayer != null) {
-            loadUrlIntoPlayer(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken()));
+            loadUrlIntoPlayer(mStreamInfo.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken()));
         }
     }
 
@@ -700,8 +699,8 @@ public class AudioService
 
         int queueSize = 0;
 
-        if (MB3Application.getInstance().PlayerQueue.PlaylistItems != null) {
-            queueSize = MB3Application.getInstance().PlayerQueue.PlaylistItems.size();
+        if (MainApplication.getInstance().PlayerQueue.PlaylistItems != null) {
+            queueSize = MainApplication.getInstance().PlayerQueue.PlaylistItems.size();
         }
 
         return queueSize;
@@ -788,7 +787,7 @@ public class AudioService
         info.setSubtitleStreamIndex(mStreamInfo.getSubtitleStreamIndex());
         info.setVolumeLevel((int) mVolume * 100);
 
-        MB3Application.getInstance().API.ReportPlaybackStartAsync(info, new EmptyResponse());
+        MainApplication.getInstance().API.ReportPlaybackStartAsync(info, new EmptyResponse());
     }
 
     private void sendPlaybackProgressToServer(Long position) {
@@ -805,7 +804,7 @@ public class AudioService
         progressInfo.setSubtitleStreamIndex(mStreamInfo.getSubtitleStreamIndex());
         progressInfo.setVolumeLevel((int) mVolume * 100);
 
-        MB3Application.getInstance().API.ReportPlaybackProgressAsync(progressInfo, new EmptyResponse());
+        MainApplication.getInstance().API.ReportPlaybackProgressAsync(progressInfo, new EmptyResponse());
     }
 
     private void sendPlaybackStoppedToServer(Long position) {
@@ -815,7 +814,7 @@ public class AudioService
         stopInfo.setMediaSourceId(mStreamInfo.getMediaSourceId());
         stopInfo.setPositionTicks(position);
 
-        MB3Application.getInstance().API.ReportPlaybackStoppedAsync(stopInfo, new EmptyResponse());
+        MainApplication.getInstance().API.ReportPlaybackStoppedAsync(stopInfo, new EmptyResponse());
     }
 
     public synchronized void incrementUiCounter() {

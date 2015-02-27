@@ -16,7 +16,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.utils.Utils;
@@ -66,7 +66,7 @@ public class ChannelsAdapter extends BaseAdapter implements SectionIndexer {
             mImageHeight = (mImageWidth / 16) * 9;
 
             imageEnhancersEnabled = PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
 
         } catch (Exception e) {
@@ -196,7 +196,7 @@ public class ChannelsAdapter extends BaseAdapter implements SectionIndexer {
                 options.setWidth(mImageWidth);
                 options.setMaxHeight(mImageHeight);
                 options.setEnableImageEnhancers(imageEnhancersEnabled);
-                imageUrl = MB3Application.getInstance().API.GetImageUrl(mBaseItems.get(position).getId(), options);
+                imageUrl = MainApplication.getInstance().API.GetImageUrl(mBaseItems.get(position).getId(), options);
 
             } else if (mBaseItems.get(position).getHasPrimaryImage()) {
                 options = new ImageOptions();
@@ -204,7 +204,7 @@ public class ChannelsAdapter extends BaseAdapter implements SectionIndexer {
                 options.setWidth(mImageWidth);
                 options.setMaxHeight(mImageHeight);
                 options.setEnableImageEnhancers(imageEnhancersEnabled);
-                imageUrl = MB3Application.getInstance().API.GetImageUrl(mBaseItems.get(position), options);
+                imageUrl = MainApplication.getInstance().API.GetImageUrl(mBaseItems.get(position), options);
 
             } else if (mBaseItems.get(position).getBackdropCount() > 0) {
                 options = new ImageOptions();
@@ -213,14 +213,14 @@ public class ChannelsAdapter extends BaseAdapter implements SectionIndexer {
                 options.setMaxHeight(mImageHeight);
                 options.setEnableImageEnhancers(imageEnhancersEnabled);
                 options.setImageIndex(0);
-                imageUrl = MB3Application.getInstance().API.GetImageUrl(mBaseItems.get(position), options);
+                imageUrl = MainApplication.getInstance().API.GetImageUrl(mBaseItems.get(position), options);
 
             } else {
-                holder.imageView.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+                holder.imageView.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
             }
 
             if (options != null) {
-                holder.imageView.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                holder.imageView.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             }
         }
 

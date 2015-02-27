@@ -2,14 +2,13 @@ package com.mb.android.fragments.tv.music;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.MenuEntity;
 import com.mb.android.R;
 import com.mb.android.adapters.TvSongsAdapter;
@@ -43,7 +42,7 @@ public class MusicSongsFragment extends Fragment {
 
         ItemQuery query = new ItemQuery();
         query.setParentId(mMenuEntity.Id);
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setRecursive(true);
         query.setSortBy(new String[]{ItemSortBy.Name.toString()});
         query.setSortOrder(SortOrder.Ascending);
@@ -51,7 +50,7 @@ public class MusicSongsFragment extends Fragment {
         query.setIncludeItemTypes(new String[]{"Audio"});
         query.setExcludeLocationTypes(new LocationType[]{LocationType.Virtual});
 
-        MB3Application.getInstance().API.GetItemsAsync(query, getItemsResponse);
+        MainApplication.getInstance().API.GetItemsAsync(query, getItemsResponse);
     }
 
     @Override

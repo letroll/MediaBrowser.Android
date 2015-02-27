@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.widget.AnimatedNetworkImageView;
@@ -85,8 +85,8 @@ public class NextUpCardAdapter extends BaseAdapter {
             options.setWidth(400);
             options.setEnableImageEnhancers(false);
 
-            String url = MB3Application.getInstance().API.GetImageUrl(mItems[index], options);
-            holder.primaryImage.setImageUrl(url, MB3Application.getInstance().API.getImageLoader());
+            String url = MainApplication.getInstance().API.GetImageUrl(mItems[index], options);
+            holder.primaryImage.setImageUrl(url, MainApplication.getInstance().API.getImageLoader());
         }
 
         return view;

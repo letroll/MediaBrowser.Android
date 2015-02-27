@@ -8,7 +8,7 @@ import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.utils.Utils;
 
 import ch.qos.logback.classic.Level;
@@ -65,7 +65,7 @@ public class AppLogger implements ILogger {
 
         String path = UUID.randomUUID().toString() + ".log";
 
-        fileAppender.setFile(MB3Application.getInstance().getFileStreamPath(path).getAbsolutePath());
+        fileAppender.setFile(MainApplication.getInstance().getFileStreamPath(path).getAbsolutePath());
         fileAppender.setEncoder(encoder1);
         fileAppender.start();
 
@@ -100,7 +100,7 @@ public class AppLogger implements ILogger {
 
         PackageInfo pInfo = null;
         try {
-            pInfo = MB3Application.getInstance().getPackageManager().getPackageInfo(MB3Application.getInstance().getPackageName(), 0);
+            pInfo = MainApplication.getInstance().getPackageManager().getPackageInfo(MainApplication.getInstance().getPackageName(), 0);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -118,7 +118,7 @@ public class AppLogger implements ILogger {
 
         try {
             DisplayMetrics metrics = new DisplayMetrics();
-            WindowManager wm = (WindowManager) MB3Application.getInstance().getSystemService(Context.WINDOW_SERVICE);
+            WindowManager wm = (WindowManager) MainApplication.getInstance().getSystemService(Context.WINDOW_SERVICE);
             Display display = wm.getDefaultDisplay();
             display.getMetrics(metrics);
             Info("Screen Width: " + String.valueOf(metrics.widthPixels));
@@ -130,7 +130,7 @@ public class AppLogger implements ILogger {
 
         }
 
-        Info("Total Memory Available: " + Utils.TotalMemory(MB3Application.getInstance()));
+        Info("Total Memory Available: " + Utils.TotalMemory(MainApplication.getInstance()));
         Info("Max Memory usable per Application: " + Utils.MaxApplicationMemory());
     }
 

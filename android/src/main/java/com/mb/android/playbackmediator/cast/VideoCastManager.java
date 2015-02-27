@@ -20,7 +20,6 @@ import android.support.v7.app.MediaRouteDialogFactory;
 import android.support.v7.media.MediaControlIntent;
 import android.support.v7.media.MediaRouter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -40,7 +39,7 @@ import com.google.gson.Gson;
 import com.mb.android.chromecast.CommandPayload;
 import com.mb.android.chromecast.DataMessage;
 import com.mb.android.chromecast.DisplayCommandItemData;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.chromecast.PlayCommandItemData;
 import com.mb.android.R;
 import com.mb.android.chromecast.StreamSelectionCommandData;
@@ -190,7 +189,7 @@ public class VideoCastManager extends BaseCastManager
             }
             sInstance = new VideoCastManager(context, applicationId, targetActivity, dataNamespace);
             mCastManager = sInstance;
-            MB3Application.getAudioService().addAudioPlayerListener(sInstance);
+            MainApplication.getAudioService().addAudioPlayerListener(sInstance);
         }
         return sInstance;
     }
@@ -275,7 +274,7 @@ public class VideoCastManager extends BaseCastManager
         String imageId = "";
 
         if (isAudioPlayerAlive()) {
-            BaseItemDto item = MB3Application.getAudioService().getCurrentItem();
+            BaseItemDto item = MainApplication.getAudioService().getCurrentItem();
             if (item == null) return;
             LockScreenPayload payload = new LockScreenPayload(item);
             titleText = payload.title;
@@ -309,7 +308,7 @@ public class VideoCastManager extends BaseCastManager
             ImageOptions options = new ImageOptions();
             options.setImageType(ImageType.Primary);
             options.setMaxWidth(400);
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(imageId, options);
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(imageId, options);
             controller.setIcon(Uri.parse(imageUrl));
         }
     }
@@ -341,9 +340,9 @@ public class VideoCastManager extends BaseCastManager
     @Override
     public void onPlayPauseClicked(View v) throws CastException,
             TransientNetworkDisconnectionException, NoConnectionException {
-        if (MB3Application.getAudioService().getPlayerState().equals(AudioService.PlayerState.PLAYING)
-                || MB3Application.getAudioService().getPlayerState().equals(AudioService.PlayerState.PAUSED)) {
-            MB3Application.getAudioService().togglePause();
+        if (MainApplication.getAudioService().getPlayerState().equals(AudioService.PlayerState.PLAYING)
+                || MainApplication.getAudioService().getPlayerState().equals(AudioService.PlayerState.PAUSED)) {
+            MainApplication.getAudioService().togglePause();
         }
         checkConnectivity();
         if (mState == MediaStatus.PLAYER_STATE_PLAYING) {
@@ -366,7 +365,7 @@ public class VideoCastManager extends BaseCastManager
     public void onTargetActivityInvoked(Context ctx) throws TransientNetworkDisconnectionException,
             NoConnectionException {
         LOGD(TAG, "onTargetActivityInvoked() reached");
-        if (null == mSelectedCastDevice && null == mCurrentSessionInfoDto && MB3Application.getInstance().PlayerQueue != null) {
+        if (null == mSelectedCastDevice && null == mCurrentSessionInfoDto && MainApplication.getInstance().PlayerQueue != null) {
             Intent intent = new Intent(ctx, AudioPlaybackActivity.class);
             ctx.startActivity(intent);
         } else {
@@ -1424,9 +1423,9 @@ public class VideoCastManager extends BaseCastManager
      */
     public void togglePlayback() throws CastException, TransientNetworkDisconnectionException,
             NoConnectionException {
-        if (MB3Application.getAudioService().getPlayerState().equals(AudioService.PlayerState.PLAYING)
-                || MB3Application.getAudioService().getPlayerState().equals(AudioService.PlayerState.PAUSED)) {
-            MB3Application.getAudioService().togglePause();
+        if (MainApplication.getAudioService().getPlayerState().equals(AudioService.PlayerState.PLAYING)
+                || MainApplication.getAudioService().getPlayerState().equals(AudioService.PlayerState.PAUSED)) {
+            MainApplication.getAudioService().togglePause();
         } else {
             checkConnectivity();
             boolean isPlaying = isRemoteMoviePlaying();
@@ -1867,13 +1866,13 @@ public class VideoCastManager extends BaseCastManager
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mLockScreenPayload.primaryImageItemId)) {
             options.setImageType(ImageType.Primary);
             options.setMaxHeight(300);
-            imageUrl = MB3Application.getInstance().API.GetImageUrl(mLockScreenPayload.primaryImageItemId, options);
+            imageUrl = MainApplication.getInstance().API.GetImageUrl(mLockScreenPayload.primaryImageItemId, options);
             images.add(imageUrl);
         }
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mLockScreenPayload.backdropImageItemId)) {
             options.setImageType(ImageType.Backdrop);
             options.setMaxHeight(720);
-            imageUrl = MB3Application.getInstance().API.GetImageUrl(mLockScreenPayload.backdropImageItemId, options);
+            imageUrl = MainApplication.getInstance().API.GetImageUrl(mLockScreenPayload.backdropImageItemId, options);
             images.add(imageUrl);
         }
 
@@ -1919,7 +1918,7 @@ public class VideoCastManager extends BaseCastManager
         if (!isFeatureEnabled(FEATURE_LOCKSCREEN)) {
             return;
         }
-        if (!isConnected() && MB3Application.getAudioService().getPlayerState().equals(AudioService.PlayerState.IDLE)) {
+        if (!isConnected() && MainApplication.getAudioService().getPlayerState().equals(AudioService.PlayerState.IDLE)) {
 //            removeRemoteControlClient();
             return;
         }
@@ -2037,8 +2036,8 @@ public class VideoCastManager extends BaseCastManager
                         : onChangedListener);
                 try {
                     if ((isConnected() && isRemoteMediaLoaded()) ||
-                            (MB3Application.getAudioService() != null
-                                    && AudioService.PlayerState.PLAYING.equals(MB3Application.getAudioService().getPlayerState()))) {
+                            (MainApplication.getAudioService() != null
+                                    && AudioService.PlayerState.PLAYING.equals(MainApplication.getAudioService().getPlayerState()))) {
                         updateMiniController(miniController);
                         miniController.setVisibility(View.VISIBLE);
                     }
@@ -2282,7 +2281,7 @@ public class VideoCastManager extends BaseCastManager
 
             String id = getRouteInfo().getId().substring(getRouteInfo().getId().lastIndexOf(":") + 1);
 
-            String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(playRequest);
+            String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(playRequest);
             Intent intent = new Intent(MediaControlIntent.ACTION_PLAY);
             intent.addCategory(MediaControlIntent.CATEGORY_REMOTE_PLAYBACK);
             intent.putExtra("SessionId", id);
@@ -2395,7 +2394,7 @@ public class VideoCastManager extends BaseCastManager
 
             String id = getRouteInfo().getId().substring(getRouteInfo().getId().lastIndexOf(":") + 1);
 
-            String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(playRequest);
+            String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(playRequest);
             Intent intent = new Intent(MediaControlIntent.ACTION_PLAY);
             intent.addCategory(MediaControlIntent.CATEGORY_REMOTE_PLAYBACK);
             intent.putExtra("SessionId", id);
@@ -2555,11 +2554,11 @@ public class VideoCastManager extends BaseCastManager
     private void buildAndSendMessage(Object data, String command) {
 
         DataMessage message = new DataMessage();
-        message.userId = MB3Application.getInstance().API.getCurrentUserId();
-        message.deviceId = MB3Application.getInstance().API.getDeviceId();
-        message.accessToken = MB3Application.getInstance().API.getAccessToken();
-        message.serverAddress = MB3Application.getInstance().API.getServerAddress();
-        message.maxBitrate = PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance()).getString("pref_chromecast_bitrate", "3872000");
+        message.userId = MainApplication.getInstance().API.getCurrentUserId();
+        message.deviceId = MainApplication.getInstance().API.getDeviceId();
+        message.accessToken = MainApplication.getInstance().API.getAccessToken();
+        message.serverAddress = MainApplication.getInstance().API.getServerAddress();
+        message.maxBitrate = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance()).getString("pref_chromecast_bitrate", "3872000");
         message.receiverName = getDeviceName();
         message.options = data;
         message.command = command;
@@ -2615,7 +2614,7 @@ public class VideoCastManager extends BaseCastManager
 
     public void getStatusUpdate() {
         SessionQuery query = new SessionQuery();
-        MB3Application.getInstance().API.GetClientSessionsAsync(query, new Response<SessionInfoDto[]>() {
+        MainApplication.getInstance().API.GetClientSessionsAsync(query, new Response<SessionInfoDto[]>() {
             @Override
             public void onResponse(SessionInfoDto[] remoteSessions) {
                 MediaRouter.RouteInfo routeInfo = getRouteInfo();
@@ -2715,14 +2714,14 @@ public class VideoCastManager extends BaseCastManager
                         options.setMaxWidth(400);
                         try {
                             options.setEnableImageEnhancers(PreferenceManager
-                                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                                    .getDefaultSharedPreferences(MainApplication.getInstance())
                                     .getBoolean("pref_enable_image_enhancers", true));
                         } catch (Exception e) {
                             AppLogger.getLogger().Debug("AbstractMediaAdapter", "Error reading preferences");
                         }
 
                         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mLockScreenPayload.primaryImageItemId)) {
-                            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mLockScreenPayload.primaryImageItemId, options);
+                            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mLockScreenPayload.primaryImageItemId, options);
                             controller.setIcon(Uri.parse(imageUrl));
                         } else {
                             controller.setIcon((Uri)null);
@@ -2770,8 +2769,8 @@ public class VideoCastManager extends BaseCastManager
     }
 
     private boolean isAudioPlayerAlive() {
-        return MB3Application.getAudioService() != null &&
-                (AudioService.PlayerState.PLAYING.equals(MB3Application.getAudioService().getPlayerState())
-                        || AudioService.PlayerState.PAUSED.equals(MB3Application.getAudioService().getPlayerState()));
+        return MainApplication.getAudioService() != null &&
+                (AudioService.PlayerState.PLAYING.equals(MainApplication.getAudioService().getPlayerState())
+                        || AudioService.PlayerState.PAUSED.equals(MainApplication.getAudioService().getPlayerState()));
     }
 }

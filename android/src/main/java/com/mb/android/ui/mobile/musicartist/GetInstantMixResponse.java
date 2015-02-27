@@ -3,7 +3,7 @@ package com.mb.android.ui.mobile.musicartist;
 import android.content.Context;
 import android.content.Intent;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.PlaylistItem;
 import mediabrowser.apiinteraction.Response;
@@ -28,8 +28,8 @@ public class GetInstantMixResponse extends Response<ItemsResult> {
 
         if (response == null || response.getItems() == null) return;
 
-        MB3Application.getInstance().PlayerQueue = new Playlist();
-        MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+        MainApplication.getInstance().PlayerQueue = new Playlist();
+        MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
 
         for (BaseItemDto song : response.getItems()) {
             PlaylistItem playableItem = new PlaylistItem();
@@ -48,7 +48,7 @@ public class GetInstantMixResponse extends Response<ItemsResult> {
             playableItem.Type = song.getType();
             playableItem.Runtime = song.getRunTimeTicks();
 
-            MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
+            MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
         }
 
         Intent intent = new Intent(mContext, AudioPlaybackActivity.class);

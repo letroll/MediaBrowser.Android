@@ -16,12 +16,12 @@ import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.android.gms.cast.CastMediaControlIntent;
+import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.activities.BaseMbMobileActivity;
 import com.mb.android.utils.Utils;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.playbackmediator.widgets.MiniController;
-import com.mb.android.MB3Application;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.ProgramDetailsActivity;
@@ -102,7 +102,7 @@ public class ChannelListingsActivity extends BaseMbMobileActivity {
         drawer.setDrawerListener(mDrawerToggle);
 
         String jsonData = getMb3Intent().getStringExtra("ChannelInfoDto");
-        mChannel = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, ChannelInfoDto.class);
+        mChannel = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, ChannelInfoDto.class);
 
         mMini = (MiniController) findViewById(R.id.miniController1);
         mCastManager.addMiniController(mMini);
@@ -157,10 +157,10 @@ public class ChannelListingsActivity extends BaseMbMobileActivity {
 
                 if (options != null) {
                     options.setMaxWidth(500);
-                    String imageUrl = MB3Application.getInstance().API.GetImageUrl(mChannel.getId(), options);
-                    networkLogo.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                    String imageUrl = MainApplication.getInstance().API.GetImageUrl(mChannel.getId(), options);
+                    networkLogo.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
                 } else {
-                    networkLogo.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+                    networkLogo.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
                 }
 
                 mActivityIndicator = (ProgressBar) findViewById(R.id.pbActivityIndicator);
@@ -168,14 +168,14 @@ public class ChannelListingsActivity extends BaseMbMobileActivity {
                 mErrorText = (TextView) findViewById(R.id.tvErrorText);
 
                 ProgramQuery query = new ProgramQuery();
-                query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+                query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
                 query.setChannelIdList(new String[]{ mChannel.getId() });
 
-                MB3Application.getInstance().API.GetLiveTvProgramsAsync(query, new GetProgramsResponse());
+                MainApplication.getInstance().API.GetLiveTvProgramsAsync(query, new GetProgramsResponse());
 
                 if (mCastManager.isConnected()) {
                     MediaRouter.RouteInfo routeInfo = mCastManager.getRouteInfo();
-                    if (routeInfo == null || !routeInfo.supportsControlCategory(CastMediaControlIntent.categoryForCast(MB3Application.getApplicationId()))) {
+                    if (routeInfo == null || !routeInfo.supportsControlCategory(CastMediaControlIntent.categoryForCast(MainApplication.getApplicationId()))) {
                         mWatchNowButton.setVisibility(View.GONE);
                     }
                 }
@@ -220,7 +220,7 @@ public class ChannelListingsActivity extends BaseMbMobileActivity {
             }
 
             if (result.getItems() == null || result.getItems().length == 0) {
-                mErrorText.setText(MB3Application.getInstance().getResources().getString(R.string.no_listings_available));
+                mErrorText.setText(MainApplication.getInstance().getResources().getString(R.string.no_listings_available));
                 mErrorText.setVisibility(View.VISIBLE);
             } else {
 
@@ -250,14 +250,14 @@ public class ChannelListingsActivity extends BaseMbMobileActivity {
                 }
 
                 mChannelsListView = (ListView) findViewById(R.id.lvChannelListings);
-                mChannelsListView.setAdapter(new ChannelListingsAdapter(ChannelListingsActivity.this, listings, MB3Application.getInstance().API));
+                mChannelsListView.setAdapter(new ChannelListingsAdapter(ChannelListingsActivity.this, listings, MainApplication.getInstance().API));
                 mChannelsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         if (listings.get(i) instanceof ListingData) {
 
                             ListingData data = (ListingData) listings.get(i);
-                            String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(data.programInfoDto);
+                            String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(data.programInfoDto);
 
                             Intent intent = new Intent(ChannelListingsActivity.this, ProgramDetailsActivity.class);
                             intent.putExtra("program", jsonData);
@@ -274,11 +274,11 @@ public class ChannelListingsActivity extends BaseMbMobileActivity {
     View.OnClickListener onPlayClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            AudioService.PlayerState currentState = MB3Application.getAudioService().getPlayerState();
+            AudioService.PlayerState currentState = MainApplication.getAudioService().getPlayerState();
             if (currentState.equals(AudioService.PlayerState.PLAYING) || currentState.equals(AudioService.PlayerState.PAUSED)) {
-                MB3Application.getAudioService().stopMedia();
+                MainApplication.getAudioService().stopMedia();
             }
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
             if (mCastManager.isConnected()) {
                 mCastManager.playItem(mChannel, PlayCommand.PlayNow, 0L);
 //            } else if (PreferenceManager.getDefaultSharedPreferences(ChannelListingsActivity.this)
@@ -301,7 +301,7 @@ public class ChannelListingsActivity extends BaseMbMobileActivity {
                 playableItem.startPositionTicks = 0L;
                 playableItem.Type = "TvChannel";
 
-                MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
+                MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
 
                 Intent intent = new Intent(ChannelListingsActivity.this, PlaybackActivity.class);
                 startActivity(intent);

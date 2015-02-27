@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import com.mb.android.adapters.ResumeDialogAdapter;
@@ -51,7 +51,7 @@ public class MediaResumeDialogFragment extends DialogFragment {
     private AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+            MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
             PlaylistItem playableItem = new PlaylistItem();
             playableItem.Id = mItem.getId();
             playableItem.Name = mItem.getName();
@@ -67,8 +67,8 @@ public class MediaResumeDialogFragment extends DialogFragment {
 //            if (subtitleStreamIndex != null) {
 //                playableItem.SubtitleStreamIndex = subtitleStreamIndex;
 //            }
-            MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
-            Intent intent = new Intent(MB3Application.getInstance(), VideoPlayer.class);
+            MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
+            Intent intent = new Intent(MainApplication.getInstance(), VideoPlayer.class);
             startActivity(intent);
 //            MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
 //            PlayerHelpers.playItem(getActivity(), mItem, position == 1, null, null); // only resumes if the second button is pressed

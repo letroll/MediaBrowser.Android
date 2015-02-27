@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.MenuItem;
 import android.widget.BaseAdapter;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
@@ -12,7 +12,6 @@ import mediabrowser.apiinteraction.Response;
 import com.mb.android.ui.mobile.musicartist.GetInstantMixResponse;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.UserItemDataDto;
-import mediabrowser.model.extensions.StringHelper;
 import mediabrowser.model.querying.ItemsResult;
 import mediabrowser.model.querying.ItemQuery;
 import mediabrowser.model.querying.SimilarItemsByNameQuery;
@@ -101,23 +100,23 @@ public class OverflowOnMenuItemClickListener
      */
     private void addItemToPlaylist() {
 
-        if (MB3Application.getInstance().PlayerQueue == null) {
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+        if (MainApplication.getInstance().PlayerQueue == null) {
+            MainApplication.getInstance().PlayerQueue = new Playlist();
         }
 
-        if (MB3Application.getInstance().PlayerQueue.PlaylistItems == null) {
-            MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+        if (MainApplication.getInstance().PlayerQueue.PlaylistItems == null) {
+            MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
         }
 
         if (mItem.getRecursiveItemCount() != null && mItem.getRecursiveItemCount() > 0) {
 
             ItemQuery query = new ItemQuery();
             query.setParentId(mItem.getId());
-            query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+            query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             query.setRecursive(true);
             query.setIncludeItemTypes(new String[] { "audio" });
 
-            MB3Application.getInstance().API.GetItemsAsync(query, getAllRecursiveChildrenResponse);
+            MainApplication.getInstance().API.GetItemsAsync(query, getAllRecursiveChildrenResponse);
 
         } else {
             addItemToPlaylistInternal(mItem);
@@ -136,7 +135,7 @@ public class OverflowOnMenuItemClickListener
             playlistItem.SecondaryText = item.getArtists().get(0);
         }
 
-        MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playlistItem);
+        MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playlistItem);
     }
 
     /**
@@ -144,15 +143,15 @@ public class OverflowOnMenuItemClickListener
      */
     private void removeItemFromPlaylist() {
 
-        if (MB3Application.getInstance().PlayerQueue == null
-                || MB3Application.getInstance().PlayerQueue.PlaylistItems == null) {
+        if (MainApplication.getInstance().PlayerQueue == null
+                || MainApplication.getInstance().PlayerQueue.PlaylistItems == null) {
             return;
         }
 
         int index = -1;
 
-        for (int i = 0; i < MB3Application.getInstance().PlayerQueue.PlaylistItems.size(); i++) {
-            if (MB3Application.getInstance().PlayerQueue.PlaylistItems.get(i).Id.equalsIgnoreCase(mItem.getId())) {
+        for (int i = 0; i < MainApplication.getInstance().PlayerQueue.PlaylistItems.size(); i++) {
+            if (MainApplication.getInstance().PlayerQueue.PlaylistItems.get(i).Id.equalsIgnoreCase(mItem.getId())) {
                 index = i;
                 break;
             }
@@ -160,7 +159,7 @@ public class OverflowOnMenuItemClickListener
 
         if (index == -1) return;
 
-        MB3Application.getInstance().PlayerQueue.PlaylistItems.remove(index);
+        MainApplication.getInstance().PlayerQueue.PlaylistItems.remove(index);
     }
 
     /**
@@ -174,35 +173,35 @@ public class OverflowOnMenuItemClickListener
 
             SimilarItemsQuery query = new SimilarItemsQuery();
             query.setId(mItem.getId());
-            query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+            query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             query.setLimit(50);
-            MB3Application.getInstance().API.GetInstantMixFromSongAsync(query, new GetInstantMixResponse(mContext));
+            MainApplication.getInstance().API.GetInstantMixFromSongAsync(query, new GetInstantMixResponse(mContext));
 
         } else if (mItem.getType().equalsIgnoreCase("MusicAlbum")) {
 
             SimilarItemsQuery query = new SimilarItemsQuery();
             query.setId(mItem.getId());
-            query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+            query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             query.setLimit(50);
-            MB3Application.getInstance().API.GetInstantMixFromAlbumAsync(query, new GetInstantMixResponse(mContext));
+            MainApplication.getInstance().API.GetInstantMixFromAlbumAsync(query, new GetInstantMixResponse(mContext));
 
         } else if (mItem.getType().equalsIgnoreCase("musicartist")) {
 
             SimilarItemsByNameQuery query = new SimilarItemsByNameQuery();
             query.setName(mItem.getName());
-            query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+            query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             query.setLimit(50);
 
-            MB3Application.getInstance().API.GetInstantMixFromArtistAsync(query, new GetInstantMixResponse(mContext));
+            MainApplication.getInstance().API.GetInstantMixFromArtistAsync(query, new GetInstantMixResponse(mContext));
 
         } else if (mItem.getType().equalsIgnoreCase("musicgenre")) {
 
             SimilarItemsByNameQuery query = new SimilarItemsByNameQuery();
             query.setName(mItem.getName());
-            query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+            query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             query.setLimit(50);
 
-            MB3Application.getInstance().API.GetInstantMixFromMusicGenreAsync(query, new GetInstantMixResponse(mContext));
+            MainApplication.getInstance().API.GetInstantMixFromMusicGenreAsync(query, new GetInstantMixResponse(mContext));
         }
     }
 
@@ -211,8 +210,8 @@ public class OverflowOnMenuItemClickListener
      */
     private void setItemLiked() {
 
-        MB3Application.getInstance().API.UpdateUserItemRatingAsync(mItem.getId(),
-                MB3Application.getInstance().API.getCurrentUserId(), true, new UpdateUserDataResponse());
+        MainApplication.getInstance().API.UpdateUserItemRatingAsync(mItem.getId(),
+                MainApplication.getInstance().API.getCurrentUserId(), true, new UpdateUserDataResponse());
     }
 
     /**
@@ -220,8 +219,8 @@ public class OverflowOnMenuItemClickListener
      */
     private void setItemDisliked() {
 
-        MB3Application.getInstance().API.UpdateUserItemRatingAsync(mItem.getId(),
-                MB3Application.getInstance().API.getCurrentUserId(), false, new UpdateUserDataResponse());
+        MainApplication.getInstance().API.UpdateUserItemRatingAsync(mItem.getId(),
+                MainApplication.getInstance().API.getCurrentUserId(), false, new UpdateUserDataResponse());
     }
 
     /**
@@ -229,8 +228,8 @@ public class OverflowOnMenuItemClickListener
      */
     private void clearItemRating() {
 
-        MB3Application.getInstance().API.ClearUserItemRatingAsync(mItem.getId(),
-                MB3Application.getInstance().API.getCurrentUserId(), new UpdateUserDataResponse());
+        MainApplication.getInstance().API.ClearUserItemRatingAsync(mItem.getId(),
+                MainApplication.getInstance().API.getCurrentUserId(), new UpdateUserDataResponse());
     }
 
     /**
@@ -238,8 +237,8 @@ public class OverflowOnMenuItemClickListener
      */
     private void setItemFavorite() {
 
-        MB3Application.getInstance().API.UpdateFavoriteStatusAsync(mItem.getId(),
-                MB3Application.getInstance().API.getCurrentUserId(), true, new UpdateUserDataResponse());
+        MainApplication.getInstance().API.UpdateFavoriteStatusAsync(mItem.getId(),
+                MainApplication.getInstance().API.getCurrentUserId(), true, new UpdateUserDataResponse());
     }
 
     /**
@@ -247,8 +246,8 @@ public class OverflowOnMenuItemClickListener
      */
     private void removeItemFavorite() {
 
-        MB3Application.getInstance().API.UpdateFavoriteStatusAsync(mItem.getId(),
-                MB3Application.getInstance().API.getCurrentUserId(), false, new UpdateUserDataResponse());
+        MainApplication.getInstance().API.UpdateFavoriteStatusAsync(mItem.getId(),
+                MainApplication.getInstance().API.getCurrentUserId(), false, new UpdateUserDataResponse());
     }
 
     /**
@@ -256,9 +255,9 @@ public class OverflowOnMenuItemClickListener
      */
     private void setItemPlayed() {
 
-        MB3Application.getInstance().API.MarkPlayedAsync(
+        MainApplication.getInstance().API.MarkPlayedAsync(
                 mItem.getId(),
-                MB3Application.getInstance().API.getCurrentUserId(),
+                MainApplication.getInstance().API.getCurrentUserId(),
                 null,
                 new UpdateUserDataResponse()
         );
@@ -269,9 +268,9 @@ public class OverflowOnMenuItemClickListener
      */
     private void setItemUnplayed() {
 
-        MB3Application.getInstance().API.MarkUnplayedAsync(
+        MainApplication.getInstance().API.MarkUnplayedAsync(
                 mItem.getId(),
-                MB3Application.getInstance().API.getCurrentUserId(),
+                MainApplication.getInstance().API.getCurrentUserId(),
                 new UpdateUserDataResponse()
         );
     }

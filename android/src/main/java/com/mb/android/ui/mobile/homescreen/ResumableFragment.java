@@ -3,7 +3,6 @@ package com.mb.android.ui.mobile.homescreen;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.MediaDetailsActivity;
 import com.mb.android.adapters.HomeScreenItemsAdapter;
@@ -63,14 +62,14 @@ public class ResumableFragment extends Fragment implements ICommandListener {
     public void onResume() {
         super.onResume();
 
-        if (MB3Application.getInstance().API != null
-                && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getCurrentUserId())) {
+        if (MainApplication.getInstance().API != null
+                && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getCurrentUserId())) {
 
             if (mActivityIndicator != null)
                 mActivityIndicator.setVisibility(View.VISIBLE);
 
             ItemQuery query = new ItemQuery();
-            query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+            query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             query.setSortBy(new String[]{ItemSortBy.SortName});
             query.setSortOrder(SortOrder.Ascending);
             query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio});
@@ -80,7 +79,7 @@ public class ResumableFragment extends Fragment implements ICommandListener {
             query.setExcludeLocationTypes(new LocationType[]{LocationType.Offline, LocationType.Virtual});
 
             // Retrieve the root items.
-            MB3Application.getInstance().API.GetItemsAsync(query, getItemsResponse);
+            MainApplication.getInstance().API.GetItemsAsync(query, getItemsResponse);
         }
     }
 
@@ -110,8 +109,8 @@ public class ResumableFragment extends Fragment implements ICommandListener {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View v, int index, long id) {
                         // Resumable items are only going to be episodes and movies
-                        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mItems[index]);
-                        Intent intent = new Intent(MB3Application.getInstance(), MediaDetailsActivity.class);
+                        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mItems[index]);
+                        Intent intent = new Intent(MainApplication.getInstance(), MediaDetailsActivity.class);
                         intent.putExtra("Item", jsonData);
                         intent.putExtra("LaunchedFromHomeScreen", true);
                         startActivity(intent);

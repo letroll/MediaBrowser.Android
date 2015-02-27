@@ -32,13 +32,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class MB3Application extends Application
+public class MainApplication extends Application
         implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener, OnDolbyAudioProcessingEventListener {
 
     private static final String TAG = "MB3Application";
     public static final double VOLUME_INCREMENT = 0.05;
-    private static MB3Application _mb3Application;
+    private static MainApplication _mb3Application;
     // v1 Id AE4DA10A
     // v2 Id 472F0435
     // v3 Id 69C59853
@@ -56,7 +56,7 @@ public class MB3Application extends Application
     private DolbyAudioProcessing mDolbyAudioProcessing = null;
     private boolean isDolbyAudioProcessingConnected = false;
 
-    public static MB3Application getInstance() {
+    public static MainApplication getInstance() {
         return _mb3Application;
     }
 

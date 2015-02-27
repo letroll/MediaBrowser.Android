@@ -16,7 +16,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.utils.Utils;
 import mediabrowser.apiinteraction.ApiClient;
@@ -67,7 +67,7 @@ public class MediaAdapterBackdrops extends BaseAdapter implements SectionIndexer
             mImageHeight = (mImageWidth / 16) * 9;
 
             imageEnhancersEnabled = PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
 
         } catch (Exception e) {
@@ -218,11 +218,11 @@ public class MediaAdapterBackdrops extends BaseAdapter implements SectionIndexer
             imageUrl = mApi.GetImageUrl(mBaseItems.get(position).getParentThumbItemId(), options);
 
         } else {
-            holder.imageView.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+            holder.imageView.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
         }
 
         if (options != null) {
-            holder.imageView.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            holder.imageView.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         }
 
         // Process top-right overlays
@@ -238,7 +238,7 @@ public class MediaAdapterBackdrops extends BaseAdapter implements SectionIndexer
                 long currentMs = new Date().getTime();
 
                 if (premiereDateMs - currentMs > 0)
-                    holder.missingEpisodeOverlay.setText(MB3Application.getInstance().getResources().getString(R.string.un_aired_overlay));
+                    holder.missingEpisodeOverlay.setText(MainApplication.getInstance().getResources().getString(R.string.un_aired_overlay));
             }
 
             holder.missingEpisodeOverlay.setVisibility(TextView.VISIBLE);

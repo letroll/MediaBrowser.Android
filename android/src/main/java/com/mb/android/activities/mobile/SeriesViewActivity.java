@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +24,7 @@ import com.mb.android.logging.AppLogger;
 import com.mb.android.playbackmediator.cast.exceptions.NoConnectionException;
 import com.mb.android.playbackmediator.cast.exceptions.TransientNetworkDisconnectionException;
 import com.mb.android.playbackmediator.widgets.MiniController;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
@@ -83,7 +82,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
         ((PagerTabStrip) findViewById(R.id.pager_title_strip)).setDrawFullUnderline(false);
 
         String jsonData = getMb3Intent().getStringExtra("Item");
-        mSeries = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
+        mSeries = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
 
         if (mSeries != null) {
             ViewPager pager = (ViewPager) findViewById(R.id.seriesPager);
@@ -129,7 +128,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
         if (savedInstanceState == null &&
                 PreferenceManager.getDefaultSharedPreferences(SeriesViewActivity.this)
                         .getBoolean("pref_play_theme", false)) {
-            if (!MB3Application.getAudioService().getPlayerState().equals(AudioService.PlayerState.PLAYING)) {
+            if (!MainApplication.getAudioService().getPlayerState().equals(AudioService.PlayerState.PLAYING)) {
                 shouldPlayThemeSong = true;
             }
 
@@ -180,7 +179,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
     protected void onSaveInstanceState(Bundle savedInstanceState) {
 
         if (mSeries != null) {
-            String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mSeries);
+            String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mSeries);
             savedInstanceState.putString("Item",jsonData);
         }
 
@@ -198,14 +197,14 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mSeries.getId())) {
 
             AppLogger.getLogger().Info("SeriesViewActivity: GetItemAsync");
-            MB3Application.getInstance().API.GetItemAsync(
+            MainApplication.getInstance().API.GetItemAsync(
                     mSeries.getId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     getItemResponse);
 
             if (shouldPlayThemeSong) {
-                MB3Application.getInstance().API.GetThemeSongsAsync(
-                        MB3Application.getInstance().API.getCurrentUserId(),
+                MainApplication.getInstance().API.GetThemeSongsAsync(
+                        MainApplication.getInstance().API.getCurrentUserId(),
                         mSeries.getId(), false,
                         getLocalThemeSongsResponse
                 );
@@ -219,7 +218,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             // Just in case the theme is still playing
-            MB3Application.getInstance().StopMedia();
+            MainApplication.getInstance().StopMedia();
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -302,9 +301,9 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.favorite_action_bar_button))) {
 
-            MB3Application.getInstance().API.UpdateFavoriteStatusAsync(
+            MainApplication.getInstance().API.UpdateFavoriteStatusAsync(
                     mSeries.getId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     true,
                     new UpdateFavoriteResponse()
             );
@@ -314,9 +313,9 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.un_favorite_action_bar_button))) {
 
-            MB3Application.getInstance().API.UpdateFavoriteStatusAsync(
+            MainApplication.getInstance().API.UpdateFavoriteStatusAsync(
                     mSeries.getId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     false,
                     new UpdateFavoriteResponse()
             );
@@ -326,9 +325,9 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.played_action_bar_button))) {
 
-            MB3Application.getInstance().API.MarkPlayedAsync(
+            MainApplication.getInstance().API.MarkPlayedAsync(
                     mSeries.getId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     null,
                     new UpdatePlaystateResponse()
             );
@@ -338,9 +337,9 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.un_played_action_bar_button))) {
 
-            MB3Application.getInstance().API.MarkUnplayedAsync(
+            MainApplication.getInstance().API.MarkUnplayedAsync(
                     mSeries.getId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     new UpdatePlaystateResponse()
             );
 
@@ -355,18 +354,18 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
 
         AppLogger.getLogger().Info("Library Presentation Fragment: Play-all/Shuffle clicked");
 
-        AudioService.PlayerState currentState = MB3Application.getAudioService().getPlayerState();
+        AudioService.PlayerState currentState = MainApplication.getAudioService().getPlayerState();
         if (currentState.equals(AudioService.PlayerState.PLAYING) || currentState.equals(AudioService.PlayerState.PAUSED)) {
-            MB3Application.getAudioService().stopMedia();
+            MainApplication.getAudioService().stopMedia();
         }
-        MB3Application.getInstance().PlayerQueue = new Playlist();
-        MB3Application.getInstance().StopMedia();
+        MainApplication.getInstance().PlayerQueue = new Playlist();
+        MainApplication.getInstance().StopMedia();
 
         if (mCastManager.isConnected()) {
             mCastManager.playItem(mSeries, shuffleMedia ? PlayCommand.PlayShuffle : PlayCommand.PlayNow, 0L);
         } else {
             ItemQuery query = new ItemQuery();
-            query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+            query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             query.setParentId(mSeries.getId());
             query.setSortBy(new String[]{shuffleMedia ? ItemSortBy.Random : ItemSortBy.SortName});
             query.setSortOrder(SortOrder.Ascending);
@@ -376,7 +375,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
             query.setIsMissing(false);
             query.setIsVirtualUnaired(false);
 
-            MB3Application.getInstance().API.GetItemsAsync(query, playAllShuffleResponse);
+            MainApplication.getInstance().API.GetItemsAsync(query, playAllShuffleResponse);
         }
     }
 
@@ -486,8 +485,8 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
                 options.setImageType(ImageType.Backdrop);
                 options.setWidth(getResources().getDisplayMetrics().widthPixels);
 
-                String imageUrl = MB3Application.getInstance().API.GetImageUrl(item, options);
-                mBackdropImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                String imageUrl = MainApplication.getInstance().API.GetImageUrl(item, options);
+                mBackdropImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
 
                 if (item.getBackdropCount() > 1)
                     mBackdropImage.postDelayed(CycleBackdrop, 8000);
@@ -570,7 +569,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
                     playableItem.SecondaryText = "Season " + String.valueOf(item.getParentIndexNumber()) + " | Episode " + String.valueOf(item.getIndexNumber());
                 playableItem.Type = item.getType();
 
-                MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
+                MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
             }
 
             Intent intent = new Intent(SeriesViewActivity.this, PlaybackActivity.class);
@@ -592,7 +591,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
                 return;
 
             String url = Utils.buildPlaybackUrl(themeSongs.getItems()[0], 0L, null, null, null);
-            MB3Application.getInstance().PlayMedia(url);
+            MainApplication.getInstance().PlayMedia(url);
         }
         @Override
         public void onError(Exception ex) {
@@ -619,8 +618,8 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
 
             mImageIndex += 1;
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mSeries, options);
-            mBackdropImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mSeries, options);
+            mBackdropImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
 
             mBackdropImage.postDelayed(CycleBackdrop, 8000);
         }

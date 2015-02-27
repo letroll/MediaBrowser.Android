@@ -1,30 +1,25 @@
 package com.mb.android.ui.tv.library;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jess.ui.TwoWayAdapterView;
 import com.jess.ui.TwoWayGridView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.adapters.HorizontalAdapterBackdrops;
-import com.mb.android.adapters.HorizontalAdapterPosters;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.tv.playback.PlayerHelpers;
 import com.mb.android.utils.Utils;
 import mediabrowser.apiinteraction.Response;
 import mediabrowser.model.dto.BaseItemDto;
-import mediabrowser.model.extensions.StringHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,7 +69,7 @@ public class GridFragment extends BaseLibraryFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DisplayMetrics dm = MB3Application.getInstance().getResources().getDisplayMetrics();
+        DisplayMetrics dm = MainApplication.getInstance().getResources().getDisplayMetrics();
         if (dm != null) {
             maxTitleWidthDp = (int) ((float)dm.widthPixels * .60);
         }
@@ -318,7 +313,7 @@ public class GridFragment extends BaseLibraryFragment {
         mItems.addAll(Arrays.asList(items));
 
         if (mItems.size() > 0 && mItemsGrid.getAdapter() == null) {
-            DisplayMetrics dm = MB3Application.getInstance().getResources().getDisplayMetrics();
+            DisplayMetrics dm = MainApplication.getInstance().getResources().getDisplayMetrics();
             int rows = 3;
             if (dm != null) {
                 maxTitleWidthDp = (int) (dm.widthPixels * .65);
@@ -335,7 +330,7 @@ public class GridFragment extends BaseLibraryFragment {
                 mOnItemSelectedListener.onItemSelected(mItemsGrid, v, 0, mItemsGrid.getAdapter().getItemId(0));
 
                 if ("episode".equalsIgnoreCase(mItems.get(0).getType()) && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(mItems.get(0).getParentBackdropItemId())) {
-                    MB3Application.getInstance().API.GetItemAsync(mItems.get(0).getParentBackdropItemId(), MB3Application.getInstance().API.getCurrentUserId(), new GetParentResponse());
+                    MainApplication.getInstance().API.GetItemAsync(mItems.get(0).getParentBackdropItemId(), MainApplication.getInstance().API.getCurrentUserId(), new GetParentResponse());
                 }
             }
         }

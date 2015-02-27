@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 
@@ -62,9 +61,9 @@ public class BioFragment extends Fragment {
 
         if (tangible.DotNetToJavaStringHelper.isNullOrEmpty(artistId)) return;
 
-        MB3Application.getInstance().API.GetItemAsync(
+        MainApplication.getInstance().API.GetItemAsync(
                 artistId,
-                MB3Application.getInstance().API.getCurrentUserId(),
+                MainApplication.getInstance().API.getCurrentUserId(),
                 getItemResponse);
     }
 
@@ -94,8 +93,8 @@ public class BioFragment extends Fragment {
                     options.setMaxWidth(400);
                     options.setMaxHeight(250);
 
-                    String imageUrl = MB3Application.getInstance().API.GetImageUrl(item, options);
-                    artistLogoImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                    String imageUrl = MainApplication.getInstance().API.GetImageUrl(item, options);
+                    artistLogoImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
                 }
 
                 // Set the backdrop
@@ -110,8 +109,8 @@ public class BioFragment extends Fragment {
                         options.setImageType(ImageType.Backdrop);
                         options.setMaxWidth(metrics.widthPixels);
 
-                        String imageUrl = MB3Application.getInstance().API.GetImageUrl(item, options);
-                        backdrop.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                        String imageUrl = MainApplication.getInstance().API.GetImageUrl(item, options);
+                        backdrop.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
                     }
                 }
 

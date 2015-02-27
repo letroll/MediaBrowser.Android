@@ -3,7 +3,6 @@ package com.mb.android.ui.mobile.homescreen;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.library.LibraryPresentationActivity;
@@ -58,17 +57,17 @@ public class CollectionsFragment extends Fragment implements ICommandListener {
     public void onResume() {
         super.onResume();
 
-        if (MB3Application.getInstance().API != null
-                && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getCurrentUserId())) {
+        if (MainApplication.getInstance().API != null
+                && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getCurrentUserId())) {
 
             ItemQuery query = new ItemQuery();
-            query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+            query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             query.setSortBy(new String[]{ItemSortBy.SortName});
             query.setSortOrder(SortOrder.Ascending);
             query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio});
 
             // Retrieve the root items.
-            MB3Application.getInstance().API.GetItemsAsync(query, getItemsResponse);
+            MainApplication.getInstance().API.GetItemsAsync(query, getItemsResponse);
         }
     }
 
@@ -91,17 +90,17 @@ public class CollectionsFragment extends Fragment implements ICommandListener {
 
                     if (mCollectionsGrid == null) return;
 
-                    mCollectionsGrid.setAdapter(new CollectionAdapter(mItems, MB3Application.getInstance(), MB3Application.getInstance().API));
+                    mCollectionsGrid.setAdapter(new CollectionAdapter(mItems, MainApplication.getInstance(), MainApplication.getInstance().API));
                     mCollectionsGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View v, int index, long id) {
                             if (mItems[index].getCollectionType() != null && mItems[index].getCollectionType().equalsIgnoreCase("music")) {
-                                Intent intent = new Intent(MB3Application.getInstance(), MusicActivity.class);
+                                Intent intent = new Intent(MainApplication.getInstance(), MusicActivity.class);
                                 intent.putExtra("ParentId", mItems[index].getId());
                                 startActivity(intent);
                             } else {
-                                String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mItems[index]);
-                                Intent intent = new Intent(MB3Application.getInstance(), LibraryPresentationActivity.class);
+                                String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mItems[index]);
+                                Intent intent = new Intent(MainApplication.getInstance(), LibraryPresentationActivity.class);
                                 intent.putExtra("Item", jsonData);
                                 startActivity(intent);
                             }

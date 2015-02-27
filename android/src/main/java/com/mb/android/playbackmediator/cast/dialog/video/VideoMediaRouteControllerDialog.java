@@ -22,7 +22,7 @@ import static com.mb.android.playbackmediator.utils.LogUtils.LOGE;
 import com.google.android.gms.cast.CastMediaControlIntent;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaStatus;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.mediaroute.MediaBrowserControlIntent;
@@ -35,7 +35,6 @@ import com.mb.android.playbackmediator.utils.LogUtils;
 import com.mb.android.playbackmediator.utils.Utils;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
-import mediabrowser.model.extensions.StringHelper;
 import mediabrowser.model.session.SessionInfoDto;
 
 import android.content.Context;
@@ -46,7 +45,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.MediaRouteControllerDialog;
 import android.support.v7.media.MediaRouter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -177,7 +175,7 @@ public class VideoMediaRouteControllerDialog extends MediaRouteControllerDialog 
             ImageOptions options = new ImageOptions();
             options.setImageType(ImageType.Primary);
             options.setMaxWidth(400);
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(sessionInfo.getNowPlayingItem().getId(), options);
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(sessionInfo.getNowPlayingItem().getId(), options);
             setIcon(Uri.parse(imageUrl));
         } else {
             setIcon(null);
@@ -326,7 +324,7 @@ public class VideoMediaRouteControllerDialog extends MediaRouteControllerDialog 
 
         boolean enable = info != null && (
                 info.supportsControlCategory(CastMediaControlIntent.categoryForCast(
-                        MB3Application.getApplicationId()))
+                        MainApplication.getApplicationId()))
                 || info.supportsControlAction(
                         MediaBrowserControlIntent.CATEGORY_MEDIA_BROWSER_COMMAND,
                         MediaBrowserControlIntent.ACTION_DISPLAY_CONTENT));
@@ -335,7 +333,7 @@ public class VideoMediaRouteControllerDialog extends MediaRouteControllerDialog 
             // only show the option if the route supports it
             mContentMirroring.setVisibility(View.VISIBLE);
             boolean mirrorEnabled
-                    = Utils.getBooleanFromPreference(MB3Application.getInstance(), "CONTENT_MIRROR_ENABLED", false);
+                    = Utils.getBooleanFromPreference(MainApplication.getInstance(), "CONTENT_MIRROR_ENABLED", false);
             AppLogger.getLogger().Debug(TAG, "MIRROR ENABLED CURRENTLY SET TO " + String.valueOf(mirrorEnabled));
 
             if (null != mContentMirroring) {
@@ -343,7 +341,7 @@ public class VideoMediaRouteControllerDialog extends MediaRouteControllerDialog 
             }
         } else {
             // If the route doesn't support it, explicitly set it to false just in case
-            Utils.saveBooleanToPreference(MB3Application.getInstance(), "CONTENT_MIRROR_ENABLED", false);
+            Utils.saveBooleanToPreference(MainApplication.getInstance(), "CONTENT_MIRROR_ENABLED", false);
         }
     }
 
@@ -392,7 +390,7 @@ public class VideoMediaRouteControllerDialog extends MediaRouteControllerDialog 
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 AppLogger.getLogger().Debug(TAG, "Mirror content being set to " + String.valueOf(isChecked ? true : null));
-                Utils.saveBooleanToPreference(MB3Application.getInstance(), "CONTENT_MIRROR_ENABLED", isChecked ? true : null);
+                Utils.saveBooleanToPreference(MainApplication.getInstance(), "CONTENT_MIRROR_ENABLED", isChecked ? true : null);
             }
         });
     }

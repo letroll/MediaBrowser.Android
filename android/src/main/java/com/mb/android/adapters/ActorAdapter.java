@@ -2,7 +2,6 @@ package com.mb.android.adapters;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.ViewHolder;
 import com.mb.android.logging.AppLogger;
@@ -39,7 +38,7 @@ public class ActorAdapter extends BaseAdapter {
         try {
             mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             imageEnhancersEnabled = PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
         } catch (Exception e) {
             AppLogger.getLogger().Debug("ActorAdapter", "Error getting layout inflater");
@@ -98,9 +97,9 @@ public class ActorAdapter extends BaseAdapter {
             actorImageOptions.setEnableImageEnhancers(imageEnhancersEnabled);
 
             String actorImageUrl = mApi.GetImageUrl(mPeople[position].getId(), actorImageOptions);
-            holder.imageView.setImageUrl(actorImageUrl, MB3Application.getInstance().API.getImageLoader());
+            holder.imageView.setImageUrl(actorImageUrl, MainApplication.getInstance().API.getImageLoader());
         } else {
-            holder.imageView.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+            holder.imageView.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
         }
         return convertView;
     }

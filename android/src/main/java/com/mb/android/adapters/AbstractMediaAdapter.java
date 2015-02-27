@@ -1,7 +1,6 @@
 package com.mb.android.adapters;
 
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.BaseAdapter;
 import android.widget.ProgressBar;
@@ -10,7 +9,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.utils.Utils;
 import mediabrowser.model.dto.BaseItemDto;
@@ -41,7 +40,7 @@ public abstract class AbstractMediaAdapter extends BaseAdapter implements Sectio
 
         try {
             imageEnhancersEnabled = PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
         } catch (Exception e) {
             AppLogger.getLogger().Debug("AbstractMediaAdapter", "Error reading preferences");

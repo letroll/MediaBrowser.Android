@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.utils.Utils;
 import com.mb.android.activities.mobile.MediaDetailsActivity;
@@ -69,7 +69,7 @@ public class MediaOverviewFragment extends Fragment {
         Bundle args = getArguments();
 
         String jsonData = args.getString("Item");
-        mItem = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
+        mItem = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
 
         sRating = (ImageView) mView.findViewById(R.id.ivDetailsStarRating);
         miRuntime = inflater.inflate(R.layout.widget_bordered_textview, container, false);
@@ -156,14 +156,14 @@ public class MediaOverviewFragment extends Fragment {
             options.setMaxWidth((int) (300 * mMediaDetailsActivity.getScreenDensity()));
             options.setMaxHeight(mMediaDetailsActivity.getScreenHeight() - 150);
             options.setEnableImageEnhancers(PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true));
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mItem, options);
-            mPrimaryImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem, options);
+            mPrimaryImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         } else {
             mPrimaryImage.setDefaultImageResId(R.drawable.default_video_portrait);
-            mPrimaryImage.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+            mPrimaryImage.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
         }
     }
 
@@ -195,7 +195,7 @@ public class MediaOverviewFragment extends Fragment {
             options = new ImageOptions();
             options.setImageType(ImageType.Primary);
             options.setEnableImageEnhancers(false);
-            imageUrl = MB3Application.getInstance().API.GetImageUrl(mItem, options);
+            imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem, options);
             setBackdropImage(imageUrl);
 
             if (mPrimaryImage != null) {
@@ -209,7 +209,7 @@ public class MediaOverviewFragment extends Fragment {
                     options.setImageType(ImageType.Backdrop);
                     options.setImageIndex(i);
                     options.setMaxWidth(mMediaDetailsActivity.getResources().getDisplayMetrics().widthPixels);
-                    imageUrl = MB3Application.getInstance().API.GetImageUrl(mItem, options);
+                    imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem, options);
 
                     mBackdropUrls.add(imageUrl);
                 }
@@ -217,7 +217,7 @@ public class MediaOverviewFragment extends Fragment {
                 options = new ImageOptions();
                 options.setImageType(ImageType.Backdrop);
 
-                imageUrl = MB3Application.getInstance().API.GetImageUrl(mItem.getParentBackdropItemId(), options);
+                imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem.getParentBackdropItemId(), options);
                 mBackdropUrls.add(imageUrl);
             }
         }
@@ -289,7 +289,7 @@ public class MediaOverviewFragment extends Fragment {
                 public void onClick(View arg0) {
 
                     Intent rtIntent = new Intent(mMediaDetailsActivity, RottenTomatoesActivity.class);
-                    String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mItem);
+                    String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mItem);
                     rtIntent.putExtra("Item", jsonData);
                     startActivity(rtIntent);
 
@@ -419,10 +419,10 @@ public class MediaOverviewFragment extends Fragment {
         }
 
         if (mBackdropSwitcher.getDisplayedChild() == 0) {
-            mBackdropImage2.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            mBackdropImage2.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mBackdropSwitcher.showNext();
         } else {
-            mBackdropImage1.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            mBackdropImage1.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mBackdropSwitcher.showPrevious();
         }
     }

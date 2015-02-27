@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.SeriesViewActivity;
 import com.mb.android.ui.tv.library.LibraryTools;
@@ -120,8 +119,8 @@ public class SeriesDetailsFragment extends Fragment {
 
                 options.setWidth(metrics.widthPixels);
 
-                String imageUrl = MB3Application.getInstance().API.GetImageUrl(mSeries, options);
-                mBackdropImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                String imageUrl = MainApplication.getInstance().API.GetImageUrl(mSeries, options);
+                mBackdropImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             }
         } else {
             NetworkImageView primaryImageLandscape = (NetworkImageView) mView.findViewById(R.id.ivPrimaryImage);
@@ -131,8 +130,8 @@ public class SeriesDetailsFragment extends Fragment {
             options.setMaxWidth((int) (300 * mSeriesActivity.getScreenDensity()));
             options.setMaxHeight(mSeriesActivity.getScreenHeight() - 325);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mSeries, options);
-            primaryImageLandscape.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mSeries, options);
+            primaryImageLandscape.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         }
 
         PopulateView();
@@ -210,8 +209,8 @@ public class SeriesDetailsFragment extends Fragment {
 
             mImageIndex += 1;
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mSeries, options);
-            mBackdropImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mSeries, options);
+            mBackdropImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
 
             mBackdropImage.postDelayed(CycleBackdrop, 8000);
         }

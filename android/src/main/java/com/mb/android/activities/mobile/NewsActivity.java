@@ -13,7 +13,7 @@ import android.widget.ListView;
 
 import com.mb.android.activities.BaseMbMobileActivity;
 import com.mb.android.playbackmediator.widgets.MiniController;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.adapters.NewsAdapter;
 import com.mb.android.fragments.NavigationMenuFragment;
@@ -113,14 +113,14 @@ public class NewsActivity extends BaseMbMobileActivity {
     }
 
     private void getNewsItems() {
-        MB3Application.getInstance().API.GetNewsItems(new GetNewsItemsResponse());
+        MainApplication.getInstance().API.GetNewsItems(new GetNewsItemsResponse());
     }
 
     private class GetNewsItemsResponse extends Response<NewsItemsResult> {
         @Override
         public void onResponse(final NewsItemsResult result) {
             ListView newsList = (ListView) findViewById(R.id.lvNewsList);
-            newsList.setAdapter(new NewsAdapter(result.getItems(), NewsActivity.this, MB3Application.getInstance().API));
+            newsList.setAdapter(new NewsAdapter(result.getItems(), NewsActivity.this, MainApplication.getInstance().API));
             newsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

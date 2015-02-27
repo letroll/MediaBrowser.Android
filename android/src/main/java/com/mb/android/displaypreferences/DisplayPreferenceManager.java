@@ -4,10 +4,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import mediabrowser.apiinteraction.android.GsonJsonSerializer;
 import mediabrowser.model.dto.BaseItemDto;
-import mediabrowser.model.extensions.StringHelper;
 
 /**
  * Created by Mark on 2014-11-22.
@@ -19,7 +18,7 @@ public class DisplayPreferenceManager {
 
     public DisplayPreferenceManager() {
         serializer = new GsonJsonSerializer();
-        mPreferncesHelper = new PreferencesOpenHelper(MB3Application.getInstance());
+        mPreferncesHelper = new PreferencesOpenHelper(MainApplication.getInstance());
     }
 
     /**

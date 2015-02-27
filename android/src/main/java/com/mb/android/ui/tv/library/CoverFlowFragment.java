@@ -3,7 +3,6 @@ package com.mb.android.ui.tv.library;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import android.widget.TextView;
 
 import com.jess.ui.TwoWayAdapterView;
 import com.jess.ui.TwoWayGridView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.adapters.HorizontalAdapterPosters;
 import com.mb.android.logging.AppLogger;
@@ -337,7 +336,7 @@ public class CoverFlowFragment extends BaseLibraryFragment {
             onItemSelectedListener.onItemSelected(contentGrid, v, 0, contentGrid.getAdapter().getItemId(0));
 
             if ("episode".equalsIgnoreCase(mItems.get(0).getType()) && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(mItems.get(0).getParentBackdropItemId())) {
-                MB3Application.getInstance().API.GetItemAsync(mItems.get(0).getParentBackdropItemId(), MB3Application.getInstance().API.getCurrentUserId(), new GetParentResponse());
+                MainApplication.getInstance().API.GetItemAsync(mItems.get(0).getParentBackdropItemId(), MainApplication.getInstance().API.getCurrentUserId(), new GetParentResponse());
             }
         }
     }

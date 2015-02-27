@@ -10,9 +10,8 @@ import android.support.v7.media.MediaRouteDiscoveryRequest;
 import android.support.v7.media.MediaRouteProvider;
 import android.support.v7.media.MediaRouteProviderDescriptor;
 import android.support.v7.media.MediaRouter;
-import android.util.Log;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.logging.AppLogger;
 
@@ -54,11 +53,11 @@ public final class MediaBrowserRouteProvider extends MediaRouteProvider {
      */
     private void getRoutes() {
 
-        if (null == MB3Application.getInstance().API || tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getServerAddress())) {
+        if (null == MainApplication.getInstance().API || tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getServerAddress())) {
             return;
         }
         SessionQuery query = new SessionQuery();
-        MB3Application.getInstance().API.GetClientSessionsAsync(query, new Response<SessionInfoDto[]>() {
+        MainApplication.getInstance().API.GetClientSessionsAsync(query, new Response<SessionInfoDto[]>() {
             @Override
             public void onResponse(SessionInfoDto[] remoteSessions) {
 
@@ -83,7 +82,7 @@ public final class MediaBrowserRouteProvider extends MediaRouteProvider {
                     if (session.getDeviceId().equalsIgnoreCase(deviceId) || "Chromecast".equalsIgnoreCase(session.getClient()))
                         continue;
 
-                    if (MB3Application.getInstance().API.getCurrentUserId().equals(session.getUserId()) || userCanControlOtherSessions()) {
+                    if (MainApplication.getInstance().API.getCurrentUserId().equals(session.getUserId()) || userCanControlOtherSessions()) {
                         validSessions.add(session);
                     }
                 }
@@ -99,9 +98,9 @@ public final class MediaBrowserRouteProvider extends MediaRouteProvider {
     }
 
     private boolean userCanControlOtherSessions() {
-        return MB3Application.getInstance().user != null
-                && MB3Application.getInstance().user.getPolicy() != null
-                && MB3Application.getInstance().user.getPolicy().getEnableRemoteControlOfOtherUsers();
+        return MainApplication.getInstance().user != null
+                && MainApplication.getInstance().user.getPolicy() != null
+                && MainApplication.getInstance().user.getPolicy().getEnableRemoteControlOfOtherUsers();
     }
 
     /**

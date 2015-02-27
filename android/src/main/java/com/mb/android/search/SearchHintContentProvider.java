@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.net.Uri;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.Response;
 import mediabrowser.apiinteraction.android.GsonJsonSerializer;
@@ -41,7 +41,7 @@ public class SearchHintContentProvider extends ContentProvider {
         SearchQuery searchQuery = new SearchQuery();
         searchQuery.setSearchTerm(selectionArgs[0].trim());
         searchQuery.setLimit(20);
-        searchQuery.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        searchQuery.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         searchQuery.setIncludeArtists(true);
         searchQuery.setIncludeMedia(true);
         searchQuery.setIncludePeople(true);
@@ -49,7 +49,7 @@ public class SearchHintContentProvider extends ContentProvider {
         searchQuery.setIncludeGenres(false);
 
 
-        MB3Application.getInstance().API.GetSearchHintsAsync(searchQuery, new Response<SearchHintResult>() {
+        MainApplication.getInstance().API.GetSearchHintsAsync(searchQuery, new Response<SearchHintResult>() {
             @Override
             public void onResponse(SearchHintResult result) {
                 if (result == null || result.getSearchHints() == null) return;

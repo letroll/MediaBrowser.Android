@@ -15,7 +15,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.ApiClient;
 import com.mb.android.logging.AppLogger;
@@ -48,16 +48,16 @@ public class LiveTvChannelsAdapter extends BaseAdapter implements SectionIndexer
         mApi = apiClient;
 
         try {
-            li = (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            li = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            int columns = MB3Application.getInstance().getResources().getInteger(R.integer.library_columns);
-            DisplayMetrics dm = MB3Application.getInstance().getResources().getDisplayMetrics();
+            int columns = MainApplication.getInstance().getResources().getInteger(R.integer.library_columns);
+            DisplayMetrics dm = MainApplication.getInstance().getResources().getDisplayMetrics();
 
             mImageWidth = (dm.widthPixels - ((columns * 2) * (int) (4 * dm.density))) / columns;
             mImageHeight = (mImageWidth / 16) * 9;
 
             imageEnhancersEnabled = PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
 
         } catch (Exception e) {
@@ -134,10 +134,10 @@ public class LiveTvChannelsAdapter extends BaseAdapter implements SectionIndexer
                 imageUrl = mApi.GetImageUrl(mBaseItems.get(position).getId(), options);
             }
 
-            holder.imageView.setImageUrl(options != null ? imageUrl : null, MB3Application.getInstance().API.getImageLoader());
+            holder.imageView.setImageUrl(options != null ? imageUrl : null, MainApplication.getInstance().API.getImageLoader());
 
         } else {
-            holder.imageView.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+            holder.imageView.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
         }
 
         return convertView;

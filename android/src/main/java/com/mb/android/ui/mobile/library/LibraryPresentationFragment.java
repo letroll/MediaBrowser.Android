@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +16,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import mediabrowser.apiinteraction.Response;
+
+import com.mb.android.MainApplication;
 import com.mb.android.interfaces.ICommandListener;
-import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.musicartist.ArtistActivity;
@@ -71,15 +71,15 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
 
         String jsonData = getArguments().getString("EpisodeQuery");
         if (jsonData != null) {
-            mEpisodeQuery = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, EpisodeQuery.class);
+            mEpisodeQuery = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, EpisodeQuery.class);
         } else {
             jsonData = getArguments().getString("ItemQuery");
             if (jsonData != null) {
-                mItemQuery = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, ItemQuery.class);
+                mItemQuery = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, ItemQuery.class);
             } else {
                 jsonData = getArguments().getString("Item");
                 if (jsonData != null) {
-                    mItem = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
+                    mItem = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
                 }
             }
         }
@@ -141,9 +141,9 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
 
     private void performInitialQueries() {
         if (mItemQuery != null) {
-            MB3Application.getInstance().API.GetItemsAsync(mItemQuery, getItemsResponse);
+            MainApplication.getInstance().API.GetItemsAsync(mItemQuery, getItemsResponse);
         } else if (mEpisodeQuery != null) {
-            MB3Application.getInstance().API.GetEpisodesAsync(mEpisodeQuery, getItemsResponse);
+            MainApplication.getInstance().API.GetEpisodesAsync(mEpisodeQuery, getItemsResponse);
         }
     }
 
@@ -168,8 +168,8 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
             AppLogger.getLogger().Info(TAG + ": " + String.valueOf(mItems.size()) + " items to show");
 
             mLibraryGrid.setAdapter(mPosterViewEnabled
-                    ? new MediaAdapterPosters(mItems, MB3Application.getInstance().getResources().getInteger(R.integer.library_columns_poster), MB3Application.getInstance().API, R.drawable.default_video_portrait)
-                    : new MediaAdapterBackdrops(mLibraryActivity, mItems, MB3Application.getInstance().API, R.drawable.default_video_landscape)
+                    ? new MediaAdapterPosters(mItems, MainApplication.getInstance().getResources().getInteger(R.integer.library_columns_poster), MainApplication.getInstance().API, R.drawable.default_video_portrait)
+                    : new MediaAdapterBackdrops(mLibraryActivity, mItems, MainApplication.getInstance().API, R.drawable.default_video_landscape)
             );
             mLibraryGrid.setFastScrollEnabled(true);
             mLibraryGrid.requestFocus();
@@ -187,7 +187,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
             AppLogger.getLogger().Info("Library Presentation Fragment: Position Clicked " + position);
 
             mItem = mItems.get(position);
-            String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mItem);
+            String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mItem);
 
             Intent intent;
 
@@ -272,7 +272,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
         mItemQuery.setStartIndex(0);
 
         // perform the new query
-        MB3Application.getInstance().API.GetItemsAsync(query, getItemsResponse);
+        MainApplication.getInstance().API.GetItemsAsync(query, getItemsResponse);
         mLibraryGrid.setAdapter(null);
     }
 
@@ -366,7 +366,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
                 if (response.getTotalRecordCount() > mCurrentQueryStartIndex + 1) {
 
                     mItemQuery.setStartIndex(mCurrentQueryStartIndex);
-                    MB3Application.getInstance().API.GetItemsAsync(mItemQuery, this);
+                    MainApplication.getInstance().API.GetItemsAsync(mItemQuery, this);
                 } else {
                 }
 

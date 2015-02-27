@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class TextTabAdapter extends BaseAdapter {
 
     public TextTabAdapter(Context context, List<String> sections) {
 
-        inflater = LayoutInflater.from(context != null ? context : MB3Application.getInstance());
+        inflater = LayoutInflater.from(context != null ? context : MainApplication.getInstance());
         this.sections = sections;
     }
 
@@ -67,7 +67,7 @@ public class TextTabAdapter extends BaseAdapter {
         holder.sectionName.setText(sections.get(i));
 
         if (i == selectedIndex) {
-            holder.sectionName.setTextColor(MB3Application.getInstance().getResources().getColor(R.color.white));
+            holder.sectionName.setTextColor(MainApplication.getInstance().getResources().getColor(R.color.white));
         } else {
             holder.sectionName.setTextColor(Color.parseColor("#70ffffff"));
         }

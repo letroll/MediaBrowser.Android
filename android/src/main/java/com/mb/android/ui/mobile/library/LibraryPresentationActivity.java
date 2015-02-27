@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,12 +20,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mb.android.MainApplication;
 import com.mb.android.activities.BaseMbMobileActivity;
 import mediabrowser.apiinteraction.Response;
 
 import com.mb.android.logging.AppLogger;
 import com.mb.android.playbackmediator.widgets.MiniController;
-import com.mb.android.MB3Application;
 import com.mb.android.Playlist;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
@@ -132,15 +131,15 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
         mDisableIndexing = getMb3Intent().getBooleanExtra("DisableIndexing", false);
         String jsonData = getMb3Intent().getStringExtra("EpisodeQuery");
         if (jsonData != null) {
-            mEpisodeQuery = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, EpisodeQuery.class);
+            mEpisodeQuery = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, EpisodeQuery.class);
         } else {
             jsonData = getMb3Intent().getStringExtra("ItemQuery");
             if (jsonData != null) {
-                mItemQuery = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, ItemQuery.class);
+                mItemQuery = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, ItemQuery.class);
             } else {
                 jsonData = getMb3Intent().getStringExtra("Item");
                 if (jsonData != null) {
-                    mItem = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
+                    mItem = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
                 }
             }
         }
@@ -224,13 +223,13 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
 
     private void handlePlayRequest(boolean shuffle) {
 
-        AudioService.PlayerState currentState = MB3Application.getAudioService().getPlayerState();
+        AudioService.PlayerState currentState = MainApplication.getAudioService().getPlayerState();
         if (currentState.equals(AudioService.PlayerState.PLAYING) || currentState.equals(AudioService.PlayerState.PAUSED)) {
-            MB3Application.getAudioService().stopMedia();
+            MainApplication.getAudioService().stopMedia();
         }
-        MB3Application.getInstance().StopMedia();
+        MainApplication.getInstance().StopMedia();
 
-        MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+        MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
 
         if (mItem != null && mItem.getType().equalsIgnoreCase("playlist")) {
             if (mCastManager != null && mCastManager.isConnected()) {
@@ -257,10 +256,10 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
             query.setSeasonNumber(mEpisodeQuery.getSeasonNumber());
             query.setSeriesId(mEpisodeQuery.getSeriesId());
             query.setUserId(mEpisodeQuery.getUserId());
-            MB3Application.getInstance().API.GetEpisodesAsync(query, new PlayAllShuffleResponse(shuffle));
+            MainApplication.getInstance().API.GetEpisodesAsync(query, new PlayAllShuffleResponse(shuffle));
         } else {
             ItemQuery query = new ItemQuery();
-            query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+            query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             if (mItem != null) {
                 query.setParentId(mItem.getId());
                 query.setIncludeItemTypes(new String[]{"Audio", "Movie", "Episode", "MusicVideo"});
@@ -283,7 +282,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
             query.setIsMissing(false);
             query.setIsVirtualUnaired(false);
 
-            MB3Application.getInstance().API.GetItemsAsync(query, new PlayAllShuffleResponse(shuffle));
+            MainApplication.getInstance().API.GetItemsAsync(query, new PlayAllShuffleResponse(shuffle));
         }
     }
 
@@ -345,7 +344,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
 
         AppLogger.getLogger().Info(TAG + ": parsing initial query information");
         if (ParentalRatings.size() == 0) {
-            MB3Application.getInstance().API.GetParentalRatingsAsync(getParentalRatingsResponse);
+            MainApplication.getInstance().API.GetParentalRatingsAsync(getParentalRatingsResponse);
         }
 
         if (mItem != null) {
@@ -355,7 +354,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
         if (mEpisodeQuery == null && mItemQuery == null && mItem != null) {
 
             mItemQuery = new ItemQuery();
-            mItemQuery.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+            mItemQuery.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             mItemQuery.setParentId(mItem.getId());
             mItemQuery.setSortBy(new String[]{ItemSortBy.SortName});
             mItemQuery.setSortOrder(SortOrder.Ascending);
@@ -415,15 +414,15 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
 
         Bundle bundle = new Bundle();
         if (mItem != null) {
-            String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mItem);
+            String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mItem);
             bundle.putSerializable("Item", jsonData);
         }
         if (mItemQuery != null) {
-            String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mItemQuery);
+            String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mItemQuery);
             bundle.putSerializable("ItemQuery", jsonData);
         }
         if (mEpisodeQuery != null) {
-            String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mEpisodeQuery);
+            String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mEpisodeQuery);
             bundle.putSerializable("EpisodeQuery", jsonData);
         }
         bundle.putBoolean("DisableIndexing", mDisableIndexing);
@@ -445,11 +444,11 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
             ibnQuery.setIncludeItemTypes(mItemQuery.getIncludeItemTypes());
             ibnQuery.setRecursive(true);
         }
-        ibnQuery.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        ibnQuery.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         ibnQuery.setSortOrder(SortOrder.Ascending);
         ibnQuery.setSortBy(new String[]{"SortName"});
 
-        MB3Application.getInstance().API.GetGenresAsync(ibnQuery, getGenresResponse);
+        MainApplication.getInstance().API.GetGenresAsync(ibnQuery, getGenresResponse);
     }
 
     private List<String> SortOfficialRatings(List<String> mOfficialRatings) {
@@ -1060,7 +1059,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
                 AppLogger.getLogger().Info("shuffled result.Items.length = " + String.valueOf(response.getItems().length));
             }
 
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
 
             AppLogger.getLogger().Info("Library Presentation Fragment: processing response");
             for (BaseItemDto item : response.getItems()) {
@@ -1073,12 +1072,12 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
                     playableItem.SecondaryText = "Season " + String.valueOf(item.getParentIndexNumber()) + " | Episode " + String.valueOf(item.getIndexNumber());
                 playableItem.Type = item.getType();
 
-                MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
+                MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
             }
 
-            if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() == 0) return;
+            if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() == 0) return;
 
-            if ("audio".equalsIgnoreCase(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
+            if ("audio".equalsIgnoreCase(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
                 Intent intent = new Intent(LibraryPresentationActivity.this, AudioPlaybackActivity.class);
                 startActivity(intent);
             } else {
@@ -1114,15 +1113,15 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
 
         ItemQuery query = new ItemQuery();
         query.setParentId(mItem.getId());
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
 
-        MB3Application.getInstance().API.GetItemsAsync(query, new Response<ItemsResult>() {
+        MainApplication.getInstance().API.GetItemsAsync(query, new Response<ItemsResult>() {
             @Override
             public void onResponse(ItemsResult response) {
 
                 if (response == null || response.getItems() == null) return;
 
-                MB3Application.getInstance().PlayerQueue = new Playlist();
+                MainApplication.getInstance().PlayerQueue = new Playlist();
 
                 for (BaseItemDto item : response.getItems()) {
 
@@ -1131,11 +1130,11 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
                     playlistItem.Name = String.valueOf(item.getIndexNumber()) + ". " + item.getName();
                     playlistItem.Type = item.getType();
 
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playlistItem);
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playlistItem);
                 }
 
                 if (shuffle) {
-                    Collections.shuffle(MB3Application.getInstance().PlayerQueue.PlaylistItems);
+                    Collections.shuffle(MainApplication.getInstance().PlayerQueue.PlaylistItems);
                 }
 
                 Intent intent = new Intent(LibraryPresentationActivity.this, AudioPlaybackActivity.class);
@@ -1149,15 +1148,15 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
 
         ItemQuery query = new ItemQuery();
         query.setParentId(mItem.getId());
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
 
-        MB3Application.getInstance().API.GetItemsAsync(query, new Response<ItemsResult>() {
+        MainApplication.getInstance().API.GetItemsAsync(query, new Response<ItemsResult>() {
             @Override
             public void onResponse(ItemsResult result) {
 
                 if (result == null || result.getItems() == null) return;
 
-                MB3Application.getInstance().PlayerQueue = new Playlist();
+                MainApplication.getInstance().PlayerQueue = new Playlist();
 
                 for (BaseItemDto item : result.getItems()) {
 
@@ -1168,10 +1167,10 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
                         playableItem.SecondaryText = "Season " + String.valueOf(item.getParentIndexNumber()) + " | Episode " + String.valueOf(item.getIndexNumber());
                     playableItem.Type = item.getType();
 
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
 
                     if (shuffle) {
-                        Collections.shuffle(MB3Application.getInstance().PlayerQueue.PlaylistItems);
+                        Collections.shuffle(MainApplication.getInstance().PlayerQueue.PlaylistItems);
                     }
                 }
 

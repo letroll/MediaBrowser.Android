@@ -15,7 +15,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import mediabrowser.model.dto.BaseItemDto;
@@ -44,18 +44,18 @@ public class RecordingsAdapterBackdrops extends BaseAdapter implements SectionIn
 
     public RecordingsAdapterBackdrops(List<RecordingInfoDto> recordings) {
         mBaseItems = recordings;
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance());
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         try {
-            li = (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            li = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            int columns = MB3Application.getInstance().getResources().getInteger(R.integer.library_columns);
-            DisplayMetrics dm = MB3Application.getInstance().getResources().getDisplayMetrics();
+            int columns = MainApplication.getInstance().getResources().getInteger(R.integer.library_columns);
+            DisplayMetrics dm = MainApplication.getInstance().getResources().getDisplayMetrics();
 
             mImageWidth = (dm.widthPixels - ((columns * 2) * (int) (4 * dm.density))) / columns;
             mImageHeight = (mImageWidth / 16) * 9;
 
             imageEnhancersEnabled = PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
 
         } catch (Exception e) {
@@ -118,7 +118,7 @@ public class RecordingsAdapterBackdrops extends BaseAdapter implements SectionIn
                     options.setMaxWidth(mImageWidth);
                     options.setMaxHeight(mImageHeight);
                     options.setEnableImageEnhancers(imageEnhancersEnabled);
-                    imageUrl = MB3Application.getInstance().API.GetImageUrl(mBaseItems.get(position).getId(), options);
+                    imageUrl = MainApplication.getInstance().API.GetImageUrl(mBaseItems.get(position).getId(), options);
 
                 } else if (mBaseItems.get(position).getImageTags().containsKey(ImageType.Thumb)) {
 
@@ -127,7 +127,7 @@ public class RecordingsAdapterBackdrops extends BaseAdapter implements SectionIn
                     options.setMaxWidth(mImageWidth);
                     options.setMaxHeight(mImageHeight);
                     options.setEnableImageEnhancers(imageEnhancersEnabled);
-                    imageUrl = MB3Application.getInstance().API.GetImageUrl(mBaseItems.get(position).getId(), options);
+                    imageUrl = MainApplication.getInstance().API.GetImageUrl(mBaseItems.get(position).getId(), options);
                 }
             }
 
@@ -141,7 +141,7 @@ public class RecordingsAdapterBackdrops extends BaseAdapter implements SectionIn
                 */
 
                 holder.imageView.setVisibility(View.VISIBLE);
-                holder.imageView.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                holder.imageView.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             } else {
                 holder.imageView.setVisibility(View.INVISIBLE);
             }

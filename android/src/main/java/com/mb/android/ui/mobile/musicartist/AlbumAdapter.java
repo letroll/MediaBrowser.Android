@@ -3,7 +3,6 @@ package com.mb.android.ui.mobile.musicartist;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 
@@ -49,7 +48,7 @@ public class AlbumAdapter extends BaseAdapter implements SectionIndexer {
 
         try {
             imageEnhancersEnabled = PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
         } catch (Exception e) {
             AppLogger.getLogger().Debug("AbstractMediaAdapter", "Error reading preferences");
@@ -118,10 +117,10 @@ public class AlbumAdapter extends BaseAdapter implements SectionIndexer {
             options.setEnableImageEnhancers(imageEnhancersEnabled);
 
             String imageUrl = mApi.GetImageUrl(mBaseItems.get(position), options);
-            holder.imageView.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            holder.imageView.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
 
         } else {
-            holder.imageView.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+            holder.imageView.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
         }
 
 //        holder.isNewOverlay.setVisibility(ImageView.INVISIBLE);

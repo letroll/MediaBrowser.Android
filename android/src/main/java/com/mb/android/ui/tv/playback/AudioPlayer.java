@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
@@ -126,9 +125,9 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
         mFavoriteButton = (ImageView) findViewById(R.id.ivFavorite);
         mFavoriteButton.setOnClickListener(onClickListener);
 
-        if (MB3Application.getInstance().PlayerQueue != null
-                && MB3Application.getInstance().PlayerQueue.PlaylistItems != null
-                && MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > 1) {
+        if (MainApplication.getInstance().PlayerQueue != null
+                && MainApplication.getInstance().PlayerQueue.PlaylistItems != null
+                && MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > 1) {
             mPreviousButton.setOnClickListener(onClickListener);
             mPreviousButton.setVisibility(View.VISIBLE);
             mNextButton.setOnClickListener(onClickListener);
@@ -153,7 +152,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
         mBackdropSwitcher.setInAnimation(animationSet);
         mBackdropSwitcher.setOutAnimation(fadeOutAnimation);
 
-        songAdapter = new BaseSongAdapter(MB3Application.getInstance().PlayerQueue.PlaylistItems, this);
+        songAdapter = new BaseSongAdapter(MainApplication.getInstance().PlayerQueue.PlaylistItems, this);
         mPlaylist.setAdapter(songAdapter);
         mPlaylist.setOnItemClickListener(onPlaylistItemClick);
 
@@ -164,7 +163,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
     public void onResume() {
         super.onResume();
 
-        MB3Application.getInstance().setCurrentActivity(this);
+        MainApplication.getInstance().setCurrentActivity(this);
 
         if (isFresh) {
 
@@ -173,9 +172,9 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
                 return;
             }
 
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     itemDtoResponse
             );
 
@@ -394,9 +393,9 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
             audioPlayer.reset();
             mCurrentlyPlayingIndex++;
 
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     itemDtoResponse);
 
         } catch(IllegalStateException ex) {
@@ -413,9 +412,9 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
             audioPlayer.reset();
             mCurrentlyPlayingIndex--;
 
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     itemDtoResponse);
 
         } catch(IllegalStateException ex) {
@@ -441,16 +440,16 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
 
     private void onLikeButton() {
         if (mLikes == null || !mLikes) {
-            MB3Application.getInstance().API.UpdateUserItemRatingAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.UpdateUserItemRatingAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     true,
                     new UpdateUserDataResponse()
             );
         } else {
-            MB3Application.getInstance().API.ClearUserItemRatingAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.ClearUserItemRatingAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     new UpdateUserDataResponse()
             );
         }
@@ -458,25 +457,25 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
 
     private void onDislikeButton() {
         if (mLikes == null || mLikes) {
-            MB3Application.getInstance().API.UpdateUserItemRatingAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.UpdateUserItemRatingAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     false,
                     new UpdateUserDataResponse()
             );
         } else {
-            MB3Application.getInstance().API.ClearUserItemRatingAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.ClearUserItemRatingAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     new UpdateUserDataResponse()
             );
         }
     }
 
     private void onFavoriteButton() {
-        MB3Application.getInstance().API.UpdateFavoriteStatusAsync(
-                MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
-                MB3Application.getInstance().API.getCurrentUserId(),
+        MainApplication.getInstance().API.UpdateFavoriteStatusAsync(
+                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
+                MainApplication.getInstance().API.getCurrentUserId(),
                 !mIsFavorite,
                 new UpdateUserDataResponse()
         );
@@ -558,8 +557,8 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             AppLogger.getLogger().Debug(TAG + ": playlist item clicked.");
-            if (MB3Application.getInstance().PlayerQueue.PlaylistItems == null
-                    || MB3Application.getInstance().PlayerQueue.PlaylistItems.size() <= position ) {
+            if (MainApplication.getInstance().PlayerQueue.PlaylistItems == null
+                    || MainApplication.getInstance().PlayerQueue.PlaylistItems.size() <= position ) {
                 AppLogger.getLogger().Debug(TAG + ": invalid index.");
                 return;
             }
@@ -570,9 +569,9 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
             }
             AppLogger.getLogger().Debug(TAG + ": audio player killed");
             mCurrentlyPlayingIndex = position;
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(position).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(position).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     itemDtoResponse
             );
             AppLogger.getLogger().Debug(TAG + ": finished playlist item click");
@@ -608,9 +607,9 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
         if (hasMoreItemsToPlay()) {
             mCurrentlyPlayingIndex++;
 
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     itemDtoResponse);
 
         } else {
@@ -619,9 +618,9 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
     }
 
     private boolean hasMoreItemsToPlay() {
-        return MB3Application.getInstance().PlayerQueue != null
-                && MB3Application.getInstance().PlayerQueue.PlaylistItems != null
-                && MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > mCurrentlyPlayingIndex + 1;
+        return MainApplication.getInstance().PlayerQueue != null
+                && MainApplication.getInstance().PlayerQueue.PlaylistItems != null
+                && MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > mCurrentlyPlayingIndex + 1;
     }
 
     @Override
@@ -636,9 +635,9 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
 
 
     private boolean playerQueueIsEmpty() {
-        return MB3Application.getInstance().PlayerQueue == null
-                || MB3Application.getInstance().PlayerQueue.PlaylistItems == null
-                || MB3Application.getInstance().PlayerQueue.PlaylistItems.size() == 0;
+        return MainApplication.getInstance().PlayerQueue == null
+                || MainApplication.getInstance().PlayerQueue.PlaylistItems == null
+                || MainApplication.getInstance().PlayerQueue.PlaylistItems.size() == 0;
     }
 
     private Response<BaseItemDto> itemDtoResponse = new Response<BaseItemDto>() {
@@ -679,7 +678,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
     };
 
     private void loadStreamInfoIntoPlayer() {
-        loadUrlIntoPlayer(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken()));
+        loadUrlIntoPlayer(mStreamInfo.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken()));
     }
 
     private void loadUrlIntoPlayer(String url) {
@@ -714,7 +713,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
                 && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(item.getAlbumId())) {
             setAlbumImage(item.getAlbumId());
         } else {
-            mAlbumImage.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+            mAlbumImage.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
         }
     }
 
@@ -724,8 +723,8 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
         options.setMaxWidth(150 * 2);
         options.setImageType(ImageType.Primary);
 
-        String url = MB3Application.getInstance().API.GetImageUrl(itemId, options);
-        mAlbumImage.setImageUrl(url, MB3Application.getInstance().API.getImageLoader());
+        String url = MainApplication.getInstance().API.GetImageUrl(itemId, options);
+        mAlbumImage.setImageUrl(url, MainApplication.getInstance().API.getImageLoader());
     }
 
     private void getBackdrops(BaseItemDto item) {
@@ -733,9 +732,9 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
         if (item.getBackdropCount() > 0) {
             setBackdrops(item);
         } else if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(item.getParentBackdropItemId())) {
-            MB3Application.getInstance().API.GetItemAsync(
+            MainApplication.getInstance().API.GetItemAsync(
                     item.getParentBackdropItemId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     getBackdropItemResponse);
         } else {
             mSlideShow.setBackdropResourceIds(mDefaultImages);
@@ -761,7 +760,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
             options.setImageType(ImageType.Backdrop);
             options.setImageIndex(i);
 
-            String url = MB3Application.getInstance().API.GetImageUrl(item.getId(), options);
+            String url = MainApplication.getInstance().API.GetImageUrl(item.getId(), options);
             backdropUrls.add(url);
         }
 
@@ -826,12 +825,12 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
             if (audioPlayer != null) {
                 audioPlayer.reset();
             }
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
             AppLogger.getLogger().Info(TAG + ": audio player killed");
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     itemDtoResponse
             );
             AppLogger.getLogger().Info(TAG + ": finished audio play request");
@@ -840,7 +839,7 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
             if (audioPlayer != null) {
                 audioPlayer.reset();
             }
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
             AppLogger.getLogger().Info(TAG + ": audio player killed");
             Intent intent = new Intent(this, VideoPlayer.class);
@@ -881,14 +880,14 @@ public class AudioPlayer extends FragmentActivity implements MediaPlayer.OnCompl
         for (String id : itemIds) {
             PlaylistItem item = new PlaylistItem();
             item.Id = id;
-            MB3Application.getInstance().PlayerQueue.PlaylistItems.add(item);
+            MainApplication.getInstance().PlayerQueue.PlaylistItems.add(item);
         }
     }
 
     private void clearReferences(){
-        IWebsocketEventListener currActivity = MB3Application.getInstance().getCurrentActivity();
+        IWebsocketEventListener currActivity = MainApplication.getInstance().getCurrentActivity();
         if (currActivity != null && currActivity.equals(this))
-            MB3Application.getInstance().setCurrentActivity(null);
+            MainApplication.getInstance().setCurrentActivity(null);
     }
 
     private void showControlsOverlay() {

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.MenuEntity;
 import com.mb.android.R;
 import com.mb.android.adapters.GenericAdapterPosters;
@@ -39,7 +39,7 @@ public class MusicAlbumsFragment extends Fragment {
 
         ItemQuery query = new ItemQuery();
         query.setParentId(mMenuEntity.Id);
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setRecursive(true);
         query.setSortBy(new String[]{ItemSortBy.SortName.toString()});
         query.setSortOrder(SortOrder.Ascending);
@@ -47,7 +47,7 @@ public class MusicAlbumsFragment extends Fragment {
         query.setIncludeItemTypes(new String[]{"MusicAlbum"});
         query.setExcludeLocationTypes(new LocationType[]{LocationType.Virtual});
 
-        MB3Application.getInstance().API.GetItemsAsync(query, getItemsResponse);
+        MainApplication.getInstance().API.GetItemsAsync(query, getItemsResponse);
     }
 
     @Override

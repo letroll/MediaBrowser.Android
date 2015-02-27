@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.utils.Utils;
 import mediabrowser.model.dto.BaseItemDto;
@@ -30,7 +30,7 @@ public class ResumeDialogAdapter extends BaseAdapter {
 
     public ResumeDialogAdapter(BaseItemDto baseItem) {
         mResumePositionTicks = baseItem.getUserData().getPlaybackPositionTicks();
-        inflater = LayoutInflater.from(MB3Application.getInstance());
+        inflater = LayoutInflater.from(MainApplication.getInstance());
 
         if (baseItem.getChapters() == null || baseItem.getChapters().size() < 1) return;
 
@@ -70,11 +70,11 @@ public class ResumeDialogAdapter extends BaseAdapter {
 
 
         if (position == 0) {
-            text.setText(MB3Application.getInstance().getResources().getString(R.string.play_from_beginning_string));
-            image.setImageUrl(startImageUrl, MB3Application.getInstance().API.getImageLoader());
+            text.setText(MainApplication.getInstance().getResources().getString(R.string.play_from_beginning_string));
+            image.setImageUrl(startImageUrl, MainApplication.getInstance().API.getImageLoader());
         } else {
-            text.setText(String.format(MB3Application.getInstance().getResources().getString(R.string.popup_resume), Utils.PlaybackRuntimeFromMilliseconds(mResumePositionTicks / 10000)));
-            image.setImageUrl(resumeImageUrl, MB3Application.getInstance().API.getImageLoader());
+            text.setText(String.format(MainApplication.getInstance().getResources().getString(R.string.popup_resume), Utils.PlaybackRuntimeFromMilliseconds(mResumePositionTicks / 10000)));
+            image.setImageUrl(resumeImageUrl, MainApplication.getInstance().API.getImageLoader());
         }
 
         return convertView;
@@ -86,6 +86,6 @@ public class ResumeDialogAdapter extends BaseAdapter {
         options.setImageType(ImageType.Chapter);
         options.setImageIndex(chapterIndex);
 
-        return MB3Application.getInstance().API.GetImageUrl(itemId, options);
+        return MainApplication.getInstance().API.GetImageUrl(itemId, options);
     }
 }

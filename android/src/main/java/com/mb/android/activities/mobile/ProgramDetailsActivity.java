@@ -15,13 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.activities.BaseMbMobileActivity;
 import mediabrowser.apiinteraction.EmptyResponse;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.playbackmediator.widgets.MiniController;
 import com.mb.android.DialogFragments.RecordSettingsDialogFragment;
-import com.mb.android.MB3Application;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import com.mb.android.fragments.NavigationMenuFragment;
@@ -82,15 +82,15 @@ public class ProgramDetailsActivity extends BaseMbMobileActivity implements View
 
         String jsonData = getMb3Intent().getStringExtra("timer");
         if (jsonData != null) {
-            timer = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseTimerInfoDto.class);
+            timer = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseTimerInfoDto.class);
         }
         jsonData = getMb3Intent().getStringExtra("program");
         if (jsonData != null) {
-            program = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, ProgramInfoDto.class);
+            program = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, ProgramInfoDto.class);
         }
         jsonData = getMb3Intent().getStringExtra("recording");
         if (jsonData != null) {
-            recording = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, RecordingInfoDto.class);
+            recording = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, RecordingInfoDto.class);
         }
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -195,11 +195,11 @@ public class ProgramDetailsActivity extends BaseMbMobileActivity implements View
 
         if (item.getTitle().equals(getResources().getString(R.string.play_action_bar_button))) {
 
-            AudioService.PlayerState currentState = MB3Application.getAudioService().getPlayerState();
+            AudioService.PlayerState currentState = MainApplication.getAudioService().getPlayerState();
             if (currentState.equals(AudioService.PlayerState.PLAYING) || currentState.equals(AudioService.PlayerState.PAUSED)) {
-                MB3Application.getAudioService().stopMedia();
+                MainApplication.getAudioService().stopMedia();
             }
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
 
             if (mCastManager.isConnected()) {
                 if (recording != null) {
@@ -222,8 +222,8 @@ public class ProgramDetailsActivity extends BaseMbMobileActivity implements View
 
                 playableItem.Type = recording.getType();
 
-                MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
-                MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
+                MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+                MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
 
                 Intent intent = new Intent(this, PlaybackActivity.class);
                 startActivity(intent);
@@ -231,7 +231,7 @@ public class ProgramDetailsActivity extends BaseMbMobileActivity implements View
 
         } else if (item.getTitle().equals(getResources().getString(R.string.ltv_delete_recording))) {
 
-            MB3Application.getInstance().API.DeleteLiveTvRecordingAsync(recording.getId(), new EmptyResponse());
+            MainApplication.getInstance().API.DeleteLiveTvRecordingAsync(recording.getId(), new EmptyResponse());
 
         } else {
             return super.onOptionsItemSelected(item);
@@ -335,8 +335,8 @@ public class ProgramDetailsActivity extends BaseMbMobileActivity implements View
         ImageOptions options = new ImageOptions();
         options.setImageType(ImageType.Primary);
         options.setHeight(500);
-        String imageUrl = MB3Application.getInstance().API.GetImageUrl(itemId, options);
-        primaryImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+        String imageUrl = MainApplication.getInstance().API.GetImageUrl(itemId, options);
+        primaryImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
     }
 
     private void setCommunityRating(Float rating) {
@@ -448,7 +448,7 @@ public class ProgramDetailsActivity extends BaseMbMobileActivity implements View
 
     private boolean userCanManageLiveTV() {
 
-        return MB3Application.getInstance().user.getPolicy().getEnableLiveTvManagement();
+        return MainApplication.getInstance().user.getPolicy().getEnableLiveTvManagement();
 
     }
 
@@ -469,7 +469,7 @@ public class ProgramDetailsActivity extends BaseMbMobileActivity implements View
 //                }
                 if (timer == null && program != null) {
                     // We're browsing program info for a program in the guide, not a scheduled recording
-                    MB3Application.getInstance().API.GetDefaultLiveTvTimerInfo(program.getId(), new GetDefaultTimerResponse());
+                    MainApplication.getInstance().API.GetDefaultLiveTvTimerInfo(program.getId(), new GetDefaultTimerResponse());
                 } else {
                     // It's a scheduled recording. The timer already exists on the server
                     RecordSettingsDialogFragment dialogFragment = new RecordSettingsDialogFragment();
@@ -487,11 +487,11 @@ public class ProgramDetailsActivity extends BaseMbMobileActivity implements View
 
                 if (timer instanceof TimerInfoDto) {
                     AppLogger.getLogger().Info("Cancel Recording");
-                    MB3Application.getInstance().API.CancelLiveTvTimerAsync(timer.getId(), new cancelRecordingResponse());
+                    MainApplication.getInstance().API.CancelLiveTvTimerAsync(timer.getId(), new cancelRecordingResponse());
 
                 } else if (timer instanceof SeriesTimerInfoDto) {
                     AppLogger.getLogger().Info("Cancel Series Recording");
-                    MB3Application.getInstance().API.CancelLiveTvSeriesTimerAsync(timer.getId(), new cancelRecordingResponse());
+                    MainApplication.getInstance().API.CancelLiveTvSeriesTimerAsync(timer.getId(), new cancelRecordingResponse());
                 }
 
 //                AlertDialog.Builder builder = new AlertDialog.Builder(this);

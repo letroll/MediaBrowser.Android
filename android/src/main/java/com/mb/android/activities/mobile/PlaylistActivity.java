@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import com.mb.android.activities.BaseMbMobileActivity;
@@ -110,8 +110,8 @@ public class PlaylistActivity extends BaseMbMobileActivity {
     @Override
     public void onResume() {
         super.onResume();
-        toggleClearPlaylistButtonVisibility(MB3Application.getInstance().PlayerQueue.PlaylistItems != null
-                && MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > 0);
+        toggleClearPlaylistButtonVisibility(MainApplication.getInstance().PlayerQueue.PlaylistItems != null
+                && MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > 0);
     }
 
     @Override
@@ -127,9 +127,9 @@ public class PlaylistActivity extends BaseMbMobileActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (MB3Application.getInstance().PlayerQueue != null
-                && MB3Application.getInstance().PlayerQueue.PlaylistItems != null
-                && MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > 0) {
+        if (MainApplication.getInstance().PlayerQueue != null
+                && MainApplication.getInstance().PlayerQueue.PlaylistItems != null
+                && MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > 0) {
 
             menu.add(getResources().getString(R.string.play_action_bar_button))
                     .setIcon(R.drawable.play)
@@ -147,11 +147,11 @@ public class PlaylistActivity extends BaseMbMobileActivity {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.play_action_bar_button))) {
-            if ("audio".equalsIgnoreCase(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
+            if ("audio".equalsIgnoreCase(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
                 Intent intent = new Intent(this, AudioPlaybackActivity.class);
                 startActivity(intent);
             } else {
-                Intent intent = new Intent(MB3Application.getInstance(), PlaybackActivity.class);
+                Intent intent = new Intent(MainApplication.getInstance(), PlaybackActivity.class);
                 startActivity(intent);
             }
             return true;
@@ -165,12 +165,12 @@ public class PlaylistActivity extends BaseMbMobileActivity {
 
         @Override
         public int getCount() {
-            return MB3Application.getInstance().PlayerQueue.PlaylistItems.size();
+            return MainApplication.getInstance().PlayerQueue.PlaylistItems.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return MB3Application.getInstance().PlayerQueue.PlaylistItems.get(position);
+            return MainApplication.getInstance().PlayerQueue.PlaylistItems.get(position);
         }
 
         @Override
@@ -195,7 +195,7 @@ public class PlaylistActivity extends BaseMbMobileActivity {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            PlaylistItem item = MB3Application.getInstance().PlayerQueue.PlaylistItems.get(position);
+            PlaylistItem item = MainApplication.getInstance().PlayerQueue.PlaylistItems.get(position);
 
             viewHolder.primaryText.setText(item.Name);
             viewHolder.secondaryText.setText(item.SecondaryText);
@@ -228,9 +228,9 @@ public class PlaylistActivity extends BaseMbMobileActivity {
                 @Override
                 public void drop(int from, int to) {
                     if (from != to) {
-                        PlaylistItem item = MB3Application.getInstance().PlayerQueue.PlaylistItems.get(from);
-                        MB3Application.getInstance().PlayerQueue.PlaylistItems.remove(item);
-                        MB3Application.getInstance().PlayerQueue.PlaylistItems.add(to, item);
+                        PlaylistItem item = MainApplication.getInstance().PlayerQueue.PlaylistItems.get(from);
+                        MainApplication.getInstance().PlayerQueue.PlaylistItems.remove(item);
+                        MainApplication.getInstance().PlayerQueue.PlaylistItems.add(to, item);
                         mPlaylistAdapter.notifyDataSetChanged();
                     }
                 }
@@ -240,9 +240,9 @@ public class PlaylistActivity extends BaseMbMobileActivity {
             new DragSortListView.RemoveListener() {
                 @Override
                 public void remove(int which) {
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.remove(which);
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.remove(which);
                     mPlaylistAdapter.notifyDataSetChanged();
-                    if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() == 0) {
+                    if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() == 0) {
                         invalidateOptionsMenu();
                         toggleClearPlaylistButtonVisibility(false);
                     }
@@ -258,8 +258,8 @@ public class PlaylistActivity extends BaseMbMobileActivity {
     private View.OnClickListener onClearPlaylistClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
-            MB3Application.getAudioService().stopMedia();
+            MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+            MainApplication.getAudioService().stopMedia();
             toggleClearPlaylistButtonVisibility(false);
         }
     };

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
@@ -146,7 +145,7 @@ public class OnStageFragment extends Fragment {
     private void requestOnStageContent() {
 
         ItemQuery query = new ItemQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setLimit(1);
         query.setRecursive(true);
         query.setSortBy(new String[]{ItemSortBy.DatePlayed.toString()});
@@ -155,10 +154,10 @@ public class OnStageFragment extends Fragment {
         query.setFields(new ItemFields[]{ItemFields.ParentId});
         query.setIncludeItemTypes(new String[]{"Audio"});
 
-        MB3Application.getInstance().API.GetItemsAsync(query, getLastSongResponse);
+        MainApplication.getInstance().API.GetItemsAsync(query, getLastSongResponse);
 
         ItemQuery newMusicQuery = new ItemQuery();
-        newMusicQuery.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        newMusicQuery.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         newMusicQuery.setLimit(3);
         newMusicQuery.setRecursive(true);
         newMusicQuery.setSortBy(new String[]{ItemSortBy.DateCreated.toString()});
@@ -166,10 +165,10 @@ public class OnStageFragment extends Fragment {
         newMusicQuery.setFields(new ItemFields[]{ItemFields.ParentId, ItemFields.PrimaryImageAspectRatio});
         newMusicQuery.setIncludeItemTypes(new String[]{"MusicAlbum"});
 
-        MB3Application.getInstance().API.GetItemsAsync(newMusicQuery, getNewMusicResponse);
+        MainApplication.getInstance().API.GetItemsAsync(newMusicQuery, getNewMusicResponse);
 
         ItemQuery mostPlayedQuery = new ItemQuery();
-        mostPlayedQuery.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        mostPlayedQuery.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         mostPlayedQuery.setLimit(10);
         mostPlayedQuery.setRecursive(true);
         mostPlayedQuery.setSortBy(new String[]{ItemSortBy.PlayCount.toString()});
@@ -178,7 +177,7 @@ public class OnStageFragment extends Fragment {
         mostPlayedQuery.setFields(new ItemFields[]{ItemFields.ParentId});
         mostPlayedQuery.setIncludeItemTypes(new String[]{"Audio"});
 
-        MB3Application.getInstance().API.GetItemsAsync(mostPlayedQuery, getMostPlayedResponse);
+        MainApplication.getInstance().API.GetItemsAsync(mostPlayedQuery, getMostPlayedResponse);
 
     }
 
@@ -196,7 +195,7 @@ public class OnStageFragment extends Fragment {
             if (!isRandomSongQuery && (response == null || response.getItems() == null || response.getItems().length < 1)) {
 
                 ItemQuery query = new ItemQuery();
-                query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+                query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
                 query.setLimit(1);
                 query.setRecursive(true);
                 query.setSortBy(new String[]{ItemSortBy.Random.toString()});
@@ -205,16 +204,16 @@ public class OnStageFragment extends Fragment {
                 query.setIncludeItemTypes(new String[]{"Audio"});
 
                 isRandomSongQuery = true;
-                MB3Application.getInstance().API.GetItemsAsync(query, this);
+                MainApplication.getInstance().API.GetItemsAsync(query, this);
 
             } else if (response != null && response.getItems() != null && response.getItems().length > 0) {
 
                 SimilarItemsQuery query = new SimilarItemsQuery();
                 query.setId(response.getItems()[0].getId());
-                query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+                query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
                 query.setLimit(50);
 
-                MB3Application.getInstance().API.GetInstantMixFromSongAsync(query, getInstantMixResponse);
+                MainApplication.getInstance().API.GetInstantMixFromSongAsync(query, getInstantMixResponse);
             } else {
                 // Couldn't get any music from the server.
                 AppLogger.getLogger().Error("OnStage: Could not retrieve song for instant mix");
@@ -254,7 +253,7 @@ public class OnStageFragment extends Fragment {
                         options.setImageType(ImageType.Backdrop);
                         options.setImageIndex(0);
 
-                        String imageUrl = MB3Application.getInstance().API.GetImageUrl(song.getParentBackdropItemId(), options);
+                        String imageUrl = MainApplication.getInstance().API.GetImageUrl(song.getParentBackdropItemId(), options);
 
                         if (mBackdropUrls == null)
                             mBackdropUrls = new ArrayList<>();
@@ -323,15 +322,15 @@ public class OnStageFragment extends Fragment {
 
             if (mInstantMixItems == null || mInstantMixItems.length == 0) return;
 
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
 
-            AudioService.PlayerState currentState = MB3Application.getAudioService().getPlayerState();
+            AudioService.PlayerState currentState = MainApplication.getAudioService().getPlayerState();
             if (currentState.equals(AudioService.PlayerState.PLAYING) || currentState.equals(AudioService.PlayerState.PAUSED)) {
-                MB3Application.getAudioService().stopMedia();
+                MainApplication.getAudioService().stopMedia();
             }
 
-            if (MB3Application.getCastManager(MB3Application.getInstance()).isConnected()) {
-                MB3Application.getCastManager(MB3Application.getInstance()).playItems(mInstantMixItems, PlayCommand.PlayNow, 0L);
+            if (MainApplication.getCastManager(MainApplication.getInstance()).isConnected()) {
+                MainApplication.getCastManager(MainApplication.getInstance()).playItems(mInstantMixItems, PlayCommand.PlayNow, 0L);
                 Intent intent = new Intent(mMusicActivity, RemoteControlActivity.class);
                 mMusicActivity.startActivity(intent);
             } else {
@@ -351,7 +350,7 @@ public class OnStageFragment extends Fragment {
                     playableItem.Type = song.getType();
                     playableItem.Runtime = song.getRunTimeTicks();
 
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
                 }
                 Intent intent = new Intent(mMusicActivity, AudioPlaybackActivity.class);
                 mMusicActivity.startActivity(intent);
@@ -379,10 +378,10 @@ public class OnStageFragment extends Fragment {
         }
 
         if (mBackdropSwitcher.getDisplayedChild() == 0) {
-            mBackdropImage2.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            mBackdropImage2.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mBackdropSwitcher.showNext();
         } else {
-            mBackdropImage1.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            mBackdropImage1.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mBackdropSwitcher.showPrevious();
         }
     }

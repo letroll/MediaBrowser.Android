@@ -11,7 +11,7 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.adapters.LiveTvChannelsAdapter;
 import mediabrowser.apiinteraction.Response;
@@ -51,9 +51,9 @@ public class ChannelsFragment extends Fragment {
         mActivityIndicator.setVisibility(View.VISIBLE);
 
         LiveTvChannelQuery query = new LiveTvChannelQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
 
-        MB3Application.getInstance().API.GetLiveTvChannelsAsync(query, new GetChannelsResponse());
+        MainApplication.getInstance().API.GetLiveTvChannelsAsync(query, new GetChannelsResponse());
     }
 
     private class GetChannelsResponse extends Response<ChannelInfoDtoResult> {
@@ -72,17 +72,17 @@ public class ChannelsFragment extends Fragment {
             channelsList.addAll(Arrays.asList(result.getItems()));
 
             if (channelsList.size() == 0) {
-                mErrorText.setText(MB3Application.getInstance().getResources().getString(R.string.channels_no_content_warning));
+                mErrorText.setText(MainApplication.getInstance().getResources().getString(R.string.channels_no_content_warning));
                 mErrorText.setVisibility(View.VISIBLE);
             }
 
-            mChannels.setAdapter(new LiveTvChannelsAdapter(channelsList,MB3Application.getInstance().API));
+            mChannels.setAdapter(new LiveTvChannelsAdapter(channelsList, MainApplication.getInstance().API));
             mChannels.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                    String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(channelsList.get(i));
-                    Intent intent = new Intent(MB3Application.getInstance(), ChannelListingsActivity.class);
+                    String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(channelsList.get(i));
+                    Intent intent = new Intent(MainApplication.getInstance(), ChannelListingsActivity.class);
                     intent.putExtra("ChannelInfoDto", jsonData);
 
                     startActivity(intent);

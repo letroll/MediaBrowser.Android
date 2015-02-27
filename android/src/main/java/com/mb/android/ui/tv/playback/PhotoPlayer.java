@@ -20,7 +20,7 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
@@ -66,9 +66,9 @@ public class PhotoPlayer extends FragmentActivity {
         ImageView rewindButton = (ImageView) findViewById(R.id.ivRewind);
         rewindButton.setOnClickListener(onClickListener);
 
-        if (MB3Application.getInstance().PlayerQueue == null
-                || MB3Application.getInstance().PlayerQueue.PlaylistItems == null
-                || MB3Application.getInstance().PlayerQueue.PlaylistItems.isEmpty()) {
+        if (MainApplication.getInstance().PlayerQueue == null
+                || MainApplication.getInstance().PlayerQueue.PlaylistItems == null
+                || MainApplication.getInstance().PlayerQueue.PlaylistItems.isEmpty()) {
             Toast.makeText(this, "No images to display", Toast.LENGTH_LONG).show();
             finish();
             return;
@@ -133,9 +133,9 @@ public class PhotoPlayer extends FragmentActivity {
         options.setMaxHeight(mHeight);
         options.setMaxWidth(mWidth);
 
-        for (PlaylistItem item : MB3Application.getInstance().PlayerQueue.PlaylistItems) {
+        for (PlaylistItem item : MainApplication.getInstance().PlayerQueue.PlaylistItems) {
             if ("photo".equalsIgnoreCase(item.Type)) {
-                String url = MB3Application.getInstance().API.GetImageUrl(item.Id, options);
+                String url = MainApplication.getInstance().API.GetImageUrl(item.Id, options);
                 mPhotoUrls.add(url);
             }
         }
@@ -148,16 +148,16 @@ public class PhotoPlayer extends FragmentActivity {
         }
 
         if (mBackdropSwitcher.getDisplayedChild() == 0) {
-            mBackdropImage2.setImageUrl(mPhotoUrls.get(mPhotoIndex), MB3Application.getInstance().API.getImageLoader());
+            mBackdropImage2.setImageUrl(mPhotoUrls.get(mPhotoIndex), MainApplication.getInstance().API.getImageLoader());
             mBackdropSwitcher.showNext();
         } else {
-            mBackdropImage1.setImageUrl(mPhotoUrls.get(mPhotoIndex), MB3Application.getInstance().API.getImageLoader());
+            mBackdropImage1.setImageUrl(mPhotoUrls.get(mPhotoIndex), MainApplication.getInstance().API.getImageLoader());
             mBackdropSwitcher.showPrevious();
         }
     }
 
     private void loadImageInfo() {
-        mPhotoName.setText(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Name);
+        mPhotoName.setText(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Name);
     }
 
     @Override

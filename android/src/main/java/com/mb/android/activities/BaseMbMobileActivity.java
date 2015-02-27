@@ -17,7 +17,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.media.MediaRouter;
 import android.support.v7.widget.SearchView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -27,6 +26,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.google.android.gms.cast.ApplicationMetadata;
+import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.PlaylistItem;
 import com.mb.android.activities.mobile.BookDetailsActivity;
@@ -42,7 +42,6 @@ import com.mb.android.playbackmediator.cast.VideoCastManager;
 import com.mb.android.playbackmediator.cast.callbacks.IVideoCastConsumer;
 import com.mb.android.playbackmediator.cast.callbacks.VideoCastConsumerImpl;
 import com.mb.android.playbackmediator.widgets.MiniController;
-import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.ui.main.ConnectionActivity;
 import com.mb.android.ui.main.SettingsActivity;
@@ -91,12 +90,12 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
         super.onCreate(savedInstanceState);
 
         // If we've recovered from a crash, we don't want to crash again. Just restart the app normally
-        if (MB3Application.getInstance().API == null) {
+        if (MainApplication.getInstance().API == null) {
             AppLogger.getLogger().Info("Recovering from crash. Trying to re-acquiring server");
             Thread thread = new Thread() {
                 @Override
                 public void run() {
-                    MB3Application.getInstance().getConnectionManager().Connect(connectionResult);
+                    MainApplication.getInstance().getConnectionManager().Connect(connectionResult);
                 }
             };
             thread.start();
@@ -120,7 +119,7 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
 //            MB3Application.getInstance().Payload = LoginHelper.LoadPayload(this);
 //        }
 
-        mCastManager = MB3Application.getCastManager(this);
+        mCastManager = MainApplication.getCastManager(this);
         mCastConsumer = new VideoCastConsumerImpl() {
 
             @Override
@@ -174,14 +173,14 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
     @Override
     public void onStart() {
         super.onStart();
-        MB3Application.getAudioService().incrementUiCounter();
+        MainApplication.getAudioService().incrementUiCounter();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        MB3Application.getInstance().setCurrentActivity(this);
-        mCastManager = MB3Application.getCastManager(this);
+        MainApplication.getInstance().setCurrentActivity(this);
+        mCastManager = MainApplication.getCastManager(this);
         if (null != mCastManager) {
             mCastManager.addVideoCastConsumer(mCastConsumer);
             mCastManager.incrementUiCounter();
@@ -205,7 +204,7 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
     public void onStop() {
         super.onStop();
         mActionBar = null;
-        MB3Application.getAudioService().decrementUiCounter();
+        MainApplication.getAudioService().decrementUiCounter();
     }
 
     @Override
@@ -233,9 +232,9 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
                 // A server was found and the user has been signed in using previously saved credentials.
                 // Ready to browse using result.ApiClient
                 AppLogger.getLogger().Info("**** SIGNED IN ****");
-                MB3Application.getInstance().API = (AndroidApiClient)result.getApiClient();
-                MB3Application.getInstance().user = new UserDto();
-                MB3Application.getInstance().user.setId(MB3Application.getInstance().API.getCurrentUserId());
+                MainApplication.getInstance().API = (AndroidApiClient)result.getApiClient();
+                MainApplication.getInstance().user = new UserDto();
+                MainApplication.getInstance().user.setId(MainApplication.getInstance().API.getCurrentUserId());
                 onConnectionRestored();
             } else {
                 returnToConnectionActivity();
@@ -251,7 +250,7 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
 
     private void returnToConnectionActivity() {
         AppLogger.getLogger().Info("Failed to recover session after crash");
-        Intent intent = new Intent(MB3Application.getInstance(), ConnectionActivity.class);
+        Intent intent = new Intent(MainApplication.getInstance(), ConnectionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         this.finish();
@@ -402,12 +401,12 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
     public void onRemotePlayRequest(PlayRequest request, String mediaType) {
 
         if ("audio".equalsIgnoreCase(mediaType)) {
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
             Intent intent = new Intent(this, AudioPlaybackActivity.class);
             startActivity(intent);
         } else if ("video".equalsIgnoreCase(mediaType)) {
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
             Intent intent = new Intent(this, PlaybackActivity.class);
             startActivity(intent);
@@ -418,15 +417,15 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
         for (String id : itemIds) {
             PlaylistItem item = new PlaylistItem();
             item.Id = id;
-            MB3Application.getInstance().PlayerQueue.PlaylistItems.add(item);
+            MainApplication.getInstance().PlayerQueue.PlaylistItems.add(item);
         }
     }
 
     @Override
     public void onSeekCommand(Long seekPositionTicks) {
         if (seekPositionTicks == null) return;
-        if (AudioService.PlayerState.PLAYING.equals(MB3Application.getAudioService().getPlayerState())) {
-            MB3Application.getAudioService().playerSeekTo((int)(seekPositionTicks / 10000));
+        if (AudioService.PlayerState.PLAYING.equals(MainApplication.getAudioService().getPlayerState())) {
+            MainApplication.getAudioService().playerSeekTo((int)(seekPositionTicks / 10000));
         }
     }
 
@@ -436,7 +435,7 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
             browseToVideoDetails(item);
         } else if ("audio".equalsIgnoreCase(item.getMediaType())) {
             if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(item.getAlbumId()))
-            MB3Application.getInstance().API.GetItemAsync(item.getAlbumId(), MB3Application.getInstance().API.getCurrentUserId(), getAlbumResponse);
+            MainApplication.getInstance().API.GetItemAsync(item.getAlbumId(), MainApplication.getInstance().API.getCurrentUserId(), getAlbumResponse);
         } else if ("book".equalsIgnoreCase(item.getMediaType())) {
             browseToBookDetails(item);
         } else if ("game".equalsIgnoreCase(item.getMediaType())) {
@@ -469,20 +468,20 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
     }
 
     private void clearReferences(){
-        IWebsocketEventListener currActivity = MB3Application.getInstance().getCurrentActivity();
+        IWebsocketEventListener currActivity = MainApplication.getInstance().getCurrentActivity();
         if (currActivity != null && currActivity.equals(this))
-            MB3Application.getInstance().setCurrentActivity(null);
+            MainApplication.getInstance().setCurrentActivity(null);
     }
 
     private void browseToVideoDetails(BaseItemDto item) {
-        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(item);
+        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(item);
         Intent intent = new Intent(this, MediaDetailsActivity.class);
         intent.putExtra("Item", jsonData);
         startActivity(intent);
     }
 
     private void browseToBookDetails(BaseItemDto item) {
-        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(item);
+        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(item);
         Intent intent = new Intent(this, BookDetailsActivity.class);
         intent.putExtra("Item", jsonData);
         startActivity(intent);
@@ -503,7 +502,7 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
     }
 
     private void browseToPhotoDetails(BaseItemDto item) {
-        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(item);
+        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(item);
         Intent intent = new Intent(this, PhotoDetailsActivity.class);
         intent.putExtra("Item", jsonData);
         startActivity(intent);
@@ -519,13 +518,13 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
     private MediaPlayer mShutterMediaPlayer = null;
 
     private void playShutterSound() {
-        AudioManager audioManager = (AudioManager) MB3Application.getInstance().getSystemService(Context.AUDIO_SERVICE);
+        AudioManager audioManager = (AudioManager) MainApplication.getInstance().getSystemService(Context.AUDIO_SERVICE);
         int volume = audioManager.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
 
         if (volume != 0)
         {
             if (mShutterMediaPlayer == null)
-                mShutterMediaPlayer = MediaPlayer.create(MB3Application.getInstance(), Uri.parse("file:///system/media/audio/ui/camera_click.ogg"));
+                mShutterMediaPlayer = MediaPlayer.create(MainApplication.getInstance(), Uri.parse("file:///system/media/audio/ui/camera_click.ogg"));
             if (mShutterMediaPlayer != null)
                 mShutterMediaPlayer.start();
         }
@@ -534,17 +533,17 @@ public abstract class BaseMbMobileActivity extends ActionBarActivity implements 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if (MB3Application.getAudioService().getPlayerState() != AudioService.PlayerState.IDLE) {
+        if (MainApplication.getAudioService().getPlayerState() != AudioService.PlayerState.IDLE) {
             if (KeyEvent.KEYCODE_MEDIA_PLAY == event.getKeyCode() ||
                     KeyEvent.KEYCODE_MEDIA_PAUSE == event.getKeyCode() ||
                     KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE == event.getKeyCode()) {
-                MB3Application.getAudioService().togglePause();
+                MainApplication.getAudioService().togglePause();
                 return true;
             } else if (KeyEvent.KEYCODE_MEDIA_PREVIOUS == event.getKeyCode()) {
-                MB3Application.getAudioService().previous();
+                MainApplication.getAudioService().previous();
                 return true;
             } else if (KeyEvent.KEYCODE_MEDIA_NEXT == event.getKeyCode()) {
-                MB3Application.getAudioService().next();
+                MainApplication.getAudioService().next();
                 return true;
             }
         }

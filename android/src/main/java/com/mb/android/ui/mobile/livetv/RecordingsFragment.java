@@ -11,7 +11,7 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.ProgramDetailsActivity;
 import com.mb.android.adapters.RecordingsAdapterBackdrops;
@@ -47,8 +47,8 @@ public class RecordingsFragment extends Fragment {
 
         mActivityIndicator.setVisibility(View.VISIBLE);
         RecordingQuery query = new RecordingQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
-        MB3Application.getInstance().API.GetLiveTvRecordingsAsync(query, new GetRecordingsResponse());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
+        MainApplication.getInstance().API.GetLiveTvRecordingsAsync(query, new GetRecordingsResponse());
     }
 
     private class GetRecordingsResponse extends Response<RecordingInfoDtoResult> {
@@ -65,15 +65,15 @@ public class RecordingsFragment extends Fragment {
             }
 
             if (result.getItems() == null || result.getItems().length == 0) {
-                mErrorText.setText(MB3Application.getInstance().getResources().getString(R.string.channels_no_content_warning));
+                mErrorText.setText(MainApplication.getInstance().getResources().getString(R.string.channels_no_content_warning));
                 mErrorText.setVisibility(View.VISIBLE);
             } else {
                 mRecordings.setAdapter(new RecordingsAdapterBackdrops(Arrays.asList(result.getItems())));
                 mRecordings.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(result.getItems()[i]);
-                        Intent intent = new Intent(MB3Application.getInstance(), ProgramDetailsActivity.class);
+                        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(result.getItems()[i]);
+                        Intent intent = new Intent(MainApplication.getInstance(), ProgramDetailsActivity.class);
                         intent.putExtra("recording", jsonData);
                         startActivity(intent);
                     }

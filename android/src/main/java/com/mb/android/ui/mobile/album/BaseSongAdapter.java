@@ -1,7 +1,6 @@
 package com.mb.android.ui.mobile.album;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
@@ -32,7 +31,7 @@ public class BaseSongAdapter extends BaseAdapter {
 
         mPlaylistItems = playList;
         mContext = context;
-        mLayoutInflater = (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mLayoutInflater = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public void setCurrentPlayingIndex(int index) {

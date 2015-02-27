@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.utils.Utils;
@@ -183,12 +183,12 @@ public class StreamSelectionDialogFragment extends DialogFragment {
 
     private StreamInfo buildStreamInfo(BaseItemDto baseItemDto) {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         if (prefs == null) return null;
 
         String bitrate;
 
-        if (Connectivity.isConnectedLAN(MB3Application.getInstance())) {
+        if (Connectivity.isConnectedLAN(MainApplication.getInstance())) {
             bitrate = prefs.getString("pref_local_bitrate", "1800000");
         } else {
             bitrate = prefs.getString("pref_cellular_bitrate", "450000");
@@ -202,7 +202,7 @@ public class StreamSelectionDialogFragment extends DialogFragment {
         options.setItemId(baseItemDto.getId());
         options.setMediaSources(baseItemDto.getMediaSources());
         options.setProfile(new AndroidProfile(hlsEnabled, false));
-        options.setDeviceId(Settings.Secure.getString(MB3Application.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
+        options.setDeviceId(Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         AppLogger.getLogger().Info("Create StreamInfo");

@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.mb.android.MB3Application;
 import com.mb.android.activities.BaseMbMobileActivity;
 import com.mb.android.playbackmediator.widgets.MiniController;
 import com.mb.android.R;

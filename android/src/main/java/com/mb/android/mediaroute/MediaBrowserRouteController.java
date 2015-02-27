@@ -4,9 +4,8 @@ import android.content.Intent;
 import android.support.v7.media.MediaControlIntent;
 import android.support.v7.media.MediaRouteProvider;
 import android.support.v7.media.MediaRouter;
-import android.util.Log;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.logging.AppLogger;
 
 import mediabrowser.apiinteraction.EmptyResponse;
@@ -150,9 +149,9 @@ public class MediaBrowserRouteController extends MediaRouteProvider.RouteControl
     private boolean handlePlayAction(Intent intent) {
 
         String jsonData = intent.getStringExtra("PlayRequest");
-        PlayRequest playRequest = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, PlayRequest.class);
+        PlayRequest playRequest = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, PlayRequest.class);
 
-        MB3Application.getInstance().API.SendPlayCommandAsync(mCurrentSessionId, playRequest, new EmptyResponse());
+        MainApplication.getInstance().API.SendPlayCommandAsync(mCurrentSessionId, playRequest, new EmptyResponse());
         handleGetSessionStatusAction();
         return true;
     }
@@ -162,7 +161,7 @@ public class MediaBrowserRouteController extends MediaRouteProvider.RouteControl
         PlaystateRequest playstateRequest = new PlaystateRequest();
         playstateRequest.setCommand(PlaystateCommand.Pause);
 
-        MB3Application.getInstance().API.SendPlaystateCommandAsync(mCurrentSessionId, playstateRequest, new EmptyResponse());
+        MainApplication.getInstance().API.SendPlaystateCommandAsync(mCurrentSessionId, playstateRequest, new EmptyResponse());
         handleGetSessionStatusAction();
         return true;
     }
@@ -178,7 +177,7 @@ public class MediaBrowserRouteController extends MediaRouteProvider.RouteControl
         request.setSeekPositionTicks(seekPosition);
         request.setCommand(PlaystateCommand.Seek);
 
-        MB3Application.getInstance().API.SendPlaystateCommandAsync(mCurrentSessionId, request, new EmptyResponse());
+        MainApplication.getInstance().API.SendPlaystateCommandAsync(mCurrentSessionId, request, new EmptyResponse());
         handleGetSessionStatusAction();
         return true;
     }
@@ -188,7 +187,7 @@ public class MediaBrowserRouteController extends MediaRouteProvider.RouteControl
         PlaystateRequest request = new PlaystateRequest();
         request.setCommand(PlaystateCommand.Stop);
 
-        MB3Application.getInstance().API.SendPlaystateCommandAsync(mCurrentSessionId, request, new EmptyResponse());
+        MainApplication.getInstance().API.SendPlaystateCommandAsync(mCurrentSessionId, request, new EmptyResponse());
         handleGetSessionStatusAction();
         return true;
     }
@@ -198,7 +197,7 @@ public class MediaBrowserRouteController extends MediaRouteProvider.RouteControl
         PlaystateRequest playstateRequest = new PlaystateRequest();
         playstateRequest.setCommand(PlaystateCommand.Unpause);
 
-        MB3Application.getInstance().API.SendPlaystateCommandAsync(mCurrentSessionId, playstateRequest, new EmptyResponse());
+        MainApplication.getInstance().API.SendPlaystateCommandAsync(mCurrentSessionId, playstateRequest, new EmptyResponse());
         handleGetSessionStatusAction();
         return true;
     }
@@ -220,7 +219,7 @@ public class MediaBrowserRouteController extends MediaRouteProvider.RouteControl
     private boolean handleGetSessionStatusAction() {
 
         SessionQuery query = new SessionQuery();
-        MB3Application.getInstance().API.GetClientSessionsAsync(query, new Response<SessionInfoDto[]>() {
+        MainApplication.getInstance().API.GetClientSessionsAsync(query, new Response<SessionInfoDto[]>() {
             @Override
             public void onResponse(SessionInfoDto[] remoteSessions) {
 
@@ -240,7 +239,7 @@ public class MediaBrowserRouteController extends MediaRouteProvider.RouteControl
 
                 if (sessionInfo != null) {
                     // We have our session
-                    MB3Application.getCastManager(MB3Application.getInstance()).setCurrentSessionInfo(sessionInfo);
+                    MainApplication.getCastManager(MainApplication.getInstance()).setCurrentSessionInfo(sessionInfo);
                 }
 
             }
@@ -255,7 +254,7 @@ public class MediaBrowserRouteController extends MediaRouteProvider.RouteControl
     //**********************************************************************************************
 
     private boolean handleNavigateToAction(String itemName, String itemId, String itemType) {
-        MB3Application.getInstance().API.SendBrowseCommandAsync(mCurrentSessionId, itemId, itemName, itemType, new EmptyResponse());
+        MainApplication.getInstance().API.SendBrowseCommandAsync(mCurrentSessionId, itemId, itemName, itemType, new EmptyResponse());
         return true;
     }
 }

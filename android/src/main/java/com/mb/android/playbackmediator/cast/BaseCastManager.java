@@ -16,7 +16,6 @@
 
 package com.mb.android.playbackmediator.cast;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -44,7 +43,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.mediaroute.MediaBrowserControlIntent;
 import com.mb.android.mediaroute.MediaBrowserRouteProvider;
@@ -200,7 +199,7 @@ public abstract class BaseCastManager implements DeviceSelectionListener, Google
 
         LOGD(TAG, "Application ID is: " + mApplicationId);
         mMediaRouter = MediaRouter.getInstance(context);
-        mMediaRouter.addProvider(new MediaBrowserRouteProvider(MB3Application.getInstance()));
+        mMediaRouter.addProvider(new MediaBrowserRouteProvider(MainApplication.getInstance()));
         mMediaRouteSelector = new MediaRouteSelector.Builder()
                 .addControlCategory(CastMediaControlIntent.categoryForCast(mApplicationId))
                 .addControlCategory(MediaBrowserRouteProvider.CATEGORY_MEDIA_BROWSER_ROUTE)

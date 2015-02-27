@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import mediabrowser.apiinteraction.Response;
@@ -64,7 +64,7 @@ public class MbConnectActivity extends FragmentActivity {
         } else {
             setContentView(R.layout.activity_welcome2_pin);
             mPin = (TextView) findViewById(R.id.tvPin);
-            connectionManager = (AndroidConnectionManager) MB3Application.getInstance().getConnectionManager();
+            connectionManager = (AndroidConnectionManager) MainApplication.getInstance().getConnectionManager();
             deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
             connectionManager.CreatePin(deviceId, pinCreationResultResponse);
         }
@@ -83,7 +83,7 @@ public class MbConnectActivity extends FragmentActivity {
     View.OnClickListener onSignInClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            ConnectionManager connectionManager = (ConnectionManager) MB3Application.getInstance().getConnectionManager();
+            ConnectionManager connectionManager = (ConnectionManager) MainApplication.getInstance().getConnectionManager();
             try {
                 showActivityDialog();
                 connectionManager.LoginToConnect(

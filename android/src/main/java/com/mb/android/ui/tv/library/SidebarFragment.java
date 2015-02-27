@@ -8,16 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.utils.Utils;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
-import mediabrowser.model.extensions.StringHelper;
 
 /**
  * Created by Mark on 2014-10-27.
@@ -99,8 +97,8 @@ public class SidebarFragment extends Fragment {
                 options.setImageType(ImageType.Logo);
                 options.setMaxWidth(500);
 
-                String imageUrl = MB3Application.getInstance().API.GetImageUrl(item, options);
-                mLogoImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                String imageUrl = MainApplication.getInstance().API.GetImageUrl(item, options);
+                mLogoImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
                 mLogoImage.setVisibility(View.VISIBLE);
                 mMediaTitle.setVisibility(View.GONE);
             } else {

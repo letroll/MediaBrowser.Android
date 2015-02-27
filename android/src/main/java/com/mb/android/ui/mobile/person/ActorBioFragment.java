@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.logging.AppLogger;
@@ -58,7 +58,7 @@ public class ActorBioFragment extends Fragment {
 
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mActorId)) {
 
-            MB3Application.getInstance().API.GetItemAsync(mActorId, MB3Application.getInstance().API.getCurrentUserId(), getPersonResponse);
+            MainApplication.getInstance().API.GetItemAsync(mActorId, MainApplication.getInstance().API.getCurrentUserId(), getPersonResponse);
             int actorImageMaxHeight = (int) (360 * 1.5);
             int actorImageMaxWidth = (int) (360 * 1.5);
             AppLogger.getLogger().Info(TAG + ": build actor image query");
@@ -68,11 +68,11 @@ public class ActorBioFragment extends Fragment {
             actorImageOptions.setMaxWidth(actorImageMaxWidth);
             actorImageOptions.setImageType(ImageType.Primary);
             actorImageOptions.setEnableImageEnhancers(PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true));
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mActorId, actorImageOptions);
-            mActorImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mActorId, actorImageOptions);
+            mActorImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             AppLogger.getLogger().Info(TAG + ": image query sent");
         }
     }

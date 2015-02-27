@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.SeriesViewActivity;
@@ -91,8 +91,8 @@ public class QuickPlayDialogFragment extends DialogFragment {
             ImageOptions options = new ImageOptions();
             options.setImageType(ImageType.Banner);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mParent.getId(), options);
-            mHeaderImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mParent.getId(), options);
+            mHeaderImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mHeaderImage.setOnClickListener(onHeaderClickListener);
         } else {
             view.findViewById(R.id.rlBannerContainer).setVisibility(View.GONE);
@@ -109,7 +109,7 @@ public class QuickPlayDialogFragment extends DialogFragment {
                 && mParent.getUserData().getUnplayedItemCount() > 0) {
 
             ItemQuery query = new ItemQuery();
-            query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+            query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.ParentId, ItemFields.DateCreated});
             query.setSortBy(new String[] {"SortName"});
             query.setSortOrder(SortOrder.Ascending);
@@ -123,7 +123,7 @@ public class QuickPlayDialogFragment extends DialogFragment {
                 query.setIncludeItemTypes(new String[]{"episode"});
             }
 
-            MB3Application.getInstance().API.GetItemsAsync(query, getUnplayedItemResponse);
+            MainApplication.getInstance().API.GetItemsAsync(query, getUnplayedItemResponse);
         } else {
             // just show play-all & shuffle buttons
             mLatestItemsList.setAdapter(new LatestEpisodesAdapter());
@@ -160,8 +160,8 @@ public class QuickPlayDialogFragment extends DialogFragment {
 
 
         public LatestEpisodesAdapter() {
-            mLayoutInflater = (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            DisplayMetrics metrics = MB3Application.getInstance().getResources().getDisplayMetrics();
+            mLayoutInflater = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            DisplayMetrics metrics = MainApplication.getInstance().getResources().getDisplayMetrics();
             mDensity = metrics.density;
         }
 
@@ -207,14 +207,14 @@ public class QuickPlayDialogFragment extends DialogFragment {
                 episodeHolder.episodeTitle.setVisibility(View.GONE);
                 episodeHolder.addedDate.setVisibility(View.GONE);
                 episodeHolder.episodeImage.setDefaultImageResId(R.drawable.play);
-                episodeHolder.episodeImage.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+                episodeHolder.episodeImage.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
             } else if (position == 1) {
                 episodeHolder.actionText.setText("Shuffle");
                 episodeHolder.actionText.setVisibility(View.VISIBLE);
                 episodeHolder.episodeTitle.setVisibility(View.GONE);
                 episodeHolder.addedDate.setVisibility(View.GONE);
                 episodeHolder.episodeImage.setDefaultImageResId(R.drawable.shuffle);
-                episodeHolder.episodeImage.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+                episodeHolder.episodeImage.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
             } else {
                 episodeHolder.episodeTitle.setText("First Unplayed");
                 if (mFirstUnplayedItem.getParentIndexNumber() != null && mFirstUnplayedItem.getIndexNumber() != null) {
@@ -244,8 +244,8 @@ public class QuickPlayDialogFragment extends DialogFragment {
                     options.setImageType(ImageType.Primary);
                     options.setWidth((int) (140 * mDensity));
 
-                    String imageUrl = MB3Application.getInstance().API.GetImageUrl(mFirstUnplayedItem.getId(), options);
-                    episodeHolder.episodeImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                    String imageUrl = MainApplication.getInstance().API.GetImageUrl(mFirstUnplayedItem.getId(), options);
+                    episodeHolder.episodeImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
                 }
             }
             return convertView;
@@ -256,7 +256,7 @@ public class QuickPlayDialogFragment extends DialogFragment {
         @Override
         public void onClick(View v) {
 
-            Intent intent = new Intent(MB3Application.getInstance(), SeriesViewActivity.class);
+            Intent intent = new Intent(MainApplication.getInstance(), SeriesViewActivity.class);
             intent.putExtra("SeriesId", mParent.getId());
 
             startActivity(intent);
@@ -276,7 +276,7 @@ public class QuickPlayDialogFragment extends DialogFragment {
             } else if (position == 1) {
                 getAllChildren(mParent, isAudio, true);
             } else if (position == 2) {
-                MB3Application.getInstance().PlayerQueue = new Playlist();
+                MainApplication.getInstance().PlayerQueue = new Playlist();
                 PlayerHelpers.addToPlaylist(mFirstUnplayedItem, 0L, null, null);
                 activity.onQuickPlaySelectionFinished();
                 QuickPlayDialogFragment.this.dismiss();
@@ -286,7 +286,7 @@ public class QuickPlayDialogFragment extends DialogFragment {
 
     private void getAllChildren(BaseItemDto item, boolean isAudio, boolean shuffle) {
         ItemQuery query = new ItemQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setSortBy(new String[]{"SortName"});
         query.setSortOrder(SortOrder.Ascending);
         query.setParentId(item.getId());
@@ -296,8 +296,8 @@ public class QuickPlayDialogFragment extends DialogFragment {
         query.setLimit(200);
         query.setMediaTypes(isAudio ? new String[] {"audio"} : new String[] {"video"});
 
-        MB3Application.getInstance().PlayerQueue = new Playlist();
-        MB3Application.getInstance().API.GetItemsAsync(query, new getAllChildrenResponse(shuffle, query));
+        MainApplication.getInstance().PlayerQueue = new Playlist();
+        MainApplication.getInstance().API.GetItemsAsync(query, new getAllChildrenResponse(shuffle, query));
     }
 
     private class getAllChildrenResponse extends Response<ItemsResult> {
@@ -321,7 +321,7 @@ public class QuickPlayDialogFragment extends DialogFragment {
             PlayerHelpers.addToPlaylist(items);
             mQuery.setStartIndex(mQuery.getStartIndex() + items.size());
             if (result.getTotalRecordCount()  > mQuery.getStartIndex() + 1) {
-                MB3Application.getInstance().API.GetItemsAsync(mQuery, this);
+                MainApplication.getInstance().API.GetItemsAsync(mQuery, this);
             } else {
                 IQuickPlayDialogListener activity = (IQuickPlayDialogListener) getActivity();
                 if (items.size() > 0 && activity != null) {

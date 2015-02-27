@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.tv.playback.PlayerHelpers;
@@ -119,8 +118,8 @@ public class ListFragment extends BaseLibraryFragment {
             ImageOptions options = new ImageOptions();
             options.setImageType(ImageType.Banner);
             banner.setImageUrl(
-                    MB3Application.getInstance().API.GetImageUrl(parent.getId(), options),
-                    MB3Application.getInstance().API.getImageLoader()
+                    MainApplication.getInstance().API.GetImageUrl(parent.getId(), options),
+                    MainApplication.getInstance().API.getImageLoader()
             );
             banner.setVisibility(View.VISIBLE);
         }
@@ -349,7 +348,7 @@ public class ListFragment extends BaseLibraryFragment {
                 onItemSelectedListener.onItemSelected(contentList, v, 0, contentList.getAdapter().getItemId(0));
 
                 if ("episode".equalsIgnoreCase(mItems.get(0).getType()) && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(mItems.get(0).getParentBackdropItemId())) {
-                    MB3Application.getInstance().API.GetItemAsync(mItems.get(0).getParentBackdropItemId(), MB3Application.getInstance().API.getCurrentUserId(), new GetParentResponse());
+                    MainApplication.getInstance().API.GetItemAsync(mItems.get(0).getParentBackdropItemId(), MainApplication.getInstance().API.getCurrentUserId(), new GetParentResponse());
                 }
             }
 
@@ -369,7 +368,7 @@ public class ListFragment extends BaseLibraryFragment {
         private LayoutInflater inflater;
 
         public TextListAdapter() {
-            inflater = (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            inflater = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
@@ -408,8 +407,8 @@ public class ListFragment extends BaseLibraryFragment {
                 ImageOptions options = new ImageOptions();
                 options.setImageType(ImageType.Banner);
                 options.setWidth(700);
-                String url = MB3Application.getInstance().API.GetImageUrl(mItems.get(position), options);
-                holder.banner.setImageUrl(url, MB3Application.getInstance().API.getImageLoader());
+                String url = MainApplication.getInstance().API.GetImageUrl(mItems.get(position), options);
+                holder.banner.setImageUrl(url, MainApplication.getInstance().API.getImageLoader());
                 holder.banner.setVisibility(View.VISIBLE);
                 holder.title.setVisibility(View.INVISIBLE);
             } else {

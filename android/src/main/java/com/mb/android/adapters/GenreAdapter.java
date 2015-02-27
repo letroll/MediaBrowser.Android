@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.ApiClient;
 import com.mb.android.logging.AppLogger;
@@ -37,13 +37,13 @@ public class GenreAdapter extends AbstractMediaAdapter {
 
     public GenreAdapter(List<BaseItemDto> baseItems, Context context) {
         super(baseItems);
-        mApi = MB3Application.getInstance().API;
+        mApi = MainApplication.getInstance().API;
         try {
             li = LayoutInflater.from(context);
 
-            DisplayMetrics dm = MB3Application.getInstance().getResources().getDisplayMetrics();
+            DisplayMetrics dm = MainApplication.getInstance().getResources().getDisplayMetrics();
 
-            int columns = MB3Application.getInstance().getResources().getInteger(R.integer.library_columns_poster);
+            int columns = MainApplication.getInstance().getResources().getInteger(R.integer.library_columns_poster);
 
             mImageWidth = (int)((float)dm.widthPixels - (columns * (int)(10 * dm.density))) / columns;
 
@@ -127,10 +127,10 @@ public class GenreAdapter extends AbstractMediaAdapter {
 
                 String imageUrl = mApi.GetImageUrl(mBaseItems.get(position), options);
                 holder.imageView.setVisibility(View.VISIBLE);
-                holder.imageView.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                holder.imageView.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
 
             } else {
-                holder.imageView.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+                holder.imageView.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
                 if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mBaseItems.get(position).getName())) {
                     holder.missingEpisodeOverlay.setText(mBaseItems.get(position).getName());
                     holder.missingEpisodeOverlay.setVisibility(View.VISIBLE);

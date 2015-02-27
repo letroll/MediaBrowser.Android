@@ -16,7 +16,7 @@ import android.widget.ViewSwitcher;
 import com.android.volley.toolbox.NetworkImageView;
 import com.jess.ui.TwoWayAdapterView;
 import com.jess.ui.TwoWayGridView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.adapters.HorizontalAdapterTitledBackdrops;
 import com.mb.android.adapters.HorizontalAdapterTitledPosters;
@@ -75,7 +75,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
         setOverscanValues();
 
         String jsonData = getIntent().getStringExtra("CurrentBaseItemDTO");
-        mParent = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
+        mParent = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
         mParentCollectionType = getIntent().getStringExtra("CollectionType");
         AppLogger.getLogger().Info(TAG + ": finish creating view");
     }
@@ -94,9 +94,9 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
 
     @Override
     protected void onUserDataUpdated(String itemId, UserItemDataDto userItemDataDto) {
-        MB3Application.getInstance().API.GetItemAsync(
+        MainApplication.getInstance().API.GetItemAsync(
                 mParent.getId(),
-                MB3Application.getInstance().API.getCurrentUserId(),
+                MainApplication.getInstance().API.getCurrentUserId(),
                 new GetParentItemResponse(true)
         );
         getChildren();
@@ -190,9 +190,9 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
     private void getParentItem() {
         if (mIsFresh && mParent != null) {
             AppLogger.getLogger().Info(TAG + ": Requesting full info for parent.");
-            MB3Application.getInstance().API.GetItemAsync(
+            MainApplication.getInstance().API.GetItemAsync(
                     mParent.getId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     new GetParentItemResponse(false));
 
             loadBoxsetImage();
@@ -221,8 +221,8 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
             options.setMaxHeight(600);
             options.setMaxWidth(450);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mParent, options);
-            mPrimaryImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mParent, options);
+            mPrimaryImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         } else {
             AppLogger.getLogger().Info(TAG + ": Parent has no primary image");
             mPrimaryImage.setVisibility(View.INVISIBLE);
@@ -233,36 +233,36 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
         AppLogger.getLogger().Info(TAG + ": Parent is a series, requesting seasons");
         SeasonQuery query = new SeasonQuery();
         query.setSeriesId(mParent.getId());
-        query.setUserId(MB3Application.getInstance().user.getId());
+        query.setUserId(MainApplication.getInstance().user.getId());
         query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.SortName});
 
-        MB3Application.getInstance().API.GetSeasonsAsync(query, getItemsResponse);
+        MainApplication.getInstance().API.GetSeasonsAsync(query, getItemsResponse);
     }
 
     private void performEpisodesQuery() {
         AppLogger.getLogger().Info(TAG + ": Parent is series, requesting episodes");
         ItemQuery query = new ItemQuery();
         query.setParentId(mParent.getId());
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setSortBy(new String[]{ItemSortBy.SortName});
         query.setSortOrder(SortOrder.Ascending);
         query.setRecursive(true);
         query.setMediaTypes(new String[]{"video"});
         query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.SortName, ItemFields.DateCreated, ItemFields.Genres});
 
-        MB3Application.getInstance().API.GetItemsAsync(query, getItemsResponse);
+        MainApplication.getInstance().API.GetItemsAsync(query, getItemsResponse);
     }
 
     private void performItemsQuery() {
         AppLogger.getLogger().Info(TAG + ": Parent is boxset, requesting children");
         ItemQuery query = new ItemQuery();
         query.setParentId(mParent.getId());
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setSortBy(new String[]{ItemSortBy.ProductionYear});
         query.setSortOrder(SortOrder.Ascending);
         query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.SortName, ItemFields.DateCreated, ItemFields.Genres});
 
-        MB3Application.getInstance().API.GetItemsAsync(query, getItemsResponse);
+        MainApplication.getInstance().API.GetItemsAsync(query, getItemsResponse);
     }
 
 
@@ -275,8 +275,8 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
             options.setMaxHeight(300);
             options.setMaxWidth(500);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mParent, options);
-            mLogo.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mParent, options);
+            mLogo.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mTitle.setVisibility(View.GONE);
             mLogo.setVisibility(View.VISIBLE);
         } else {
@@ -302,7 +302,7 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
                 imageOptions.setMaxWidth(1280);
                 imageOptions.setImageIndex(i);
 
-                backdropUrls.add(MB3Application.getInstance().API.GetImageUrl(mParent, imageOptions));
+                backdropUrls.add(MainApplication.getInstance().API.GetImageUrl(mParent, imageOptions));
             }
 
             if (backdropUrls.size() > 0) {
@@ -492,16 +492,16 @@ public class BoxSetActivity extends MbBackdropActivity implements IQuickPlayDial
                 }
             }
 
-            MB3Application.getInstance().API.GetItemAsync(
+            MainApplication.getInstance().API.GetItemAsync(
                     mParent.getId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     new GetParentItemResponse(true));
         }
     }
 
     private void sendActivityResult() {
 
-        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mParent.getUserData());
+        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mParent.getUserData());
 
         Intent resultIntent = new Intent();
         resultIntent.putExtra("Id", mParent.getId());

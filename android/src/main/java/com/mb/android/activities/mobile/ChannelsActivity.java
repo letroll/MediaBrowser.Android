@@ -16,7 +16,7 @@ import com.mb.android.activities.BaseMbMobileActivity;
 import com.mb.android.adapters.ChannelsAdapter;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.playbackmediator.widgets.MiniController;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.fragments.NavigationMenuFragment;
 import mediabrowser.model.channels.ChannelItemQuery;
@@ -119,16 +119,16 @@ public class ChannelsActivity extends BaseMbMobileActivity {
             if (DotNetToJavaStringHelper.isNullOrEmpty(mChannelId)) {
                 // This means we're displaying the root channels rather than the contents of a channel
                 ChannelQuery query = new ChannelQuery();
-                query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
-                MB3Application.getInstance().API.GetChannels(query, new GetChannelsResponse());
+                query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
+                MainApplication.getInstance().API.GetChannels(query, new GetChannelsResponse());
             } else {
                 // We're drilling down into a channel.
                 ChannelItemQuery query = new ChannelItemQuery();
                 query.setSortOrder(SortOrder.Ascending);
                 query.setChannelId(mChannelId);
                 query.setFolderId(mChannelItemId);
-                query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
-                MB3Application.getInstance().API.GetChannelItems(query, new GetChannelsResponse());
+                query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
+                MainApplication.getInstance().API.GetChannelItems(query, new GetChannelsResponse());
             }
             mIsFresh = false;
         }
@@ -193,7 +193,7 @@ public class ChannelsActivity extends BaseMbMobileActivity {
 
                     } else {
 
-                        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mItems.get(i));
+                        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mItems.get(i));
 
                         Intent intent = new Intent(ChannelsActivity.this, MediaDetailsActivity.class);
                         intent.putExtra("Item", jsonData);

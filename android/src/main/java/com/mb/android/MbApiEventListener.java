@@ -37,11 +37,11 @@ public class MbApiEventListener extends ApiEventListener {
     }
 
     public void onUserUpdated(ApiClient client, UserDto userDto){
-        if (userDto != null && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getCurrentUserId())) {
-            if (MB3Application.getInstance().API.getCurrentUserId().equalsIgnoreCase(userDto.getId())) {
-                MB3Application.getInstance().user = userDto;
-                if (MB3Application.getInstance().getCurrentActivity() != null) {
-                    MB3Application.getInstance().getCurrentActivity().onUserDataUpdated();
+        if (userDto != null && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getCurrentUserId())) {
+            if (MainApplication.getInstance().API.getCurrentUserId().equalsIgnoreCase(userDto.getId())) {
+                MainApplication.getInstance().user = userDto;
+                if (MainApplication.getInstance().getCurrentActivity() != null) {
+                    MainApplication.getInstance().getCurrentActivity().onUserDataUpdated();
                 }
             }
         }
@@ -49,7 +49,7 @@ public class MbApiEventListener extends ApiEventListener {
 
     public void onUserConfigurationUpdated(ApiClient client, UserDto userDto){
         if (userDto != null) {
-            MB3Application.getInstance().user = userDto;
+            MainApplication.getInstance().user = userDto;
         }
     }
 
@@ -57,7 +57,7 @@ public class MbApiEventListener extends ApiEventListener {
         if (command == null || tangible.DotNetToJavaStringHelper.isNullOrEmpty(command.getItemId())) return;
         AppLogger.getLogger().Info("Processing browse command");
 
-        client.GetItemAsync(command.getItemId(), MB3Application.getInstance().API.getCurrentUserId(), browseItemResponse);
+        client.GetItemAsync(command.getItemId(), MainApplication.getInstance().API.getCurrentUserId(), browseItemResponse);
     }
 
     public void onPlayCommand(ApiClient client, PlayRequest command){
@@ -67,7 +67,7 @@ public class MbApiEventListener extends ApiEventListener {
         }
         AppLogger.getLogger().Info("ApiEventListener: onPlayCommand");
 
-        MB3Application.getInstance().API.GetItemAsync(command.getItemIds()[0], client.getCurrentUserId(), new GetPlayItemTypeResponse(command));
+        MainApplication.getInstance().API.GetItemAsync(command.getItemIds()[0], client.getCurrentUserId(), new GetPlayItemTypeResponse(command));
     }
 
     public void onPlaystateCommand(ApiClient client, PlaystateRequest command)
@@ -103,8 +103,8 @@ public class MbApiEventListener extends ApiEventListener {
     }
 
     private void sendSeekCommand(Long seekPositionTicks) {
-        if (MB3Application.getInstance().getCurrentActivity() != null) {
-            MB3Application.getInstance().getCurrentActivity().onSeekCommand(seekPositionTicks);
+        if (MainApplication.getInstance().getCurrentActivity() != null) {
+            MainApplication.getInstance().getCurrentActivity().onSeekCommand(seekPositionTicks);
         }
     }
 
@@ -202,9 +202,9 @@ public class MbApiEventListener extends ApiEventListener {
     }
 
     public void onSetAudioStreamIndexCommand(ApiClient client, int value) {
-        if (MB3Application.getInstance().getCurrentActivity() instanceof PlaybackActivity) {
+        if (MainApplication.getInstance().getCurrentActivity() instanceof PlaybackActivity) {
             // Mobile video player is active
-        } else if (MB3Application.getInstance().getCurrentActivity() instanceof AudioPlaybackActivity) {
+        } else if (MainApplication.getInstance().getCurrentActivity() instanceof AudioPlaybackActivity) {
             // Mobile audio player is acive
         }
 
@@ -250,8 +250,8 @@ public class MbApiEventListener extends ApiEventListener {
                 return;
             }
 
-            if (MB3Application.getInstance().getCurrentActivity() != null) {
-                MB3Application.getInstance().getCurrentActivity().onRemoteBrowseRequest(item);
+            if (MainApplication.getInstance().getCurrentActivity() != null) {
+                MainApplication.getInstance().getCurrentActivity().onRemoteBrowseRequest(item);
             }
         }
         @Override
@@ -271,20 +271,20 @@ public class MbApiEventListener extends ApiEventListener {
     }
 
     private void takeScreenShot() {
-        if (MB3Application.getInstance().getCurrentActivity() != null) {
-            MB3Application.getInstance().getCurrentActivity().onTakeScreenshotRequest();
+        if (MainApplication.getInstance().getCurrentActivity() != null) {
+            MainApplication.getInstance().getCurrentActivity().onTakeScreenshotRequest();
         }
     }
 
     private void goHome() {
-        if (MB3Application.getInstance().getCurrentActivity() != null) {
-            MB3Application.getInstance().getCurrentActivity().onGoHomeRequest();
+        if (MainApplication.getInstance().getCurrentActivity() != null) {
+            MainApplication.getInstance().getCurrentActivity().onGoHomeRequest();
         }
     }
 
     private void goToSettings() {
-        if (MB3Application.getInstance().getCurrentActivity() != null) {
-            MB3Application.getInstance().getCurrentActivity().onGoToSettingsRequest();
+        if (MainApplication.getInstance().getCurrentActivity() != null) {
+            MainApplication.getInstance().getCurrentActivity().onGoToSettingsRequest();
         }
     }
 
@@ -300,8 +300,8 @@ public class MbApiEventListener extends ApiEventListener {
         @Override
         public void onResponse(BaseItemDto item) {
             if (item == null) return;
-            if (MB3Application.getInstance().getCurrentActivity() != null) {
-                MB3Application.getInstance().getCurrentActivity().onRemotePlayRequest(command, item.getMediaType());
+            if (MainApplication.getInstance().getCurrentActivity() != null) {
+                MainApplication.getInstance().getCurrentActivity().onRemotePlayRequest(command, item.getMediaType());
             }
         }
     }

@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.SeriesViewActivity;
 import com.mb.android.ui.tv.library.interfaces.ILongPressDialogListener;
@@ -79,8 +79,8 @@ public class LongPressDialogFragment extends DialogFragment {
             ImageOptions options = new ImageOptions();
             options.setImageType(ImageType.Banner);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mItem.getId(), options);
-            mHeaderImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem.getId(), options);
+            mHeaderImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mHeaderImage.setOnClickListener(onHeaderClickListener);
         } else {
             view.findViewById(R.id.rlBannerContainer).setVisibility(View.GONE);
@@ -123,7 +123,7 @@ public class LongPressDialogFragment extends DialogFragment {
 
 
         public ActionAdapter() {
-            mLayoutInflater = (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mLayoutInflater = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
 
         @Override
@@ -194,7 +194,7 @@ public class LongPressDialogFragment extends DialogFragment {
         @Override
         public void onClick(View v) {
 
-            Intent intent = new Intent(MB3Application.getInstance(), SeriesViewActivity.class);
+            Intent intent = new Intent(MainApplication.getInstance(), SeriesViewActivity.class);
             intent.putExtra("SeriesId", mItem.getId());
 
             startActivity(intent);
@@ -208,32 +208,32 @@ public class LongPressDialogFragment extends DialogFragment {
 
             switch(mActions.get(position)) {
                 case "Like":
-                    MB3Application.getInstance().API.UpdateUserItemRatingAsync(mItem.getId(),
-                            MB3Application.getInstance().API.getCurrentUserId(), true, updateUserDataResponse);
+                    MainApplication.getInstance().API.UpdateUserItemRatingAsync(mItem.getId(),
+                            MainApplication.getInstance().API.getCurrentUserId(), true, updateUserDataResponse);
                     break;
                 case "Dislike":
-                    MB3Application.getInstance().API.UpdateUserItemRatingAsync(mItem.getId(),
-                            MB3Application.getInstance().API.getCurrentUserId(), false, updateUserDataResponse);
+                    MainApplication.getInstance().API.UpdateUserItemRatingAsync(mItem.getId(),
+                            MainApplication.getInstance().API.getCurrentUserId(), false, updateUserDataResponse);
                     break;
                 case "Clear Rating":
-                    MB3Application.getInstance().API.ClearUserItemRatingAsync(mItem.getId(),
-                            MB3Application.getInstance().API.getCurrentUserId(), updateUserDataResponse);
+                    MainApplication.getInstance().API.ClearUserItemRatingAsync(mItem.getId(),
+                            MainApplication.getInstance().API.getCurrentUserId(), updateUserDataResponse);
                     break;
                 case "Set Unplayed":
-                    MB3Application.getInstance().API.MarkUnplayedAsync(mItem.getId(),
-                            MB3Application.getInstance().API.getCurrentUserId(), updateUserDataResponse);
+                    MainApplication.getInstance().API.MarkUnplayedAsync(mItem.getId(),
+                            MainApplication.getInstance().API.getCurrentUserId(), updateUserDataResponse);
                     break;
                 case "Set Played":
-                    MB3Application.getInstance().API.MarkPlayedAsync(mItem.getId(),
-                            MB3Application.getInstance().API.getCurrentUserId(), null, updateUserDataResponse);
+                    MainApplication.getInstance().API.MarkPlayedAsync(mItem.getId(),
+                            MainApplication.getInstance().API.getCurrentUserId(), null, updateUserDataResponse);
                     break;
                 case "Set Favorite":
-                    MB3Application.getInstance().API.UpdateFavoriteStatusAsync(mItem.getId(),
-                            MB3Application.getInstance().API.getCurrentUserId(), true, updateUserDataResponse);
+                    MainApplication.getInstance().API.UpdateFavoriteStatusAsync(mItem.getId(),
+                            MainApplication.getInstance().API.getCurrentUserId(), true, updateUserDataResponse);
                     break;
                 case "Clear Favorite":
-                    MB3Application.getInstance().API.UpdateFavoriteStatusAsync(mItem.getId(),
-                            MB3Application.getInstance().API.getCurrentUserId(), false, updateUserDataResponse);
+                    MainApplication.getInstance().API.UpdateFavoriteStatusAsync(mItem.getId(),
+                            MainApplication.getInstance().API.getCurrentUserId(), false, updateUserDataResponse);
                     break;
             }
         }

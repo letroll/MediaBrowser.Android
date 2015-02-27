@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.adapters.GenericAdapterPosters;
@@ -54,16 +54,16 @@ public class ChannelsFragment extends Fragment {
         if (mChannelDto == null) {
             // This means we're displaying the root channels rather than the contents of a channel
             ChannelQuery query = new ChannelQuery();
-            query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
-            MB3Application.getInstance().API.GetChannels(query, new GetChannelsResponse());
+            query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
+            MainApplication.getInstance().API.GetChannels(query, new GetChannelsResponse());
         } else {
             // We're drilling down into a channel.
             ChannelItemQuery query = new ChannelItemQuery();
             query.setChannelId(mChannelDto.getId());
 //            query.setFolderId(mChannelItemDto != null && mChannelItemDto.getIsFolder() ? mChannelItemDto.getId() : null);
-            query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+            query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             query.setSortOrder(SortOrder.Ascending);
-            MB3Application.getInstance().API.GetChannelItems(query, new GetChannelsResponse());
+            MainApplication.getInstance().API.GetChannelItems(query, new GetChannelsResponse());
         }
     }
 

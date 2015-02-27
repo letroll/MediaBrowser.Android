@@ -12,7 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.utils.Utils;
 import mediabrowser.model.dto.UserDto;
@@ -35,10 +35,10 @@ public class UserAdapter extends BaseAdapter {
 
     public UserAdapter(UserDto[] users) {
         mUsers = users;
-        mLayoutInflater = (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mLayoutInflater = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         try {
-            WindowManager windowManager = (WindowManager) MB3Application.getInstance().getSystemService(Context.WINDOW_SERVICE);
+            WindowManager windowManager = (WindowManager) MainApplication.getInstance().getSystemService(Context.WINDOW_SERVICE);
             Display d = windowManager.getDefaultDisplay();
             DisplayMetrics metrics = new DisplayMetrics();
             d.getMetrics(metrics);
@@ -71,7 +71,7 @@ public class UserAdapter extends BaseAdapter {
 
         viewHolder.UserName.setText(mUsers[position].getName());
         viewHolder.LastSeen.setText(getLastSeenString(mUsers[position]));
-        viewHolder.UserImage.setImageUrl(getImageUrl(mUsers[position]), MB3Application.getInstance().API.getImageLoader());
+        viewHolder.UserImage.setImageUrl(getImageUrl(mUsers[position]), MainApplication.getInstance().API.getImageLoader());
 
         return convertView;
     }
@@ -107,9 +107,9 @@ public class UserAdapter extends BaseAdapter {
             long lastSeenMs = date.getTime();
             long currentMs = new Date().getTime();
 
-            return MB3Application.getInstance().getResources().getString(R.string.last_seen) + " " + Utils.getFriendlyTimeString(currentMs - lastSeenMs);
+            return MainApplication.getInstance().getResources().getString(R.string.last_seen) + " " + Utils.getFriendlyTimeString(currentMs - lastSeenMs);
         } else {
-            return MB3Application.getInstance().getResources().getString(R.string.last_seen) + " " + MB3Application.getInstance().getResources().getString(R.string.unknown);
+            return MainApplication.getInstance().getResources().getString(R.string.last_seen) + " " + MainApplication.getInstance().getResources().getString(R.string.unknown);
         }
     }
 
@@ -119,7 +119,7 @@ public class UserAdapter extends BaseAdapter {
             options.setImageType(ImageType.Primary);
             options.setMaxHeight(mMaxPixels);
             options.setMaxWidth(mMaxPixels);
-            return MB3Application.getInstance().API.GetUserImageUrl(user, options);
+            return MainApplication.getInstance().API.GetUserImageUrl(user, options);
         } else {
             return null;
         }

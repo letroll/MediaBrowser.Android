@@ -3,7 +3,7 @@ package com.mb.android.utils;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -195,10 +195,10 @@ public class BackdropSlideshow {
         }
 
         if (mBackdropSwitcher.getDisplayedChild() == 0) {
-            mBackdropImage2.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            mBackdropImage2.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mBackdropSwitcher.showNext();
         } else {
-            mBackdropImage1.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            mBackdropImage1.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mBackdropSwitcher.showPrevious();
         }
     }

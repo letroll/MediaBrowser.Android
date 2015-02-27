@@ -16,7 +16,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.ApiClient;
 import mediabrowser.model.dto.ImageOptions;
@@ -59,7 +59,7 @@ public class SearchResultsAdapter extends BaseAdapter implements SectionIndexer 
             mImageHeight = mImageWidth = (dm.widthPixels - (columns * (int) (10 * dm.density))) / columns;
 
             imageEnhancersEnabled = PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
         } catch (Exception e) {
             AppLogger.getLogger().ErrorException("Error in adapter initialization", e);
@@ -137,7 +137,7 @@ public class SearchResultsAdapter extends BaseAdapter implements SectionIndexer 
                 holder.imageView.setVisibility(View.VISIBLE);
 
                 String imageUrl = mApi.GetImageUrl(mBaseItems.get(position).getItemId(), options);
-                holder.imageView.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                holder.imageView.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
 
             // Use placeholder image instead
             } else {

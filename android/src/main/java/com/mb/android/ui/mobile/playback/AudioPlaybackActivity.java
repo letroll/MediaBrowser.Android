@@ -3,7 +3,6 @@ package com.mb.android.ui.mobile.playback;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -13,7 +12,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
@@ -83,7 +82,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
         }
 
         // Just in case the TV Theme is still playing
-        MB3Application.getInstance().StopMedia();
+        MainApplication.getInstance().StopMedia();
 
         // acquire UI elements
         slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
@@ -128,18 +127,18 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
         mFavoriteButton.setOnClickListener(onFavoriteClick);
         clearPlaylistText.setOnClickListener(onClearPlaylistClick);
         mPlaybackProgress.setOnSeekBarChangeListener(onSeekBarChangeListener);
-        if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > 1) {
+        if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > 1) {
             mPreviousButton.setEnabled(true);
             mNextButton.setEnabled(true);
         }
 
-        mAudioService = MB3Application.getAudioService();
+        mAudioService = MainApplication.getAudioService();
         mAudioService.addAudioPlayerListener(AudioPlaybackActivity.this);
         if (mCastManager != null) {
             AppLogger.getLogger().Debug(TAG, "Adding Audio player listener");
             mAudioService.addAudioPlayerListener(mCastManager);
         }
-        songAdapter = new BaseSongAdapter(MB3Application.getInstance().PlayerQueue.PlaylistItems, this);
+        songAdapter = new BaseSongAdapter(MainApplication.getInstance().PlayerQueue.PlaylistItems, this);
         mPlayList.setAdapter(songAdapter);
         mPlayList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -187,7 +186,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
 
     private void updateCurrentPlayingIndex(int newIndex) {
 
-        if (newIndex < 0 || newIndex >= MB3Application.getInstance().PlayerQueue.PlaylistItems.size())
+        if (newIndex < 0 || newIndex >= MainApplication.getInstance().PlayerQueue.PlaylistItems.size())
             return;
 
         currentPlayingIndex = newIndex;
@@ -259,9 +258,9 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
         startPositionUpdatePulseCheck();
         updateCurrentPlayingIndex(mAudioService.getCurrentlyPlayingIndex());
         // Need the parent item to display a backdrop image
-        MB3Application.getInstance().API.GetItemAsync(
+        MainApplication.getInstance().API.GetItemAsync(
                 mediaItem.getParentId(),
-                MB3Application.getInstance().API.getCurrentUserId(),
+                MainApplication.getInstance().API.getCurrentUserId(),
                 getAlbumResponse);
     }
 
@@ -359,11 +358,11 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
         public void onClick(View v) {
             if (mItem == null) return;
             if (mLikes == null || mLikes) {
-                MB3Application.getInstance().API.UpdateUserItemRatingAsync(mItem.getId(),
-                        MB3Application.getInstance().API.getCurrentUserId(), false, new UpdateUserDataResponse());
+                MainApplication.getInstance().API.UpdateUserItemRatingAsync(mItem.getId(),
+                        MainApplication.getInstance().API.getCurrentUserId(), false, new UpdateUserDataResponse());
             } else {
-                MB3Application.getInstance().API.ClearUserItemRatingAsync(mItem.getId(),
-                        MB3Application.getInstance().API.getCurrentUserId(), new UpdateUserDataResponse());
+                MainApplication.getInstance().API.ClearUserItemRatingAsync(mItem.getId(),
+                        MainApplication.getInstance().API.getCurrentUserId(), new UpdateUserDataResponse());
             }
         }
     };
@@ -377,11 +376,11 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
         public void onClick(View v) {
             if (mItem == null) return;
             if (mLikes == null || !mLikes) {
-                MB3Application.getInstance().API.UpdateUserItemRatingAsync(mItem.getId(),
-                        MB3Application.getInstance().API.getCurrentUserId(), true, new UpdateUserDataResponse());
+                MainApplication.getInstance().API.UpdateUserItemRatingAsync(mItem.getId(),
+                        MainApplication.getInstance().API.getCurrentUserId(), true, new UpdateUserDataResponse());
             } else {
-                MB3Application.getInstance().API.ClearUserItemRatingAsync(mItem.getId(),
-                        MB3Application.getInstance().API.getCurrentUserId(), new UpdateUserDataResponse());
+                MainApplication.getInstance().API.ClearUserItemRatingAsync(mItem.getId(),
+                        MainApplication.getInstance().API.getCurrentUserId(), new UpdateUserDataResponse());
             }
         }
     };
@@ -393,7 +392,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
 
         @Override
         public void onClick(View v) {
-            MB3Application.getAudioService().toggleShuffle();
+            MainApplication.getAudioService().toggleShuffle();
         }
     };
 
@@ -404,7 +403,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
 
         @Override
         public void onClick(View v) {
-            MB3Application.getAudioService().toggleRepeat();
+            MainApplication.getAudioService().toggleRepeat();
         }
     };
 
@@ -439,8 +438,8 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
         @Override
         public void onClick(View v) {
             if (mItem == null) return;
-            MB3Application.getInstance().API.UpdateFavoriteStatusAsync(mItem.getId(),
-                        MB3Application.getInstance().API.getCurrentUserId(), !mIsFavorite, new UpdateUserDataResponse());
+            MainApplication.getInstance().API.UpdateFavoriteStatusAsync(mItem.getId(),
+                        MainApplication.getInstance().API.getCurrentUserId(), !mIsFavorite, new UpdateUserDataResponse());
         }
     };
 
@@ -451,7 +450,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
 
         @Override
         public void onClick(View v) {
-            MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+            MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
             songAdapter.clearPlaylist();
         }
     };
@@ -466,9 +465,9 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
         public void onResponse(BaseItemDto item) {
 
             if (item != null) {
-                MB3Application.getInstance().API.GetItemAsync(
+                MainApplication.getInstance().API.GetItemAsync(
                         item.getParentId(),
-                        MB3Application.getInstance().API.getCurrentUserId(),
+                        MainApplication.getInstance().API.getCurrentUserId(),
                         getArtistResponse);
 
                 if (item.getHasPrimaryImage()) {
@@ -479,17 +478,17 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
                     options.setHeight(750);
                     try {
                         options.setEnableImageEnhancers(PreferenceManager
-                                .getDefaultSharedPreferences(MB3Application.getInstance())
+                                .getDefaultSharedPreferences(MainApplication.getInstance())
                                 .getBoolean("pref_enable_image_enhancers", true));
                     } catch (Exception e) {
                         AppLogger.getLogger().Debug("AbstractMediaAdapter", "Error reading preferences");
                     }
-                    String imageUrl = MB3Application.getInstance().API.GetImageUrl(item, options);
+                    String imageUrl = MainApplication.getInstance().API.GetImageUrl(item, options);
                     mediaImage.setDefaultImageResId(R.drawable.music_square_bg);
-                    mediaImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                    mediaImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
 
                 } else {
-                    mediaImage.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+                    mediaImage.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
                 }
             }
         }
@@ -511,8 +510,8 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
                 backdropOptions.setImageIndex(0);
                 backdropOptions.setMaxHeight(Math.min(getScreenHeight(), 720));
 
-                String backdropImageUrl = MB3Application.getInstance().API.GetImageUrl(currentArtist, backdropOptions);
-                mMusicScreenSaver.setImageUrl(backdropImageUrl, MB3Application.getInstance().API.getImageLoader());
+                String backdropImageUrl = MainApplication.getInstance().API.GetImageUrl(currentArtist, backdropOptions);
+                mMusicScreenSaver.setImageUrl(backdropImageUrl, MainApplication.getInstance().API.getImageLoader());
             }
         }
         @Override
@@ -720,22 +719,22 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
     }
 
     private boolean isPlaying() {
-        return MB3Application.getAudioService().getPlayerState().equals(AudioService.PlayerState.PLAYING);
+        return MainApplication.getAudioService().getPlayerState().equals(AudioService.PlayerState.PLAYING);
     }
 
     private int getQueue() {
-        return (MB3Application.getInstance().PlayerQueue != null
-                && MB3Application.getInstance().PlayerQueue.PlaylistItems != null)
-                ? MB3Application.getInstance().PlayerQueue.PlaylistItems.size()
+        return (MainApplication.getInstance().PlayerQueue != null
+                && MainApplication.getInstance().PlayerQueue.PlaylistItems != null)
+                ? MainApplication.getInstance().PlayerQueue.PlaylistItems.size()
                 : 0;
     }
 
     private int duration() {
-        return MB3Application.getAudioService().getDuration();
+        return MainApplication.getAudioService().getDuration();
     }
 
     private int position() {
-        return MB3Application.getAudioService().getCurrentPosition();
+        return MainApplication.getAudioService().getCurrentPosition();
     }
 
     @Override
@@ -745,7 +744,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
             AppLogger.getLogger().Info(TAG + ": first item is audio.");
             if (mAudioService != null) {
                 mAudioService.stopMedia();
-                MB3Application.getInstance().PlayerQueue = new Playlist();
+                MainApplication.getInstance().PlayerQueue = new Playlist();
                 addItemsToPlaylist(request.getItemIds());
                 AppLogger.getLogger().Info(TAG + ": audio service stopped");
                 mAudioService.playMedia();
@@ -757,7 +756,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
                 mAudioService.stopMedia();
                 AppLogger.getLogger().Info(TAG + ": audio service killed");
             }
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
             Intent intent = new Intent(this, PlaybackActivity.class);
             startActivity(intent);

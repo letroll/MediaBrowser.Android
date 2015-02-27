@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.ApiClient;
 import mediabrowser.model.dto.BaseItemDto;
@@ -47,7 +47,7 @@ public class CollectionAdapter extends BaseAdapter {
             mHeight = (mWidth / 16) * 9;
 
             imageEnhancersEnabled = PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -122,7 +122,7 @@ public class CollectionAdapter extends BaseAdapter {
             options.setMaxHeight(mHeight);
 
             String imageUrl = mApi.GetImageUrl(mItems[i], options);
-            holder.CollectionImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            holder.CollectionImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             holder.CollectionImage.setVisibility(View.VISIBLE);
         } else {
             holder.CollectionImage.setVisibility(View.INVISIBLE);

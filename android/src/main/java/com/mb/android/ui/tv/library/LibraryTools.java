@@ -1,12 +1,11 @@
 package com.mb.android.ui.tv.library;
 
 import com.jess.ui.TwoWayGridView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.utils.Utils;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.entities.SeriesStatus;
-import mediabrowser.model.extensions.StringHelper;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -148,7 +147,7 @@ public class LibraryTools {
         }
 
         if (item.getAirTime() != null && !item.getAirTime().isEmpty()) {
-            aInfo += " " + MB3Application.getInstance().getResources().getString(R.string.at_string) + " ";
+            aInfo += " " + MainApplication.getInstance().getResources().getString(R.string.at_string) + " ";
             aInfo += item.getAirTime();
         }
 
@@ -159,9 +158,9 @@ public class LibraryTools {
 
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(aInfo)) {
             if (item.getStatus() != null && item.getStatus().equals(SeriesStatus.Ended)) {
-                aInfo = MB3Application.getInstance().getResources().getString(R.string.aired_string) + " " + aInfo;
+                aInfo = MainApplication.getInstance().getResources().getString(R.string.aired_string) + " " + aInfo;
             } else {
-                aInfo = MB3Application.getInstance().getResources().getString(R.string.airs_string) + " " + aInfo;
+                aInfo = MainApplication.getInstance().getResources().getString(R.string.airs_string) + " " + aInfo;
             }
         }
 
@@ -179,9 +178,9 @@ public class LibraryTools {
 
             if (premiereDate != null) {
                 if (premiereDate.before(new Date())) {
-                    aInfo = MB3Application.getInstance().getResources().getString(R.string.aired_string) + " " + aInfo;
+                    aInfo = MainApplication.getInstance().getResources().getString(R.string.aired_string) + " " + aInfo;
                 } else {
-                    aInfo = MB3Application.getInstance().getResources().getString(R.string.airs_string) + " " + aInfo;
+                    aInfo = MainApplication.getInstance().getResources().getString(R.string.airs_string) + " " + aInfo;
                 }
             }
         }

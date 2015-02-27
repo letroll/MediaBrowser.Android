@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
@@ -35,16 +35,16 @@ public class HomeScreenItemsAdapter extends BaseAdapter {
         mItems = items;
 
         try {
-            mLayoutInflater = (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            int mScreenWidth = MB3Application.getInstance().getResources().getDisplayMetrics().widthPixels;
+            mLayoutInflater = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            int mScreenWidth = MainApplication.getInstance().getResources().getDisplayMetrics().widthPixels;
 
-            int mColumns = MB3Application.getInstance().getResources().getInteger(R.integer.homescreen_item_columns);
+            int mColumns = MainApplication.getInstance().getResources().getInteger(R.integer.homescreen_item_columns);
 
-            mWidth = (mScreenWidth - ((mColumns * 2) * (int) (4 * MB3Application.getInstance().getResources().getDisplayMetrics().density))) / mColumns;
+            mWidth = (mScreenWidth - ((mColumns * 2) * (int) (4 * MainApplication.getInstance().getResources().getDisplayMetrics().density))) / mColumns;
             mHeight = (mWidth / 16) * 9;
 
             imageEnhancersEnabled = PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
         } catch (Exception e) {
             AppLogger.getLogger().ErrorException("error initializing adapter properties", e);
@@ -155,20 +155,20 @@ public class HomeScreenItemsAdapter extends BaseAdapter {
                     options.setWidth(mWidth);
                 }
 
-                imageUrl = MB3Application.getInstance().API.GetImageUrl(mItems[i], options);
+                imageUrl = MainApplication.getInstance().API.GetImageUrl(mItems[i], options);
             } else if (mItems[i].getHasThumb()) {
                 options.setImageType(ImageType.Thumb);
                 options.setWidth(mWidth);
                 options.setEnableImageEnhancers(imageEnhancersEnabled);
-                imageUrl = MB3Application.getInstance().API.GetImageUrl(mItems[i], options);
+                imageUrl = MainApplication.getInstance().API.GetImageUrl(mItems[i], options);
             } else if (mItems[i].getBackdropCount() > 0) {
                 options.setImageType(ImageType.Backdrop);
                 options.setWidth(mWidth);
-                imageUrl = MB3Application.getInstance().API.GetImageUrl(mItems[i], options);
+                imageUrl = MainApplication.getInstance().API.GetImageUrl(mItems[i], options);
             } else if (mItems[i].getParentBackdropImageTags() != null && mItems[i].getParentBackdropImageTags().size() > 0) {
                 options.setImageType(ImageType.Backdrop);
                 options.setWidth(mWidth);
-                imageUrl = MB3Application.getInstance().API.GetImageUrl(mItems[i].getParentBackdropItemId(), options);
+                imageUrl = MainApplication.getInstance().API.GetImageUrl(mItems[i].getParentBackdropItemId(), options);
             } else if (mItems[i].getHasPrimaryImage()) {
                 options.setImageType(ImageType.Primary);
                 options.setEnableImageEnhancers(imageEnhancersEnabled);
@@ -178,13 +178,13 @@ public class HomeScreenItemsAdapter extends BaseAdapter {
                 } else {
                     options.setWidth(mWidth);
                 }
-                imageUrl = MB3Application.getInstance().API.GetImageUrl(mItems[i], options);
+                imageUrl = MainApplication.getInstance().API.GetImageUrl(mItems[i], options);
             }
 
             if (options.getImageType() != null) {
-                holder.CollectionImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                holder.CollectionImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             } else {
-                holder.CollectionImage.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+                holder.CollectionImage.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
             }
 
         } catch (Exception e) {

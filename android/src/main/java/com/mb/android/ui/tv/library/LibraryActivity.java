@@ -3,7 +3,6 @@ package com.mb.android.ui.tv.library;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.displaypreferences.DisplayPreference;
 import com.mb.android.displaypreferences.ViewType;
@@ -85,7 +84,7 @@ public class LibraryActivity
         mActivityIndicator = (ProgressBar) findViewById(R.id.pbActivityIndicator);
         mErrorText = (TextView) findViewById(R.id.tvErrorText);
         String jsonData = getIntent().getStringExtra("CurrentBaseItemDTO");
-        mParent = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
+        mParent = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
         mParentCollectionType = getIntent().getStringExtra("CollectionType");
         setOverscanValues();
         AppLogger.getLogger().Info(TAG + ": Finished creating Activity");
@@ -93,7 +92,7 @@ public class LibraryActivity
         onGridSelected();
         mItems = new ArrayList<>();
 
-        displayPreference = MB3Application.getInstance().getPreferenceManager().retrieveDisplayPreference(mParent);
+        displayPreference = MainApplication.getInstance().getPreferenceManager().retrieveDisplayPreference(mParent);
         setInitialView();
     }
 
@@ -126,7 +125,7 @@ public class LibraryActivity
     @Override
     public void onPause() {
         super.onPause();
-        MB3Application.getInstance().getPreferenceManager().saveDisplayPreference(mParent, displayPreference);
+        MainApplication.getInstance().getPreferenceManager().saveDisplayPreference(mParent, displayPreference);
     }
 
     @Override
@@ -208,13 +207,13 @@ public class LibraryActivity
         AppLogger.getLogger().Info(TAG + ": building episode query");
         String seasonId = getIntent().getStringExtra("SeasonId");
         EpisodeQuery episodeQuery = new EpisodeQuery();
-        episodeQuery.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        episodeQuery.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         episodeQuery.setSeriesId(mParent.getId());
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(seasonId)) {
             episodeQuery.setSeasonId(String.valueOf(seasonId));
         }
         episodeQuery.setFields(new ItemFields[]{ItemFields.SortName, ItemFields.PrimaryImageAspectRatio});
-        MB3Application.getInstance().API.GetEpisodesAsync(episodeQuery, getItemsResponse);
+        MainApplication.getInstance().API.GetEpisodesAsync(episodeQuery, getItemsResponse);
         populateBackdrops(mParent);
     }
 
@@ -226,15 +225,15 @@ public class LibraryActivity
         } else {
             query.setChannelId(mParent.getId());
         }
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setSortOrder(SortOrder.Ascending);
-        MB3Application.getInstance().API.GetChannelItems(query, getItemsResponse);
+        MainApplication.getInstance().API.GetChannelItems(query, getItemsResponse);
     }
 
     private void buildArtistQuery() {
         mArtistsQuery = new ArtistsQuery();
         mArtistsQuery.setParentId(mParent.getId());
-        mArtistsQuery.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        mArtistsQuery.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         mArtistsQuery.setRecursive(true);
         mArtistsQuery.setSortBy(new String[]{ItemSortBy.SortName});
         mArtistsQuery.setSortOrder(SortOrder.Ascending);
@@ -242,14 +241,14 @@ public class LibraryActivity
         mArtistsQuery.setStartIndex(0);
         mArtistsQuery.setLimit(200);
 
-        MB3Application.getInstance().API.GetAlbumArtistsAsync(mArtistsQuery, getItemsResponse);
+        MainApplication.getInstance().API.GetAlbumArtistsAsync(mArtistsQuery, getItemsResponse);
     }
 
 
     private void buildStandardItemQuery() {
         AppLogger.getLogger().Info(TAG + ": building item query");
         mQuery = new ItemQuery();
-        mQuery.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        mQuery.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         mQuery.setParentId(mParent.getId());
         mQuery.setSortBy(new String[]{ItemSortBy.SortName});
         mQuery.setSortOrder(SortOrder.Ascending);
@@ -263,7 +262,7 @@ public class LibraryActivity
             mQuery.setIncludeItemTypes(new String[] { "series" });
             mQuery.setRecursive(true);
         }
-        MB3Application.getInstance().API.GetItemsAsync(mQuery, getItemsResponse);
+        MainApplication.getInstance().API.GetItemsAsync(mQuery, getItemsResponse);
     }
 
 
@@ -281,7 +280,7 @@ public class LibraryActivity
             options.setImageIndex(i);
             options.setMaxHeight(720);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(item.getId(), options);
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(item.getId(), options);
             imageUrls.add(imageUrl);
         }
 
@@ -418,10 +417,10 @@ public class LibraryActivity
                     AppLogger.getLogger().Info(TAG + ": more items to retrieve");
                     if (mArtistsQuery != null) {
                         mArtistsQuery.setStartIndex(mCurrentQueryStartIndex);
-                        MB3Application.getInstance().API.GetAlbumArtistsAsync(mArtistsQuery, this);
+                        MainApplication.getInstance().API.GetAlbumArtistsAsync(mArtistsQuery, this);
                     } else {
                         mQuery.setStartIndex(mCurrentQueryStartIndex);
-                        MB3Application.getInstance().API.GetItemsAsync(mQuery, this);
+                        MainApplication.getInstance().API.GetItemsAsync(mQuery, this);
                     }
                 }
             }

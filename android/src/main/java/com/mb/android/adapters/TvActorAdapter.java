@@ -7,21 +7,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.ViewHolder;
 import mediabrowser.apiinteraction.ApiClient;
 import mediabrowser.model.dto.BaseItemPerson;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
-import mediabrowser.model.extensions.StringHelper;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * Created by Mark on 12/12/13.
@@ -37,10 +32,10 @@ public class TvActorAdapter extends BaseAdapter {
 
     public TvActorAdapter(BaseItemPerson[] people, int gridHeight, int rows, Context context) {
         mPeople = people;
-        mApi = MB3Application.getInstance().API;
+        mApi = MainApplication.getInstance().API;
 
         if (context == null) {
-            context = MB3Application.getInstance();
+            context = MainApplication.getInstance();
         }
 
         try {
@@ -52,7 +47,7 @@ public class TvActorAdapter extends BaseAdapter {
 //            width = (int)((float)height  * .66);
 
             imageEnhancersEnabled = PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
         } catch (Exception e) {
 
@@ -113,9 +108,9 @@ public class TvActorAdapter extends BaseAdapter {
             actorImageOptions.setImageType(ImageType.Primary);
             actorImageOptions.setEnableImageEnhancers(imageEnhancersEnabled);
                 String actorImageUrl = mApi.GetPersonImageUrl(mPeople[position], actorImageOptions);
-                holder.imageView.setImageUrl(actorImageUrl, MB3Application.getInstance().API.getImageLoader());
+                holder.imageView.setImageUrl(actorImageUrl, MainApplication.getInstance().API.getImageLoader());
         } else {
-            holder.imageView.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+            holder.imageView.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
         }
 
         return convertView;

@@ -3,7 +3,6 @@ package com.mb.android;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 
 import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.main.ConnectionActivity;
@@ -45,8 +44,8 @@ public class SubtitleDownloader extends AsyncTask<String, String, File> {
             mConnection.setReadTimeout(300000);
             mConnection.addRequestProperty("Accept-Encoding", "gzip");
             mConnection.addRequestProperty("Cache-Control", "no-cache");
-            if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getAccessToken())) {
-                mConnection.addRequestProperty("X-MediaBrowser-Token", MB3Application.getInstance().API.getAccessToken());
+            if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getAccessToken())) {
+                mConnection.addRequestProperty("X-MediaBrowser-Token", MainApplication.getInstance().API.getAccessToken());
             }
             String header = getAuthorizationParameter();
             if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(header)) {
@@ -129,13 +128,13 @@ public class SubtitleDownloader extends AsyncTask<String, String, File> {
 
         if (responseCode == 401) {
             // Token has been revoked.
-            MB3Application.getInstance().API.SetAuthenticationInfo(null, null);
+            MainApplication.getInstance().API.SetAuthenticationInfo(null, null);
 
-            Intent intent = new Intent(MB3Application.getInstance(), ConnectionActivity.class);
+            Intent intent = new Intent(MainApplication.getInstance(), ConnectionActivity.class);
             intent.putExtra("ShowUserList", true);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            MB3Application.getInstance().startActivity(intent);
+            MainApplication.getInstance().startActivity(intent);
 
             return false;
         }
@@ -145,17 +144,17 @@ public class SubtitleDownloader extends AsyncTask<String, String, File> {
 
     private final String getAuthorizationParameter()
     {
-        if (tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getClientName()) && tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getDeviceId()) && tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getDeviceName()))
+        if (tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getClientName()) && tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getDeviceId()) && tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getDeviceName()))
         {
             return "";
         }
 
         //C# TO JAVA CONVERTER TODO TASK: There is no equivalent to implicit typing in Java:
-        String header = String.format("Client=\"%1$s\", DeviceId=\"%2$s\", Device=\"%3$s\", Version=\"%4$s\"", MB3Application.getInstance().API.getClientName(), MB3Application.getInstance().API.getDeviceId(), MB3Application.getInstance().API.getDeviceName(), MB3Application.getInstance().API.getApplicationVersion());
+        String header = String.format("Client=\"%1$s\", DeviceId=\"%2$s\", Device=\"%3$s\", Version=\"%4$s\"", MainApplication.getInstance().API.getClientName(), MainApplication.getInstance().API.getDeviceId(), MainApplication.getInstance().API.getDeviceName(), MainApplication.getInstance().API.getApplicationVersion());
 
-        if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getCurrentUserId()))
+        if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getCurrentUserId()))
         {
-            header += String.format(", UserId=\"%1$s\"", MB3Application.getInstance().API.getCurrentUserId());
+            header += String.format(", UserId=\"%1$s\"", MainApplication.getInstance().API.getCurrentUserId());
         }
 
         return header;

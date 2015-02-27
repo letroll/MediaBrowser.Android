@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
@@ -56,11 +56,11 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (MB3Application.getInstance().API == null) {
+        if (MainApplication.getInstance().API == null) {
             Thread thread = new Thread() {
                 @Override
                 public void run() {
-                    MB3Application.getInstance().getConnectionManager().Connect(connectionResult);
+                    MainApplication.getInstance().getConnectionManager().Connect(connectionResult);
                 }
             };
             thread.start();
@@ -70,7 +70,7 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
     @Override
     public void onResume() {
         super.onResume();
-        MB3Application.getInstance().setCurrentActivity(this);
+        MainApplication.getInstance().setCurrentActivity(this);
         if (Build.VERSION.SDK_INT >= 16) {
             View decorView = getWindow().getDecorView();
             int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
@@ -97,7 +97,7 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
             if (data != null) {
                 AppLogger.getLogger().Debug("onActivityResult with data");
                 String jsonData = data.getStringExtra("UserData");
-                UserItemDataDto userData = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, UserItemDataDto.class);
+                UserItemDataDto userData = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, UserItemDataDto.class);
                 onUserDataUpdated(data.getStringExtra("Id"), userData);
             } else {
                 AppLogger.getLogger().Debug("onActivityResult without data");
@@ -155,7 +155,7 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
             intent = new Intent(this, MediaDetailsActivity.class);
         }
 
-        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(item);
+        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(item);
         intent.putExtra("CurrentBaseItemDTO", jsonData);
         intent.putExtra("CollectionType", collectionType);
 
@@ -165,9 +165,9 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
 
     public void navigate(BaseItemPerson item, String collectionType) {
 
-        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(item);
+        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(item);
 
-        Intent intent = new Intent(MB3Application.getInstance(), ActorDetailsActivity.class);
+        Intent intent = new Intent(MainApplication.getInstance(), ActorDetailsActivity.class);
         intent.putExtra("CurrentBaseItemDTO", jsonData);
         intent.putExtra("CollectionType", collectionType);
         startActivity(intent);
@@ -175,7 +175,7 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
 
     protected void navigate(RecordingInfoDto item) {
         if (item != null) {
-            MB3Application.getInstance().API.GetItemAsync(item.getId(), MB3Application.getInstance().API.getCurrentUserId(), new Response<BaseItemDto>() {
+            MainApplication.getInstance().API.GetItemAsync(item.getId(), MainApplication.getInstance().API.getCurrentUserId(), new Response<BaseItemDto>() {
                 @Override
                 public void onResponse(BaseItemDto itemDto) {
                     if (itemDto != null) {
@@ -212,9 +212,9 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
                 // A server was found and the user has been signed in using previously saved credentials.
                 // Ready to browse using result.ApiClient
                 AppLogger.getLogger().Info("**** SIGNED IN ****");
-                MB3Application.getInstance().API = (AndroidApiClient)result.getApiClient();
-                MB3Application.getInstance().user = new UserDto();
-                MB3Application.getInstance().user.setId(MB3Application.getInstance().API.getCurrentUserId());
+                MainApplication.getInstance().API = (AndroidApiClient)result.getApiClient();
+                MainApplication.getInstance().user = new UserDto();
+                MainApplication.getInstance().user.setId(MainApplication.getInstance().API.getCurrentUserId());
                 onConnectionRestored();
             } else {
                 returnToConnectionActivity();
@@ -230,7 +230,7 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
 
     private void returnToConnectionActivity() {
         AppLogger.getLogger().Info("Failed to recover session after crash");
-        Intent intent = new Intent(MB3Application.getInstance(), ConnectionActivity.class);
+        Intent intent = new Intent(MainApplication.getInstance(), ConnectionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         this.finish();
@@ -261,9 +261,9 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
 
 
     private void clearReferences(){
-        IWebsocketEventListener currActivity = MB3Application.getInstance().getCurrentActivity();
+        IWebsocketEventListener currActivity = MainApplication.getInstance().getCurrentActivity();
         if (currActivity != null && currActivity.equals(this))
-            MB3Application.getInstance().setCurrentActivity(null);
+            MainApplication.getInstance().setCurrentActivity(null);
     }
 
 
@@ -302,12 +302,12 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
     public void onRemotePlayRequest(PlayRequest request, String mediaType) {
 
         if ("audio".equalsIgnoreCase(mediaType)) {
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
             Intent intent = new Intent(this, AudioPlayer.class);
             startActivity(intent);
         } else if ("video".equalsIgnoreCase(mediaType)) {
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
             Intent intent = new Intent(this, VideoPlayer.class);
             startActivity(intent);
@@ -318,7 +318,7 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
         for (String id : itemIds) {
             PlaylistItem item = new PlaylistItem();
             item.Id = id;
-            MB3Application.getInstance().PlayerQueue.PlaylistItems.add(item);
+            MainApplication.getInstance().PlayerQueue.PlaylistItems.add(item);
         }
     }
 
@@ -369,13 +369,13 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
     private MediaPlayer mShutterMediaPlayer = null;
 
     private void playShutterSound() {
-        AudioManager audioManager = (AudioManager) MB3Application.getInstance().getSystemService(Context.AUDIO_SERVICE);
+        AudioManager audioManager = (AudioManager) MainApplication.getInstance().getSystemService(Context.AUDIO_SERVICE);
         int volume = audioManager.getStreamVolume( AudioManager.STREAM_NOTIFICATION);
 
         if (volume != 0)
         {
             if (mShutterMediaPlayer == null)
-                mShutterMediaPlayer = MediaPlayer.create(MB3Application.getInstance(), Uri.parse("file:///system/media/audio/ui/camera_click.ogg"));
+                mShutterMediaPlayer = MediaPlayer.create(MainApplication.getInstance(), Uri.parse("file:///system/media/audio/ui/camera_click.ogg"));
             if (mShutterMediaPlayer != null)
                 mShutterMediaPlayer.start();
         }
@@ -383,7 +383,7 @@ public abstract class MbBaseActivity extends FragmentActivity implements IWebsoc
 
     private void browseToVideoDetails(BaseItemDto item) {
 
-        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(item);
+        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(item);
 
         Intent intent = new Intent(this, MediaDetailsActivity.class);
         intent.putExtra("CurrentBaseItemDTO", jsonData);

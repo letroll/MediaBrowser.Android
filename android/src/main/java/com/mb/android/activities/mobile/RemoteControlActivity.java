@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.media.MediaRouter;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -23,7 +22,7 @@ import com.mb.android.playbackmediator.cast.callbacks.VideoCastConsumerImpl;
 import com.mb.android.playbackmediator.cast.exceptions.CastException;
 import com.mb.android.playbackmediator.cast.exceptions.NoConnectionException;
 import com.mb.android.playbackmediator.cast.exceptions.TransientNetworkDisconnectionException;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.fragments.NavigationMenuFragment;
 import com.mb.android.ui.mobile.homescreen.HomescreenActivity;
@@ -334,8 +333,8 @@ public class RemoteControlActivity extends BaseMbMobileActivity {
 //            options.setMaxWidth(maxWidth);
             options.setHeight(maxHeight);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(itemInfo.getPrimaryImageItemId(), options);
-            primaryImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(itemInfo.getPrimaryImageItemId(), options);
+            primaryImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         }
 
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(itemInfo.getBackdropItemId())) {
@@ -345,11 +344,11 @@ public class RemoteControlActivity extends BaseMbMobileActivity {
             options.setMaxHeight(getScreenHeight());
             options.setQuality(80);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(itemInfo.getBackdropItemId(), options);
-            backdrop.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(itemInfo.getBackdropItemId(), options);
+            backdrop.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         }
 
-        remoteDevice.setText(MB3Application.getInstance().getResources()
+        remoteDevice.setText(MainApplication.getInstance().getResources()
                 .getString(R.string.casting_to_device, mCastManager.getDeviceName()));
 
     }
@@ -471,7 +470,7 @@ public class RemoteControlActivity extends BaseMbMobileActivity {
         public void onClick(View v) {
 
             try {
-                mCastManager.incrementVolume(-MB3Application.VOLUME_INCREMENT);
+                mCastManager.incrementVolume(-MainApplication.VOLUME_INCREMENT);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -504,7 +503,7 @@ public class RemoteControlActivity extends BaseMbMobileActivity {
         public void onClick(View v) {
 
             try {
-                mCastManager.incrementVolume(MB3Application.VOLUME_INCREMENT);
+                mCastManager.incrementVolume(MainApplication.VOLUME_INCREMENT);
             } catch (CastException | NoConnectionException | TransientNetworkDisconnectionException e) {
                 e.printStackTrace();
             }
@@ -620,7 +619,7 @@ public class RemoteControlActivity extends BaseMbMobileActivity {
 
         if (null == routeInfo) return;
 
-        if (routeInfo.supportsControlCategory(CastMediaControlIntent.categoryForCast(MB3Application.getApplicationId()))) {
+        if (routeInfo.supportsControlCategory(CastMediaControlIntent.categoryForCast(MainApplication.getApplicationId()))) {
             // Show chromecast specific controls
 
         } else {

@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.person.ActorBioActivity;
@@ -49,7 +48,7 @@ public class MediaActorsFragment extends Fragment {
 
         Bundle args = getArguments();
         String jsonData = args.getString("Item");
-        mItem = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
+        mItem = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
 
         return view;
     }
@@ -66,8 +65,8 @@ public class MediaActorsFragment extends Fragment {
                 } else {
                     if (mItem.getSeriesId() != null) {
                         AppLogger.getLogger().Info("", "Requesting Series: " + mItem.getSeriesId());
-                        MB3Application.getInstance().API.GetItemAsync(mItem.getSeriesId(),
-                                MB3Application.getInstance().API.getCurrentUserId(),
+                        MainApplication.getInstance().API.GetItemAsync(mItem.getSeriesId(),
+                                MainApplication.getInstance().API.getCurrentUserId(),
                                 getSeriesItemResponse);
                     }
                 }
@@ -90,7 +89,7 @@ public class MediaActorsFragment extends Fragment {
 
     private void populateActors(BaseItemPerson[] people) {
 
-        mCastList.setAdapter(new ActorAdapter(people, mMediaDetailsActivity, MB3Application.getInstance().API));
+        mCastList.setAdapter(new ActorAdapter(people, mMediaDetailsActivity, MainApplication.getInstance().API));
         mCastList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {

@@ -22,11 +22,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.mb.android.MainApplication;
 import com.mb.android.activities.BaseMbMobileActivity;
 import mediabrowser.apiinteraction.Response;
 
 import com.mb.android.playbackmediator.widgets.MiniController;
-import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.fragments.NavigationMenuFragment;
 import mediabrowser.model.dto.BaseItemDto;
@@ -87,7 +87,7 @@ public class RottenTomatoesActivity extends BaseMbMobileActivity {
         drawer.setDrawerListener(mDrawerToggle);
 
         String jsonData = getMb3Intent().getStringExtra("Item");
-        mItem = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
+        mItem = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
 
         TextView movieTitle = (TextView) findViewById(R.id.tvRTMovieTitle);
 
@@ -184,15 +184,15 @@ public class RottenTomatoesActivity extends BaseMbMobileActivity {
                 backdropOptions.setMaxWidth(getScreenWidth() / 2);
                 backdropOptions.setMaxHeight(getScreenHeight() / 2);
 
-                String backdropImageUrl = MB3Application.getInstance().API.GetImageUrl(mItem, backdropOptions);
-                mBackdropImage.setImageUrl(backdropImageUrl, MB3Application.getInstance().API.getImageLoader());
+                String backdropImageUrl = MainApplication.getInstance().API.GetImageUrl(mItem, backdropOptions);
+                mBackdropImage.setImageUrl(backdropImageUrl, MainApplication.getInstance().API.getImageLoader());
 
                 ImageView mImageOverlay = (ImageView) findViewById(R.id.ivDetailsOverlay);
                 mImageOverlay.setAlpha(0.8f);
 
             }
 
-            MB3Application.getInstance().API.GetCriticReviews(mItem.getId(), 0, 25, new GetCriticReviewsResponse());
+            MainApplication.getInstance().API.GetCriticReviews(mItem.getId(), 0, 25, new GetCriticReviewsResponse());
 
             NetworkImageView movieImage = (NetworkImageView) findViewById(R.id.ivRtMovieImage);
             movieImage.setDefaultImageResId(R.drawable.default_video_portrait);
@@ -204,13 +204,13 @@ public class RottenTomatoesActivity extends BaseMbMobileActivity {
                 options.setImageIndex(0);
                 options.setMaxHeight((int) (240 * getScreenDensity()));
                 options.setEnableImageEnhancers(PreferenceManager
-                        .getDefaultSharedPreferences(MB3Application.getInstance())
+                        .getDefaultSharedPreferences(MainApplication.getInstance())
                         .getBoolean("pref_enable_image_enhancers", true));
 
-                String imageUrl = MB3Application.getInstance().API.GetImageUrl(mItem, options);
-                movieImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                String imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem, options);
+                movieImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             } else {
-                movieImage.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+                movieImage.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
             }
         }
     }

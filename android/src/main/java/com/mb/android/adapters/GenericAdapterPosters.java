@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.ApiClient;
 import com.mb.android.logging.AppLogger;
@@ -38,12 +38,12 @@ public class GenericAdapterPosters extends AbstractMediaAdapter {
 
     public GenericAdapterPosters(List<BaseItemDto> baseItems, int columns, Context context, Integer defaultImageResId) {
         super(baseItems);
-        mApi = MB3Application.getInstance().API;
+        mApi = MainApplication.getInstance().API;
         mDefaultImageResId = defaultImageResId;
         try {
             li = LayoutInflater.from(context);
 
-            DisplayMetrics dm = MB3Application.getInstance().getResources().getDisplayMetrics();
+            DisplayMetrics dm = MainApplication.getInstance().getResources().getDisplayMetrics();
 
             mImageWidth = (int)((float)dm.widthPixels - (columns * (int)(18 * dm.density))) / columns;
 
@@ -180,11 +180,11 @@ public class GenericAdapterPosters extends AbstractMediaAdapter {
             options.setEnableImageEnhancers(imageEnhancersEnabled);
             imageUrl = mApi.GetImageUrl(mBaseItems.get(position).getParentThumbItemId(), options);
         } else if (mDefaultImageResId != null) {
-            holder.imageView.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+            holder.imageView.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
         }
 
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(imageUrl)) {
-            holder.imageView.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            holder.imageView.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         }
 
         // Process top-right overlays

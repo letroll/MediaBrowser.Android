@@ -20,8 +20,7 @@ import android.content.Context;
 import android.support.v7.media.MediaRouter;
 
 import com.google.android.gms.cast.CastDevice;
-import com.mb.android.MB3Application;
-import com.mb.android.mediaroute.MediaBrowserRouteProvider;
+import com.mb.android.MainApplication;
 import com.mb.android.playbackmediator.utils.LogUtils;
 import com.mb.android.playbackmediator.utils.Utils;
 
@@ -66,14 +65,14 @@ public class CastMediaRouterCallback extends MediaRouter.Callback {
             BaseCastManager.getCastManager().setDevice(info);
             LOGD(TAG, "onResult: mSelectedDevice=" + info.getName());
         }
-        MB3Application.getCastManager(MB3Application.getInstance()).startPulseCheck();
+        MainApplication.getCastManager(MainApplication.getInstance()).startPulseCheck();
     }
 
     @Override
     public void onRouteUnselected(MediaRouter router, MediaRouter.RouteInfo route) {
         LOGD(TAG, "onRouteUnselected: route=" + route);
         selectDeviceInterface.onDeviceSelected(null);
-        MB3Application.getCastManager(MB3Application.getInstance()).terminateMb3Session();
+        MainApplication.getCastManager(MainApplication.getInstance()).terminateMb3Session();
     }
 
     @Override

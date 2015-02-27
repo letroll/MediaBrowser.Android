@@ -11,7 +11,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.ProgramDetailsActivity;
 import com.mb.android.adapters.ScheduledRecordingsAdapter;
@@ -57,7 +57,7 @@ public class ScheduledFragment extends Fragment {
         super.onResume();
 
         mActivityIndicator.setVisibility(View.VISIBLE);
-        MB3Application.getInstance().API.GetLiveTvTimersAsync(new TimerQuery(), new GetTimersResponse());
+        MainApplication.getInstance().API.GetLiveTvTimersAsync(new TimerQuery(), new GetTimersResponse());
     }
 
     private class GetTimersResponse extends Response<TimerInfoDtoResult> {
@@ -73,7 +73,7 @@ public class ScheduledFragment extends Fragment {
             }
 
             if (result.getItems() == null || result.getItems().length == 0) {
-                mErrorText.setText(MB3Application.getInstance().getResources().getString(R.string.no_scheduled_recordings));
+                mErrorText.setText(MainApplication.getInstance().getResources().getString(R.string.no_scheduled_recordings));
                 mErrorText.setVisibility(View.VISIBLE);
                 if (mScheduledItems.getAdapter() != null) {
                     mScheduledItems.setAdapter(null);
@@ -111,8 +111,8 @@ public class ScheduledFragment extends Fragment {
 
                         if (listings.get(i) instanceof ListingData) {
 
-                            String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(((ListingData) listings.get(i)).timerInfoDto);
-                            Intent intent = new Intent(MB3Application.getInstance(), ProgramDetailsActivity.class);
+                            String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(((ListingData) listings.get(i)).timerInfoDto);
+                            Intent intent = new Intent(MainApplication.getInstance(), ProgramDetailsActivity.class);
                             intent.putExtra("timer", jsonData);
 
                             startActivity(intent);

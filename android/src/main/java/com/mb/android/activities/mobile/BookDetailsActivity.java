@@ -14,7 +14,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,10 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.mb.android.MainApplication;
 import com.mb.android.activities.BaseMbMobileActivity;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.playbackmediator.widgets.MiniController;
-import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.fragments.NavigationMenuFragment;
 import com.mb.android.utils.Utils;
@@ -94,7 +93,7 @@ public class BookDetailsActivity extends BaseMbMobileActivity {
 
 
         String jsonData = getMb3Intent().getStringExtra("Item");
-        mItem = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
+        mItem = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
 
         mMini = (MiniController) findViewById(R.id.miniController1);
         mCastManager.addMiniController(mMini);
@@ -181,9 +180,9 @@ public class BookDetailsActivity extends BaseMbMobileActivity {
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.favorite_action_bar_button))) {
 
-            MB3Application.getInstance().API.UpdateFavoriteStatusAsync(
+            MainApplication.getInstance().API.UpdateFavoriteStatusAsync(
                     mItem.getId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     true,
                     new UpdateFavoriteResponse()
             );
@@ -193,9 +192,9 @@ public class BookDetailsActivity extends BaseMbMobileActivity {
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.un_favorite_action_bar_button))) {
 
-            MB3Application.getInstance().API.UpdateFavoriteStatusAsync(
+            MainApplication.getInstance().API.UpdateFavoriteStatusAsync(
                     mItem.getId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     false,
                     new UpdateFavoriteResponse()
             );
@@ -232,10 +231,10 @@ public class BookDetailsActivity extends BaseMbMobileActivity {
 
     private void getInitialItem() {
         if (isFresh) {
-            if (mItem != null && MB3Application.getInstance().API.getCurrentUserId() != null) {
-                MB3Application.getInstance().API.GetItemAsync(
+            if (mItem != null && MainApplication.getInstance().API.getCurrentUserId() != null) {
+                MainApplication.getInstance().API.GetItemAsync(
                         mItem.getId(),
-                        MB3Application.getInstance().API.getCurrentUserId(),
+                        MainApplication.getInstance().API.getCurrentUserId(),
                         getItemResponse);
             }
             isFresh = false;
@@ -254,9 +253,9 @@ public class BookDetailsActivity extends BaseMbMobileActivity {
     // getAuthorizationScheme() and getAuthorizationParameter()
     private DownloadManager.Request buildDownloadRequest(String id, String fileName) {
 
-        String url = MB3Application.getInstance().API.getApiUrl() + "/items/" + id + "/File";
+        String url = MainApplication.getInstance().API.getApiUrl() + "/items/" + id + "/File";
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
-        request.addRequestHeader("X-MediaBrowser-Token", MB3Application.getInstance().API.getAccessToken());
+        request.addRequestHeader("X-MediaBrowser-Token", MainApplication.getInstance().API.getAccessToken());
         request.addRequestHeader("Authorization", getAuthorizationScheme() + " " + getAuthorizationParameter());
         request.setDescription("e-book download");
         request.setTitle(fileName);
@@ -380,13 +379,13 @@ public class BookDetailsActivity extends BaseMbMobileActivity {
                     options.setImageType(ImageType.Primary);
                     options.setHeight((int) (250 * getScreenDensity()));
                     options.setEnableImageEnhancers(PreferenceManager
-                            .getDefaultSharedPreferences(MB3Application.getInstance())
+                            .getDefaultSharedPreferences(MainApplication.getInstance())
                             .getBoolean("pref_enable_image_enhancers", true));
 
-                    String bookCoverImageUrl = MB3Application.getInstance().API.GetImageUrl(item, options);
-                    bookCover.setImageUrl(bookCoverImageUrl, MB3Application.getInstance().API.getImageLoader());
+                    String bookCoverImageUrl = MainApplication.getInstance().API.GetImageUrl(item, options);
+                    bookCover.setImageUrl(bookCoverImageUrl, MainApplication.getInstance().API.getImageLoader());
                 } else {
-                    bookCover.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+                    bookCover.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
                 }
 
                 if (item.getBackdropCount() > 0) {
@@ -394,17 +393,17 @@ public class BookDetailsActivity extends BaseMbMobileActivity {
                     options.setMaxWidth(getScreenWidth());
                     options.setMaxHeight(null);
 
-                    String bookBackgroundUrl = MB3Application.getInstance().API.GetImageUrl(item, options);
-                    bookBackground.setImageUrl(bookBackgroundUrl, MB3Application.getInstance().API.getImageLoader());
+                    String bookBackgroundUrl = MainApplication.getInstance().API.GetImageUrl(item, options);
+                    bookBackground.setImageUrl(bookBackgroundUrl, MainApplication.getInstance().API.getImageLoader());
                 } else if (item.getParentBackdropItemId() != null) {
                     options.setImageType(ImageType.Backdrop);
                     options.setMaxWidth(getScreenWidth());
                     options.setMaxHeight(null);
 
-                    String bookBackgroundUrl = MB3Application.getInstance().API.GetImageUrl(item.getParentId(), options);
-                    bookBackground.setImageUrl(bookBackgroundUrl, MB3Application.getInstance().API.getImageLoader());
+                    String bookBackgroundUrl = MainApplication.getInstance().API.GetImageUrl(item.getParentId(), options);
+                    bookBackground.setImageUrl(bookBackgroundUrl, MainApplication.getInstance().API.getImageLoader());
                 } else {
-                    bookBackground.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+                    bookBackground.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
                 }
 
                 if (item.getPeople() != null && item.getPeople().length > 0) {
@@ -478,23 +477,23 @@ public class BookDetailsActivity extends BaseMbMobileActivity {
      */
     protected final String getAuthorizationParameter()
     {
-        if (tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getClientName())
-                && tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getDeviceId())
-                && tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getDeviceName()))
+        if (tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getClientName())
+                && tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getDeviceId())
+                && tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getDeviceName()))
         {
             return "";
         }
 
         String header = String.format("Client=\"%1$s\", DeviceId=\"%2$s\", Device=\"%3$s\", Version=\"%4$s\"",
-                MB3Application.getInstance().API.getClientName(),
-                MB3Application.getInstance().API.getDeviceId(),
-                MB3Application.getInstance().API.getDeviceName(),
-                MB3Application.getInstance().API.getApplicationVersion()
+                MainApplication.getInstance().API.getClientName(),
+                MainApplication.getInstance().API.getDeviceId(),
+                MainApplication.getInstance().API.getDeviceName(),
+                MainApplication.getInstance().API.getApplicationVersion()
         );
 
-        if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getCurrentUserId()))
+        if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getCurrentUserId()))
         {
-            header += String.format(", UserId=\"%1$s\"", MB3Application.getInstance().API.getCurrentUserId());
+            header += String.format(", UserId=\"%1$s\"", MainApplication.getInstance().API.getCurrentUserId());
         }
 
         return header;

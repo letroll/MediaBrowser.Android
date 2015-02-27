@@ -10,18 +10,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.mb.android.MainApplication;
 import com.mb.android.activities.BaseMbMobileActivity;
 import com.mb.android.activities.mobile.RemoteControlActivity;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.playbackmediator.cast.exceptions.NoConnectionException;
 import com.mb.android.playbackmediator.cast.exceptions.TransientNetworkDisconnectionException;
 import com.mb.android.playbackmediator.widgets.MiniController;
-import com.mb.android.MB3Application;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import com.mb.android.fragments.NavigationMenuFragment;
@@ -228,28 +227,28 @@ public class ArtistActivity extends BaseMbMobileActivity {
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.favorite_action_bar_button))) {
 
-            MB3Application.getInstance().API.UpdateFavoriteStatusAsync(mArtist.getId(), MB3Application.getInstance().API.getCurrentUserId(), true, new UpdateFavoriteResponse());
+            MainApplication.getInstance().API.UpdateFavoriteStatusAsync(mArtist.getId(), MainApplication.getInstance().API.getCurrentUserId(), true, new UpdateFavoriteResponse());
 
         /*
         Remove Favorite
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.un_favorite_action_bar_button))) {
 
-            MB3Application.getInstance().API.UpdateFavoriteStatusAsync(mArtist.getId(), MB3Application.getInstance().API.getCurrentUserId(), false, new UpdateFavoriteResponse());
+            MainApplication.getInstance().API.UpdateFavoriteStatusAsync(mArtist.getId(), MainApplication.getInstance().API.getCurrentUserId(), false, new UpdateFavoriteResponse());
 
         /*
         Set Played
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.played_action_bar_button))) {
 
-            MB3Application.getInstance().API.MarkPlayedAsync(mArtist.getId(), MB3Application.getInstance().API.getCurrentUserId(), null, new UpdatePlaystateResponse());
+            MainApplication.getInstance().API.MarkPlayedAsync(mArtist.getId(), MainApplication.getInstance().API.getCurrentUserId(), null, new UpdatePlaystateResponse());
 
         /*
         Remove Played
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.un_played_action_bar_button))) {
 
-            MB3Application.getInstance().API.MarkUnplayedAsync(mArtist.getId(), MB3Application.getInstance().API.getCurrentUserId(), new UpdatePlaystateResponse());
+            MainApplication.getInstance().API.MarkUnplayedAsync(mArtist.getId(), MainApplication.getInstance().API.getCurrentUserId(), new UpdatePlaystateResponse());
 
         } else {
             return super.onOptionsItemSelected(item);
@@ -260,7 +259,7 @@ public class ArtistActivity extends BaseMbMobileActivity {
 
     private void handlePlayOrShuffleRequest(boolean shuffleMedia) {
         ItemQuery query = new ItemQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setParentId(mArtist.getId());
         query.setSortBy(new String[]{ shuffleMedia ? ItemSortBy.Random : ItemSortBy.Album});
         query.setSortOrder(SortOrder.Ascending);
@@ -268,7 +267,7 @@ public class ArtistActivity extends BaseMbMobileActivity {
         query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.SortName, ItemFields.DateCreated});
         query.setRecursive(true);
 
-        MB3Application.getInstance().API.GetItemsAsync(query, playAllShuffleResponse);
+        MainApplication.getInstance().API.GetItemsAsync(query, playAllShuffleResponse);
     }
 
 
@@ -293,7 +292,7 @@ public class ArtistActivity extends BaseMbMobileActivity {
     private void buildUi() {
         if (mIsFresh) {
             if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(artistId)) {
-                MB3Application.getInstance().API.GetItemAsync(artistId, MB3Application.getInstance().API.getCurrentUserId(), getArtistResponse);
+                MainApplication.getInstance().API.GetItemAsync(artistId, MainApplication.getInstance().API.getCurrentUserId(), getArtistResponse);
             }
             mIsFresh = false;
         }
@@ -378,11 +377,11 @@ public class ArtistActivity extends BaseMbMobileActivity {
 
             if (response == null ) return;
 
-            AudioService.PlayerState currentState = MB3Application.getAudioService().getPlayerState();
+            AudioService.PlayerState currentState = MainApplication.getAudioService().getPlayerState();
             if (currentState.equals(AudioService.PlayerState.PLAYING) || currentState.equals(AudioService.PlayerState.PAUSED)) {
-                MB3Application.getAudioService().stopMedia();
+                MainApplication.getAudioService().stopMedia();
             }
-            MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+            MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
 
             if (mCastManager.isConnected()) {
                 mCastManager.playItem(mArtist, PlayCommand.PlayNow, 0L);
@@ -403,7 +402,7 @@ public class ArtistActivity extends BaseMbMobileActivity {
                     playableItem.Type = song.getType();
                     playableItem.Runtime = song.getRunTimeTicks();
 
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
                 }
 
                 Intent intent = new Intent(ArtistActivity.this, AudioPlaybackActivity.class);

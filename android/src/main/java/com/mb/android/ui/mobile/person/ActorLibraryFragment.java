@@ -6,14 +6,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.MediaDetailsActivity;
 import com.mb.android.adapters.MediaAdapterBackdrops;
@@ -27,8 +26,6 @@ import mediabrowser.model.querying.ItemFields;
 import mediabrowser.model.querying.ItemSortBy;
 import mediabrowser.model.entities.SortOrder;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Arrays;
 
 /**
@@ -87,14 +84,14 @@ public class ActorLibraryFragment extends Fragment {
 
         // Get all the media in the users library containing this person
         ItemQuery query = new ItemQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setSortBy(new String[]{ItemSortBy.PremiereDate});
         query.setSortOrder(SortOrder.Descending);
         query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio});
         query.setRecursive(true);
         query.setPerson(mActorName);
 
-        MB3Application.getInstance().API.GetItemsAsync(query, getItemsResponse);
+        MainApplication.getInstance().API.GetItemsAsync(query, getItemsResponse);
     }
 
     private Response<ItemsResult> getItemsResponse = new Response<ItemsResult>() {
@@ -106,17 +103,17 @@ public class ActorLibraryFragment extends Fragment {
                 if (mPostersEnabled)
                     mActorFilmography.setAdapter(new MediaAdapterPosters(
                             Arrays.asList(response.getItems()),
-                            MB3Application.getInstance().getResources().getInteger(R.integer.library_columns_poster),
-                            MB3Application.getInstance().API,
+                            MainApplication.getInstance().getResources().getInteger(R.integer.library_columns_poster),
+                            MainApplication.getInstance().API,
                             R.drawable.default_video_portrait)
                     );
                 else
-                    mActorFilmography.setAdapter(new MediaAdapterBackdrops(mActorBioActivity, Arrays.asList(response.getItems()), MB3Application.getInstance().API, R.drawable.default_video_landscape));
+                    mActorFilmography.setAdapter(new MediaAdapterBackdrops(mActorBioActivity, Arrays.asList(response.getItems()), MainApplication.getInstance().API, R.drawable.default_video_landscape));
 
                     mActorFilmography.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(response.getItems()[i]);
+                        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(response.getItems()[i]);
 
                         Intent intent = new Intent(mActorBioActivity, MediaDetailsActivity.class);
                         intent.putExtra("Item", jsonData);

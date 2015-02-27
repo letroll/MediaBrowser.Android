@@ -11,7 +11,7 @@ import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.Response;
@@ -71,10 +71,10 @@ public class FavoritesFragment extends Fragment implements ICommandListener {
     public void onResume() {
         super.onResume();
         AppLogger.getLogger().Info(TAG + "onResume");
-        if (MB3Application.getInstance().API != null
-                && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getCurrentUserId())) {
+        if (MainApplication.getInstance().API != null
+                && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getCurrentUserId())) {
             ItemQuery query = buildNewItemsQuery();
-            MB3Application.getInstance().API.GetItemsAsync(query, getFavoritesResponse);
+            MainApplication.getInstance().API.GetItemsAsync(query, getFavoritesResponse);
         }
         AppLogger.getLogger().Info(TAG + "finish onResume");
     }
@@ -87,7 +87,7 @@ public class FavoritesFragment extends Fragment implements ICommandListener {
 
     private ItemQuery buildNewItemsQuery() {
         ItemQuery query = new ItemQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setLimit(20);
         query.setRecursive(true);
         query.setSortBy(new String[]{ItemSortBy.DateCreated});
@@ -157,35 +157,35 @@ public class FavoritesFragment extends Fragment implements ICommandListener {
         @Override
         public void onItemClick(AdapterView<?> parent, View v, int index, long id) {
             // Favorites are going to be pretty much anything...
-            String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mItems[index]);
+            String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mItems[index]);
             Intent intent;
 
             if (mItems[index].getType().equalsIgnoreCase("series")) {
-                intent = new Intent(MB3Application.getInstance(), SeriesViewActivity.class);
+                intent = new Intent(MainApplication.getInstance(), SeriesViewActivity.class);
                 intent.putExtra("Item", jsonData);
             } else if (mItems[index].getType().equalsIgnoreCase("musicartist")) {
-                intent = new Intent(MB3Application.getInstance(), ArtistActivity.class);
+                intent = new Intent(MainApplication.getInstance(), ArtistActivity.class);
                 intent.putExtra("ArtistId", mItems[index].getId());
             } else if (mItems[index].getType().equalsIgnoreCase("musicalbum")) {
-                intent = new Intent(MB3Application.getInstance(), MusicAlbumActivity.class);
+                intent = new Intent(MainApplication.getInstance(), MusicAlbumActivity.class);
                 intent.putExtra("AlbumId", mItems[index].getId());
             } else if (mItems[index].getType().equalsIgnoreCase("audio")) {
-                MB3Application.getInstance().API.GetItemAsync(
+                MainApplication.getInstance().API.GetItemAsync(
                         mItems[index].getAlbumId(),
-                        MB3Application.getInstance().API.getCurrentUserId(),
+                        MainApplication.getInstance().API.getCurrentUserId(),
                         getAlbumResponse);
                 return;
             } else if (mItems[index].getType().equalsIgnoreCase("photo")) {
-                intent = new Intent(MB3Application.getInstance(), PhotoDetailsActivity.class);
+                intent = new Intent(MainApplication.getInstance(), PhotoDetailsActivity.class);
                 intent.putExtra("Item", jsonData);
             } else if (mItems[index].getType().equalsIgnoreCase("book")) {
-                intent = new Intent(MB3Application.getInstance(), BookDetailsActivity.class);
+                intent = new Intent(MainApplication.getInstance(), BookDetailsActivity.class);
                 intent.putExtra("Item", jsonData);
             } else if (mItems[index].getIsFolder()) {
-                intent = new Intent(MB3Application.getInstance(), LibraryPresentationActivity.class);
+                intent = new Intent(MainApplication.getInstance(), LibraryPresentationActivity.class);
                 intent.putExtra("Item", jsonData);
             } else {
-                intent = new Intent(MB3Application.getInstance(), MediaDetailsActivity.class);
+                intent = new Intent(MainApplication.getInstance(), MediaDetailsActivity.class);
                 intent.putExtra("Item", jsonData);
                 intent.putExtra("LaunchedFromHomeScreen", true);
             }
@@ -201,7 +201,7 @@ public class FavoritesFragment extends Fragment implements ICommandListener {
 
             if (item == null) return;
 
-            Intent intent = new Intent(MB3Application.getInstance(), MusicAlbumActivity.class);
+            Intent intent = new Intent(MainApplication.getInstance(), MusicAlbumActivity.class);
             intent.putExtra("AlbumId", item.getId());
 
             startActivity(intent);
@@ -257,10 +257,10 @@ public class FavoritesFragment extends Fragment implements ICommandListener {
         if (item.getType().equalsIgnoreCase("episode"))
             playableItem.SecondaryText = item.getSeriesName();
 
-        MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
-        MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
+        MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+        MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
 
-        Intent intent = new Intent(MB3Application.getInstance(), PlaybackActivity.class);
+        Intent intent = new Intent(MainApplication.getInstance(), PlaybackActivity.class);
         startActivity(intent);
     }
 }

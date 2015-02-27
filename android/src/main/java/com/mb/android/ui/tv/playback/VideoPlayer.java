@@ -10,7 +10,6 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,7 @@ import com.dolby.dap.DolbyAudioProcessing;
 import com.dolby.dap.OnDolbyAudioProcessingEventListener;
 import com.jess.ui.TwoWayAdapterView;
 import com.jess.ui.TwoWayGridView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
@@ -188,9 +187,9 @@ public class VideoPlayer extends FragmentActivity
 
         setOverscanValues();
 
-        if (MB3Application.getInstance().PlayerQueue == null
-                || MB3Application.getInstance().PlayerQueue.PlaylistItems == null
-                || MB3Application.getInstance().PlayerQueue.PlaylistItems.size() == 0) {
+        if (MainApplication.getInstance().PlayerQueue == null
+                || MainApplication.getInstance().PlayerQueue.PlaylistItems == null
+                || MainApplication.getInstance().PlayerQueue.PlaylistItems.size() == 0) {
             this.finish();
         }
 
@@ -206,7 +205,7 @@ public class VideoPlayer extends FragmentActivity
             AppLogger.getLogger().Debug("Dolby available!!!!!");
         }
 
-        playlistAdapter = new BaseSongAdapter(MB3Application.getInstance().PlayerQueue.PlaylistItems, this);
+        playlistAdapter = new BaseSongAdapter(MainApplication.getInstance().PlayerQueue.PlaylistItems, this);
         mPlaylist.setAdapter(playlistAdapter);
         mPlaylist.setOnItemClickListener(onPlaylistItemClick);
 
@@ -218,7 +217,7 @@ public class VideoPlayer extends FragmentActivity
         super.onResume();
         AppLogger.getLogger().Info(TAG, "onResume");
         AppLogger.getLogger().Info(TAG +": onResume");
-        MB3Application.getInstance().setCurrentActivity(this);
+        MainApplication.getInstance().setCurrentActivity(this);
 //        mVideoView.postDelayed(onEverySecond, 1000);
         hideSystemUi();
     }
@@ -251,7 +250,7 @@ public class VideoPlayer extends FragmentActivity
         clearReferences();
 
         if (mIsStreamingHls)
-            MB3Application.getInstance().API.StopTranscodingProcesses(MB3Application.getInstance().API.getDeviceId(), new EmptyResponse());
+            MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), new EmptyResponse());
 
         if (mSubtitleDisplayHandler != null) {
             mSubtitleDisplayHandler.removeCallbacks(processSubtitles);
@@ -278,7 +277,7 @@ public class VideoPlayer extends FragmentActivity
             mLoadingTitle.removeCallbacks(hidePlayerUiRunnable);
         }
 
-        MB3Application.getInstance().releaseDolbyAudioProcessing();
+        MainApplication.getInstance().releaseDolbyAudioProcessing();
 
         super.onDestroy();
     }
@@ -305,20 +304,20 @@ public class VideoPlayer extends FragmentActivity
     //******************************************************************************************************************
 
     private void getItemAtPosition(int position) {
-        if ("recording".equalsIgnoreCase(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
-            MB3Application.getInstance().API.GetLiveTvRecordingAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(position).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+        if ("recording".equalsIgnoreCase(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
+            MainApplication.getInstance().API.GetLiveTvRecordingAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(position).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     new RecordingResponse(this));
-        } else if ("tvchannel".equalsIgnoreCase(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
-            MB3Application.getInstance().API.GetLiveTvChannelAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(position).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+        } else if ("tvchannel".equalsIgnoreCase(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Type)) {
+            MainApplication.getInstance().API.GetLiveTvChannelAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(position).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     new TvChannelResponse(this));
         } else {
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(position).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(position).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     new BaseItemResponse(this));
         }
     }
@@ -442,7 +441,7 @@ public class VideoPlayer extends FragmentActivity
         mPlayerPositionOffsetMs = 0;
         mTruePlayerPositionMs = 0;
 
-        boolean resume = mCurrentlyPlayingIndex == 0 && MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks != null && MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks > 0L;
+        boolean resume = mCurrentlyPlayingIndex == 0 && MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks != null && MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks > 0L;
 
         mIsDirectStreaming = false;
         mIsStreamingHls = false;
@@ -450,10 +449,10 @@ public class VideoPlayer extends FragmentActivity
         mStreamInfo = PlayerHelpers.buildStreamInfoVideo(
                 itemId,
                 mediaSources,
-                resume ? MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks : 0L,
+                resume ? MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks : 0L,
                 null,
-                mCurrentlyPlayingIndex == 0 ? MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).AudioStreamIndex : null,
-                mCurrentlyPlayingIndex == 0 ? MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).SubtitleStreamIndex : null
+                mCurrentlyPlayingIndex == 0 ? MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).AudioStreamIndex : null,
+                mCurrentlyPlayingIndex == 0 ? MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).SubtitleStreamIndex : null
         );
 
         if (mStreamInfo != null) {
@@ -465,7 +464,7 @@ public class VideoPlayer extends FragmentActivity
                 if (mIsStreamingHls) {
                     performInitialResumeSeek = true;
                 } else {
-                    mPlayerPositionOffsetMs = (int)(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks / 10000);
+                    mPlayerPositionOffsetMs = (int)(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks / 10000);
                 }
             }
         }
@@ -492,10 +491,10 @@ public class VideoPlayer extends FragmentActivity
                 options = new ImageOptions();
                 options.setImageType(ImageType.Backdrop);
 
-                String imageUrl = MB3Application.getInstance().API.GetImageUrl(item.getParentBackdropItemId(), options);
-                mSplashScreen.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                String imageUrl = MainApplication.getInstance().API.GetImageUrl(item.getParentBackdropItemId(), options);
+                mSplashScreen.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             } else {
-                mSplashScreen.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+                mSplashScreen.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
             }
 
             if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(item.getSeriesName())) {
@@ -510,12 +509,12 @@ public class VideoPlayer extends FragmentActivity
             options.setImageType(ImageType.Backdrop);
             options.setWidth(getResources().getDisplayMetrics().widthPixels);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(item, options);
-            mSplashScreen.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(item, options);
+            mSplashScreen.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
 
             mLoadingTitle.setText(item.getName());
         } else {
-            mSplashScreen.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+            mSplashScreen.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
         }
 
         mLoadingTitle.setVisibility(View.VISIBLE);
@@ -838,7 +837,7 @@ public class VideoPlayer extends FragmentActivity
         @Override
         public void onItemClick(TwoWayAdapterView<?> parent, View view, int position, long id) {
             try {
-                MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).startPositionTicks = (long)mTruePlayerPositionMs * 10000;
+                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).startPositionTicks = (long)mTruePlayerPositionMs * 10000;
                 MediaStream stream = (MediaStream) parent.getItemAtPosition(position);
                 if (stream == null) return;
 
@@ -867,7 +866,7 @@ public class VideoPlayer extends FragmentActivity
                     if (mIsStreamingHls) {
                         performInitialResumeSeek = true;
                     } else {
-                        mPlayerPositionOffsetMs = (int)(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks / 10000);
+                        mPlayerPositionOffsetMs = (int)(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks / 10000);
                     }
                 }
 
@@ -883,7 +882,7 @@ public class VideoPlayer extends FragmentActivity
     AdapterView.OnItemClickListener onPlaylistItemClick = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (MB3Application.getInstance().PlayerQueue.PlaylistItems.size() <= position) {
+            if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() <= position) {
                 AppLogger.getLogger().Debug("Invalid playlist index");
                 return;
             }
@@ -893,8 +892,8 @@ public class VideoPlayer extends FragmentActivity
             }
             mCurrentlyPlayingIndex = position;
             if (mIsStreamingHls) {
-                MB3Application.getInstance().API.StopTranscodingProcesses(
-                        MB3Application.getInstance().API.getDeviceId(), new EmptyResponse() {
+                MainApplication.getInstance().API.StopTranscodingProcesses(
+                        MainApplication.getInstance().API.getDeviceId(), new EmptyResponse() {
                     @Override
                     public void onResponse() {
                         getItemAtPosition(mCurrentlyPlayingIndex);
@@ -948,7 +947,7 @@ public class VideoPlayer extends FragmentActivity
         mLastProgressReport = SystemClock.elapsedRealtime();
         mVideoView.post(onEverySecond);
         PlayerHelpers.downloadSubtitles(mStreamInfo, subtitleResponse);
-        if (MB3Application.getInstance().PlayerQueue != null && MB3Application.getInstance().PlayerQueue.PlaylistItems.size() == 1) {
+        if (MainApplication.getInstance().PlayerQueue != null && MainApplication.getInstance().PlayerQueue.PlaylistItems.size() == 1) {
             setResult(RESULT_OK);
         }
     }
@@ -970,9 +969,9 @@ public class VideoPlayer extends FragmentActivity
     }
 
     private boolean noMoreItemsToPlay() {
-        return MB3Application.getInstance().PlayerQueue == null
-                || MB3Application.getInstance().PlayerQueue.PlaylistItems == null
-                || MB3Application.getInstance().PlayerQueue.PlaylistItems.size() <= mCurrentlyPlayingIndex;
+        return MainApplication.getInstance().PlayerQueue == null
+                || MainApplication.getInstance().PlayerQueue.PlaylistItems == null
+                || MainApplication.getInstance().PlayerQueue.PlaylistItems.size() <= mCurrentlyPlayingIndex;
     }
 
     //******************************************************************************************************************
@@ -1003,7 +1002,7 @@ public class VideoPlayer extends FragmentActivity
 
     private void loadStreamInfoIntoPlayer() {
         if (mVideoView != null) {
-            loadUrlIntoPlayer(mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken()));
+            loadUrlIntoPlayer(mStreamInfo.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken()));
         }
     }
 
@@ -1031,7 +1030,7 @@ public class VideoPlayer extends FragmentActivity
 
             if (mVideoView.getCurrentPosition() > 0 && performInitialResumeSeek) {
                 performInitialResumeSeek = false;
-                mVideoView.seekTo((int)(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).startPositionTicks / 10000));
+                mVideoView.seekTo((int)(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).startPositionTicks / 10000));
             }
 
             // Report current position to the server only every 5 seconds.
@@ -1049,7 +1048,7 @@ public class VideoPlayer extends FragmentActivity
                     // TODO fix session info
 //                    MB3Application.getInstance().API.GetCurrentSessionAsync(getCurrentSessionResponse);
                     SessionQuery query = new SessionQuery();
-                    MB3Application.getInstance().API.GetClientSessionsAsync(query, getCurrentSessionResponse);
+                    MainApplication.getInstance().API.GetClientSessionsAsync(query, getCurrentSessionResponse);
                 }
             }
 
@@ -1061,15 +1060,15 @@ public class VideoPlayer extends FragmentActivity
                 */
                 mTruePlayerPositionMs = mVideoView.getCurrentPosition() + mPlayerPositionOffsetMs;
                 updateCurrentPosition(mTruePlayerPositionMs,
-                        "tvchannel".equalsIgnoreCase(MB3Application.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Type));
+                        "tvchannel".equalsIgnoreCase(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Type));
             }
 
             if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(tvProgramId)) {
                 // This means we're playing a TV channel and the player is initialized.
                 if (mSeekBar.getProgress() >= mSeekBar.getMax()) {
-                    MB3Application.getInstance().API.GetLiveTvChannelAsync(
-                            MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
-                            MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.GetLiveTvChannelAsync(
+                            MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
+                            MainApplication.getInstance().API.getCurrentUserId(),
                             new TvChannelResponse(VideoPlayer.this));
                 }
             }
@@ -1087,7 +1086,7 @@ public class VideoPlayer extends FragmentActivity
                 return;
             }
             for (SessionInfoDto info : sessionInfoDto) {
-                if (MB3Application.getInstance().API.getDeviceId().equalsIgnoreCase(info.getDeviceId())) {
+                if (MainApplication.getInstance().API.getDeviceId().equalsIgnoreCase(info.getDeviceId())) {
                     if (info.getTranscodingInfo() != null && info.getTranscodingInfo().getCompletionPercentage() != null) {
                         mSeekBar.setSecondaryProgress((int) (mSeekBar.getMax() * (info.getTranscodingInfo().getCompletionPercentage() / 100)));
                     }
@@ -1163,8 +1162,8 @@ public class VideoPlayer extends FragmentActivity
         mFastForwardButton.setVisibility(canSeek ? View.VISIBLE : View.INVISIBLE);
         mRewindButton.setVisibility(canSeek ? View.VISIBLE : View.INVISIBLE);
 
-        int playlistItemCount = MB3Application.getInstance().PlayerQueue != null && MB3Application.getInstance().PlayerQueue.PlaylistItems != null
-                ? MB3Application.getInstance().PlayerQueue.PlaylistItems.size()
+        int playlistItemCount = MainApplication.getInstance().PlayerQueue != null && MainApplication.getInstance().PlayerQueue.PlaylistItems != null
+                ? MainApplication.getInstance().PlayerQueue.PlaylistItems.size()
                 : 0;
 
         mNextButton.setVisibility(playlistItemCount > 1 ? View.VISIBLE : View.INVISIBLE);
@@ -1254,7 +1253,7 @@ public class VideoPlayer extends FragmentActivity
             if (mVideoView != null) {
                 mVideoView.stopPlayback();
             }
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
             AppLogger.getLogger().Info(TAG + ": video player killed");
             Intent intent = new Intent(this, AudioPlayer.class);
@@ -1266,12 +1265,12 @@ public class VideoPlayer extends FragmentActivity
             if (mVideoView != null) {
                 mVideoView.stopPlayback();
             }
-            MB3Application.getInstance().PlayerQueue = new Playlist();
+            MainApplication.getInstance().PlayerQueue = new Playlist();
             addItemsToPlaylist(request.getItemIds());
             AppLogger.getLogger().Info(TAG + ": video player killed");
-            MB3Application.getInstance().API.GetItemAsync(
-                    MB3Application.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
-                    MB3Application.getInstance().API.getCurrentUserId(),
+            MainApplication.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).Id,
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     new BaseItemResponse(this)
             );
             AppLogger.getLogger().Info(TAG + ": finished video play request");
@@ -1311,14 +1310,14 @@ public class VideoPlayer extends FragmentActivity
         for (String id : itemIds) {
             PlaylistItem item = new PlaylistItem();
             item.Id = id;
-            MB3Application.getInstance().PlayerQueue.PlaylistItems.add(item);
+            MainApplication.getInstance().PlayerQueue.PlaylistItems.add(item);
         }
     }
 
     private void clearReferences(){
-        IWebsocketEventListener currActivity = MB3Application.getInstance().getCurrentActivity();
+        IWebsocketEventListener currActivity = MainApplication.getInstance().getCurrentActivity();
         if (currActivity != null && currActivity.equals(this))
-            MB3Application.getInstance().setCurrentActivity(null);
+            MainApplication.getInstance().setCurrentActivity(null);
     }
 
     @Override
@@ -1384,8 +1383,8 @@ public class VideoPlayer extends FragmentActivity
             ImageOptions options = new ImageOptions();
             options.setImageType(ImageType.Primary);
             options.setMaxWidth(300);
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(primaryImageId, options);
-            mNowPlayingImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(primaryImageId, options);
+            mNowPlayingImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mNowPlayingImage.setVisibility(View.VISIBLE);
         } else {
             mNowPlayingImage.setVisibility(View.GONE);

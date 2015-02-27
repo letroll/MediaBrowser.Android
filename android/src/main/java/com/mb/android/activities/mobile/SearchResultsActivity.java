@@ -12,12 +12,12 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.mb.android.MainApplication;
 import com.mb.android.activities.BaseMbMobileActivity;
 import com.mb.android.ui.mobile.library.LibraryPresentationActivity;
 import com.mb.android.ui.mobile.person.ActorBioActivity;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.playbackmediator.widgets.MiniController;
-import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.adapters.SearchResultsAdapter;
 import com.mb.android.fragments.NavigationMenuFragment;
@@ -154,10 +154,10 @@ public class SearchResultsActivity extends BaseMbMobileActivity {
         }
 
         SearchQuery searchQuery = new SearchQuery();
-        searchQuery.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        searchQuery.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         searchQuery.setSearchTerm(query);
 
-        MB3Application.getInstance().API.GetSearchHintsAsync(searchQuery, new SearchResultsResponse());
+        MainApplication.getInstance().API.GetSearchHintsAsync(searchQuery, new SearchResultsResponse());
     }
 
     private class SearchResultsResponse extends Response<SearchHintResult> {
@@ -166,7 +166,7 @@ public class SearchResultsActivity extends BaseMbMobileActivity {
             if (results == null)
                 Toast.makeText(SearchResultsActivity.this, "Results is null", Toast.LENGTH_LONG).show();
             else {
-                mLibraryGrid.setAdapter(new SearchResultsAdapter(SearchResultsActivity.this, Arrays.asList(results.getSearchHints()), MB3Application.getInstance().API));
+                mLibraryGrid.setAdapter(new SearchResultsAdapter(SearchResultsActivity.this, Arrays.asList(results.getSearchHints()), MainApplication.getInstance().API));
                 mLibraryGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
@@ -189,9 +189,9 @@ public class SearchResultsActivity extends BaseMbMobileActivity {
         } else if (hint.getType().equalsIgnoreCase("musicartist")
                 || hint.getType().equalsIgnoreCase("musicalbum")
                 || hint.getType().equalsIgnoreCase("audio")) {
-            MB3Application.getInstance().API.GetItemAsync(
+            MainApplication.getInstance().API.GetItemAsync(
                     hint.getItemId(),
-                    MB3Application.getInstance().API.getCurrentUserId(),
+                    MainApplication.getInstance().API.getCurrentUserId(),
                     getItemResponse);
             return;
         } else if (hint.getType().equalsIgnoreCase("photo")) {
@@ -219,7 +219,7 @@ public class SearchResultsActivity extends BaseMbMobileActivity {
             item.setName(hint.getName());
             item.setType(hint.getType());
 
-            String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(item);
+            String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(item);
             intent.putExtra("Item", jsonData);
 
             startActivity(intent);
@@ -245,9 +245,9 @@ public class SearchResultsActivity extends BaseMbMobileActivity {
                 intent = new Intent(SearchResultsActivity.this, MusicAlbumActivity.class);
                 intent.putExtra("AlbumId", item.getId());
             } else { // It's a song
-                MB3Application.getInstance().API.GetItemAsync(
+                MainApplication.getInstance().API.GetItemAsync(
                         item.getParentId(),
-                        MB3Application.getInstance().API.getCurrentUserId(),
+                        MainApplication.getInstance().API.getCurrentUserId(),
                         getAlbumResponse);
                 return;
             }

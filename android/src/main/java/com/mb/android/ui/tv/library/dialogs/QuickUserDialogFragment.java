@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.R;
 import com.mb.android.player.AudioService;
@@ -79,19 +79,23 @@ public class QuickUserDialogFragment extends DialogFragment {
         mDialogContent.findViewById(R.id.btnLogout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MB3Application.getInstance().PlayerQueue = new Playlist();
-                AudioService.PlayerState currentState = MB3Application.getAudioService().getPlayerState();
+                MainApplication.getInstance().PlayerQueue = new Playlist();
+                AudioService.PlayerState currentState = MainApplication.getAudioService().getPlayerState();
                 if (currentState.equals(AudioService.PlayerState.PLAYING) || currentState.equals(AudioService.PlayerState.PAUSED)) {
-                    MB3Application.getAudioService().stopMedia();
+                    MainApplication.getAudioService().stopMedia();
                 }
-                if (MB3Application.getInstance().API != null) {
-                    MB3Application.getInstance().API.Logout(new EmptyResponse());
-                }
-                Intent intent = new Intent(MB3Application.getInstance(), ConnectionActivity.class);
-                intent.putExtra("show_users", true);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                QuickUserDialogFragment.this.dismiss();
+                MainApplication.getInstance().getConnectionManager().Logout(new EmptyResponse(){
+
+                    @Override
+                    public void onResponse(){
+                        Intent intent = new Intent(MainApplication.getInstance(), ConnectionActivity.class);
+                        intent.putExtra("show_users", true);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        QuickUserDialogFragment.this.dismiss();
+                    }
+                });
+
             }
         });
 
@@ -108,18 +112,18 @@ public class QuickUserDialogFragment extends DialogFragment {
 
     private void setUserInfo() {
 
-        if (MB3Application.getInstance().user.getHasPrimaryImage()) {
+        if (MainApplication.getInstance().user.getHasPrimaryImage()) {
             ImageOptions options = new ImageOptions();
             options.setImageType(ImageType.Primary);
             options.setMaxHeight(170);
             options.setMaxWidth(170);
 
-            String imageUrl = MB3Application.getInstance().API.GetUserImageUrl(MB3Application.getInstance().user.getId(), options);
-            mHeaderImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetUserImageUrl(MainApplication.getInstance().user.getId(), options);
+            mHeaderImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
 //            mHeaderImage.setOnClickListener(onHeaderClickListener);
         }
-        if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().user.getName())) {
-            mUserName.setText(MB3Application.getInstance().user.getName());
+        if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().user.getName())) {
+            mUserName.setText(MainApplication.getInstance().user.getName());
         }
 
     }
@@ -127,7 +131,7 @@ public class QuickUserDialogFragment extends DialogFragment {
 
     private void getListContent() {
 
-        MB3Application.getInstance().API.GetPublicUsersAsync(getUsersResponse);
+        MainApplication.getInstance().API.GetPublicUsersAsync(getUsersResponse);
     }
 
 
@@ -158,13 +162,13 @@ public class QuickUserDialogFragment extends DialogFragment {
 
 
         public SwitchUserAdapter(UserDto[] users, SessionInfoDto currentSession) {
-            mLayoutInflater = (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            DisplayMetrics metrics = MB3Application.getInstance().getResources().getDisplayMetrics();
+            mLayoutInflater = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            DisplayMetrics metrics = MainApplication.getInstance().getResources().getDisplayMetrics();
             mDensity = metrics.density;
             mUsers = new ArrayList<>();
             if (users != null) {
                 for (UserDto user : users) {
-                    if (!user.getId().equalsIgnoreCase(MB3Application.getInstance().API.getCurrentUserId())) {
+                    if (!user.getId().equalsIgnoreCase(MainApplication.getInstance().API.getCurrentUserId())) {
                         mUsers.add(user);
                     }
                 }
@@ -220,8 +224,8 @@ public class QuickUserDialogFragment extends DialogFragment {
                 imageOptions.setMaxWidth((int)(65 * mDensity));
                 imageOptions.setMaxHeight((int)(65 * mDensity));
 
-                String imageUrl = MB3Application.getInstance().API.GetUserImageUrl(mUsers.get(position), imageOptions);
-                holder.avatar.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                String imageUrl = MainApplication.getInstance().API.GetUserImageUrl(mUsers.get(position), imageOptions);
+                holder.avatar.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             }
 
             if (includedUsers.contains(mUsers.get(position).getId())) {

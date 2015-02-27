@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.MenuEntity;
 import com.mb.android.R;
 
@@ -28,7 +28,7 @@ public class ViewsAdapter extends BaseAdapter {
     public ViewsAdapter(List<MenuEntity> libraryFolders) {
         mLibraryFolders = libraryFolders;
         try {
-            mLayoutInflater = (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            mLayoutInflater = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         } catch (Exception e) {
             e.printStackTrace();
         }

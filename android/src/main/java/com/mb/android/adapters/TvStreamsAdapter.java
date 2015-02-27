@@ -8,15 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
 import com.mb.android.R;
 import com.mb.android.utils.Utils;
-import mediabrowser.model.dto.ImageOptions;
-import mediabrowser.model.entities.ImageType;
+
 import mediabrowser.model.entities.MediaStream;
 import mediabrowser.model.entities.MediaStreamType;
-import mediabrowser.model.extensions.StringHelper;
 
 import java.util.ArrayList;
 

@@ -6,13 +6,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.adapters.GenericAdapterPosters;
 import com.mb.android.adapters.GenreAdapter;
@@ -84,7 +83,7 @@ public class MusicLibraryFragment extends Fragment {
     public void onResume() {
         super.onResume();
         AppLogger.getLogger().Info(TAG + ": onResume");
-        rootCategory = RootCategory.valueOf(PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance()).getString("pref_music_root", "artist"));
+        rootCategory = RootCategory.valueOf(PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance()).getString("pref_music_root", "artist"));
         switch(rootCategory) {
             case artist:
                 displayArtists();
@@ -134,7 +133,7 @@ public class MusicLibraryFragment extends Fragment {
         AppLogger.getLogger().Info(TAG + ": Build artists query");
         ArtistsQuery query = new ArtistsQuery();
         query.setParentId(mParentId);
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setRecursive(true);
         query.setSortBy(new String[]{ItemSortBy.SortName});
         query.setSortOrder(SortOrder.Ascending);
@@ -142,7 +141,7 @@ public class MusicLibraryFragment extends Fragment {
         query.setStartIndex(0);
         query.setLimit(200);
 
-        MB3Application.getInstance().API.GetArtistsAsync(query, new GetArtistsResponse(query, false));
+        MainApplication.getInstance().API.GetArtistsAsync(query, new GetArtistsResponse(query, false));
     }
 
     public void displayAlbumArtists() {
@@ -154,7 +153,7 @@ public class MusicLibraryFragment extends Fragment {
         AppLogger.getLogger().Info(TAG + ": Build album artists query");
         ArtistsQuery query = new ArtistsQuery();
         query.setParentId(mParentId);
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setRecursive(true);
         query.setSortBy(new String[]{ItemSortBy.SortName});
         query.setSortOrder(SortOrder.Ascending);
@@ -162,7 +161,7 @@ public class MusicLibraryFragment extends Fragment {
         query.setStartIndex(0);
         query.setLimit(200);
 
-        MB3Application.getInstance().API.GetAlbumArtistsAsync(query, new GetArtistsResponse(query, true));
+        MainApplication.getInstance().API.GetAlbumArtistsAsync(query, new GetArtistsResponse(query, true));
     }
 
     public void displayAlbums() {
@@ -173,7 +172,7 @@ public class MusicLibraryFragment extends Fragment {
 
         AppLogger.getLogger().Info(TAG + ": Build albums query");
         ItemQuery query = new ItemQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setRecursive(true);
         query.setSortBy(new String[]{ItemSortBy.SortName});
         query.setSortOrder(SortOrder.Ascending);
@@ -182,7 +181,7 @@ public class MusicLibraryFragment extends Fragment {
         query.setStartIndex(0);
         query.setLimit(200);
 
-        MB3Application.getInstance().API.GetItemsAsync(query, new GetAlbumsResponse(query));
+        MainApplication.getInstance().API.GetItemsAsync(query, new GetAlbumsResponse(query));
 
     }
 
@@ -194,7 +193,7 @@ public class MusicLibraryFragment extends Fragment {
 
         AppLogger.getLogger().Info(TAG + ": Build songs query");
         ItemQuery query = new ItemQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setRecursive(true);
         query.setSortBy(new String[]{ItemSortBy.Name});
         query.setSortOrder(SortOrder.Ascending);
@@ -203,7 +202,7 @@ public class MusicLibraryFragment extends Fragment {
         query.setStartIndex(0);
         query.setLimit(200);
 
-        MB3Application.getInstance().API.GetItemsAsync(query, new GetSongsResponse(query));
+        MainApplication.getInstance().API.GetItemsAsync(query, new GetSongsResponse(query));
     }
 
     public void displayGenres() {
@@ -214,18 +213,18 @@ public class MusicLibraryFragment extends Fragment {
 
         AppLogger.getLogger().Info(TAG + ": Build genres query");
         ItemsByNameQuery query = new ItemsByNameQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setParentId(mParentId);
         query.setRecursive(true);
         query.setSortBy(new String[]{ItemSortBy.Name});
         query.setSortOrder(SortOrder.Ascending);
         query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.SortName});
 
-        MB3Application.getInstance().API.GetMusicGenresAsync(query, new GetGenresResponse());
+        MainApplication.getInstance().API.GetMusicGenresAsync(query, new GetGenresResponse());
     }
 
     private void writeCategoryToPreferences(RootCategory category) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         prefs.edit()
                 .putString("pref_music_root", category.name())
                 .apply();
@@ -237,16 +236,16 @@ public class MusicLibraryFragment extends Fragment {
 
     private void initializeArtistsGrid() {
         AppLogger.getLogger().Info(TAG + ": initialize artists grid");
-        mContentGrid.setNumColumns(MB3Application.getInstance().getResources().getInteger(R.integer.library_columns_poster));
+        mContentGrid.setNumColumns(MainApplication.getInstance().getResources().getInteger(R.integer.library_columns_poster));
         mContentGrid.setVerticalSpacing(10);
-        mContentGrid.setAdapter(new GenericAdapterPosters(mItems, MB3Application.getInstance().getResources().getInteger(R.integer.library_columns_poster), mMusicActivity, R.drawable.default_artist));
+        mContentGrid.setAdapter(new GenericAdapterPosters(mItems, MainApplication.getInstance().getResources().getInteger(R.integer.library_columns_poster), mMusicActivity, R.drawable.default_artist));
         mContentGrid.setOnItemClickListener(new ArtistOnItemClickListener());
         mContentGrid.setOnItemLongClickListener(new OverflowOnItemLongClickListener());
     }
 
     private void initializeAlbumsGrid() {
         AppLogger.getLogger().Info(TAG + ": initialize albums grid");
-        mContentGrid.setNumColumns(MB3Application.getInstance().getResources().getInteger(R.integer.library_columns_poster));
+        mContentGrid.setNumColumns(MainApplication.getInstance().getResources().getInteger(R.integer.library_columns_poster));
         mContentGrid.setVerticalSpacing(10);
         mContentGrid.setAdapter(new GenericAdapterPosters(mItems, getResources().getInteger(R.integer.library_columns_poster), mMusicActivity, R.drawable.music_square_bg));
         mContentGrid.setOnItemClickListener(new AlbumOnItemClickListener());
@@ -319,9 +318,9 @@ public class MusicLibraryFragment extends Fragment {
                 AppLogger.getLogger().Info(TAG + ": more items to retrieve");
                 mQuery.setStartIndex(mQuery.getStartIndex() + 200);
                 if (mIsAlbumArtistQuery) {
-                    MB3Application.getInstance().API.GetAlbumArtistsAsync(mQuery, this);
+                    MainApplication.getInstance().API.GetAlbumArtistsAsync(mQuery, this);
                 } else {
-                    MB3Application.getInstance().API.GetArtistsAsync(mQuery, this);
+                    MainApplication.getInstance().API.GetArtistsAsync(mQuery, this);
                 }
             }
         }
@@ -371,7 +370,7 @@ public class MusicLibraryFragment extends Fragment {
             if (result.getTotalRecordCount() > mQuery.getStartIndex() + 200) {
                 AppLogger.getLogger().Info(TAG + ": more items to retrieve");
                 mQuery.setStartIndex(mQuery.getStartIndex() + 200);
-                MB3Application.getInstance().API.GetItemsAsync(mQuery, this);
+                MainApplication.getInstance().API.GetItemsAsync(mQuery, this);
             }
         }
         @Override
@@ -420,7 +419,7 @@ public class MusicLibraryFragment extends Fragment {
             if (result.getTotalRecordCount() > mQuery.getStartIndex() + 200) {
                 AppLogger.getLogger().Info(TAG + ": more items to retrieve");
                 mQuery.setStartIndex(mQuery.getStartIndex() + 200);
-                MB3Application.getInstance().API.GetItemsAsync(mQuery, this);
+                MainApplication.getInstance().API.GetItemsAsync(mQuery, this);
             }
         }
         @Override
@@ -475,7 +474,7 @@ public class MusicLibraryFragment extends Fragment {
 
             mItems.get(position).setParentId(mParentId);
 
-            Intent intent = new Intent(MB3Application.getInstance(), MusicAlbumActivity.class);
+            Intent intent = new Intent(MainApplication.getInstance(), MusicAlbumActivity.class);
             intent.putExtra("AlbumId", mItems.get(position).getId());
             intent.putExtra("isGenre", true);
             startActivity(intent);

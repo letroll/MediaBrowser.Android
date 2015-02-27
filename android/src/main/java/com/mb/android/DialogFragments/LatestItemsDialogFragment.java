@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.MediaDetailsActivity;
 import com.mb.android.activities.mobile.SeriesViewActivity;
@@ -93,8 +92,8 @@ public class LatestItemsDialogFragment extends DialogFragment {
             ImageOptions options = new ImageOptions();
             options.setImageType(ImageType.Banner);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mParent.getId(), options);
-            mHeaderImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mParent.getId(), options);
+            mHeaderImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             mHeaderImage.setOnClickListener(onHeaderClickListener);
         }
 
@@ -109,7 +108,7 @@ public class LatestItemsDialogFragment extends DialogFragment {
             limit = Math.min(mParent.getUserData().getUnplayedItemCount(), 20);
 
         LatestItemsQuery query = new LatestItemsQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.ParentId, ItemFields.DateCreated});
         query.setParentId(mParent.getId());
         query.setLimit(limit);
@@ -117,7 +116,7 @@ public class LatestItemsDialogFragment extends DialogFragment {
         query.setIsPlayed(false);
         query.setGroupItems(false);
 
-        MB3Application.getInstance().API.GetLatestItems(query, getNewItemsResponse);
+        MainApplication.getInstance().API.GetLatestItems(query, getNewItemsResponse);
     }
 
 
@@ -150,8 +149,8 @@ public class LatestItemsDialogFragment extends DialogFragment {
 
 
         public LatestEpisodesAdapter() {
-            mLayoutInflater = (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            DisplayMetrics metrics = MB3Application.getInstance().getResources().getDisplayMetrics();
+            mLayoutInflater = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            DisplayMetrics metrics = MainApplication.getInstance().getResources().getDisplayMetrics();
             mDensity = metrics.density;
         }
 
@@ -217,8 +216,8 @@ public class LatestItemsDialogFragment extends DialogFragment {
                 options.setImageType(ImageType.Primary);
                 options.setWidth((int)(140 * mDensity));
 
-                String imageUrl = MB3Application.getInstance().API.GetImageUrl(mLatestItems[position].getId(), options);
-                episodeHolder.episodeImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                String imageUrl = MainApplication.getInstance().API.GetImageUrl(mLatestItems[position].getId(), options);
+                episodeHolder.episodeImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             }
 
             if (mLatestItems[position].getDateCreated() != null) {
@@ -230,7 +229,7 @@ public class LatestItemsDialogFragment extends DialogFragment {
                 outputFormat.setTimeZone(tz);
 
                 String addedDateString =
-                        String.format(MB3Application.getInstance().getResources().getString(R.string.added_on_date), outputFormat.format(date));
+                        String.format(MainApplication.getInstance().getResources().getString(R.string.added_on_date), outputFormat.format(date));
 
                 episodeHolder.addedDate.setText(addedDateString);
             }
@@ -243,8 +242,8 @@ public class LatestItemsDialogFragment extends DialogFragment {
         @Override
         public void onClick(View v) {
 
-            String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mParent);
-            Intent intent = new Intent(MB3Application.getInstance(), SeriesViewActivity.class);
+            String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mParent);
+            Intent intent = new Intent(MainApplication.getInstance(), SeriesViewActivity.class);
             intent.putExtra("Item", jsonData);
 
             startActivity(intent);
@@ -256,9 +255,9 @@ public class LatestItemsDialogFragment extends DialogFragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(mLatestItems[position]);
+            String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mLatestItems[position]);
 
-            Intent intent = new Intent(MB3Application.getInstance(), MediaDetailsActivity.class);
+            Intent intent = new Intent(MainApplication.getInstance(), MediaDetailsActivity.class);
             intent.putExtra("Item", jsonData);
             intent.putExtra("LaunchedFromHomeScreen", true);
 

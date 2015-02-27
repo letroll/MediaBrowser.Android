@@ -13,9 +13,9 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.activities.BaseMbMobileActivity;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.playbackmediator.widgets.MiniController;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
-import com.mb.android.utils.Utils;
+
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.querying.ItemsResult;
@@ -81,7 +81,7 @@ public class PhotoDetailsActivity extends BaseMbMobileActivity {
 
         parentId = getMb3Intent().getStringExtra("ParentId");
         String jsonData = getMb3Intent().getStringExtra("Item");
-        mItem = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
+        mItem = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemDto.class);
         lastViewed = mItem.getId();
 
         if (savedInstanceState != null
@@ -124,12 +124,12 @@ public class PhotoDetailsActivity extends BaseMbMobileActivity {
     private void buildAndSendInitialQuery() {
         ItemQuery query = new ItemQuery();
         query.setParentId(parentId);
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setFields(new ItemFields[]{ItemFields.Overview});
         query.setSortBy(new String[]{ItemSortBy.SortName});
         query.setSortOrder(SortOrder.Ascending);
 
-        MB3Application.getInstance().API.GetItemsAsync(query, getItemsResponse);
+        MainApplication.getInstance().API.GetItemsAsync(query, getItemsResponse);
     }
 
     private void setImage(int index) {
@@ -148,8 +148,8 @@ public class PhotoDetailsActivity extends BaseMbMobileActivity {
         options.setMaxWidth(getScreenWidth());
         options.setMaxHeight(getScreenHeight());
 
-        String imageUrl = MB3Application.getInstance().API.GetImageUrl(_photos[index], options);
-        imageView.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+        String imageUrl = MainApplication.getInstance().API.GetImageUrl(_photos[index], options);
+        imageView.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         photoName.setText(_photos[index].getName());
 
         setImageDetails(photo);

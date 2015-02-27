@@ -3,16 +3,13 @@ package com.mb.android.utils;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.net.http.HttpResponseCache;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.Editable;
-import android.util.TypedValue;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.network.Connectivity;
 
@@ -169,7 +166,7 @@ public class Utils {
 
     public static String convertToLocalDateFormat(Date date) {
 
-        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(MB3Application.getInstance());
+        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(MainApplication.getInstance());
         return dateFormat.format(date);
     }
 
@@ -235,7 +232,7 @@ public class Utils {
             Locale local = new Locale(stream.getLanguage());
             desc = local.getDisplayLanguage();
         } else {
-            desc = MB3Application.getInstance().getResources().getString(R.string.unknown_language);
+            desc = MainApplication.getInstance().getResources().getString(R.string.unknown_language);
         }
 
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(stream.getCodec())) {
@@ -321,10 +318,10 @@ public class Utils {
                                     Integer subtitleStreamIndex) {
 
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance());
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         String bitrate;
 
-        if (Connectivity.isConnectedLAN(MB3Application.getInstance())) {
+        if (Connectivity.isConnectedLAN(MainApplication.getInstance())) {
             bitrate = prefs.getString("pref_local_bitrate", "1800000");
         } else {
             bitrate = prefs.getString("pref_cellular_bitrate", "450000");
@@ -339,7 +336,7 @@ public class Utils {
         options.setMediaSources(item.getMediaSources());
         options.setProfile(new AndroidProfile(hlsEnabled, false)
         );
-        options.setDeviceId(Settings.Secure.getString(MB3Application.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
+        options.setDeviceId(Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         if (audioStreamIndex != null) {
@@ -363,7 +360,7 @@ public class Utils {
             mStreamInfo.setStartPositionTicks(startPositionTicks);
         }
 
-        return mStreamInfo.ToUrl(MB3Application.getInstance().API.getApiUrl(), MB3Application.getInstance().API.getAccessToken());
+        return mStreamInfo.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken());
     }
 
     public static Date convertToLocalDate(Date utcDate) {

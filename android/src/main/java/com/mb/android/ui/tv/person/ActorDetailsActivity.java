@@ -11,7 +11,7 @@ import android.widget.ViewSwitcher;
 import com.android.volley.toolbox.NetworkImageView;
 import com.jess.ui.TwoWayAdapterView;
 import com.jess.ui.TwoWayGridView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.Response;
 
@@ -81,7 +81,7 @@ public class ActorDetailsActivity extends MbBackdropActivity implements ILongPre
         findViewById(R.id.ibOptionsMenu).setOnClickListener(onOptionsClick);
 
         String jsonData = getIntent().getStringExtra("CurrentBaseItemDTO");
-        mPerson = MB3Application.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemPerson.class);
+        mPerson = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, BaseItemPerson.class);
 
         setOverscanValues();
     }
@@ -113,7 +113,7 @@ public class ActorDetailsActivity extends MbBackdropActivity implements ILongPre
         if (mPerson != null) {
 
             // Need to call GetPersonAsync to retrieve the actor bio and backdrops if any
-            MB3Application.getInstance().API.GetItemAsync(mPerson.getId(), MB3Application.getInstance().API.getCurrentUserId(), getActorResponse);
+            MainApplication.getInstance().API.GetItemAsync(mPerson.getId(), MainApplication.getInstance().API.getCurrentUserId(), getActorResponse);
 
             if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mPerson.getName())) {
 
@@ -122,14 +122,14 @@ public class ActorDetailsActivity extends MbBackdropActivity implements ILongPre
                 if (mPerson.getHasPrimaryImage()) {
 
                     ItemQuery query = new ItemQuery();
-                    query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+                    query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
                     query.setSortBy(new String[]{ItemSortBy.PremiereDate});
                     query.setSortOrder(SortOrder.Descending);
                     query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio});
                     query.setRecursive(true);
                     query.setPerson(mPerson.getName());
 
-                    MB3Application.getInstance().API.GetItemsAsync(query, getActorMediaResponse);
+                    MainApplication.getInstance().API.GetItemsAsync(query, getActorMediaResponse);
                 }
             }
         } else {
@@ -180,7 +180,7 @@ public class ActorDetailsActivity extends MbBackdropActivity implements ILongPre
                     imageOptions.setMaxWidth(1280);
                     imageOptions.setImageIndex(i);
 
-                    backdropUrls.add(MB3Application.getInstance().API.GetImageUrl(item, imageOptions));
+                    backdropUrls.add(MainApplication.getInstance().API.GetImageUrl(item, imageOptions));
                 }
 
                 if (backdropUrls.size() > 0) {
@@ -205,11 +205,11 @@ public class ActorDetailsActivity extends MbBackdropActivity implements ILongPre
                 actorImageOptions.setMaxWidth(actorImageMaxWidth);
                 actorImageOptions.setImageType(ImageType.Primary);
 
-                String imageUrl = MB3Application.getInstance().API.GetPersonImageUrl(mPerson, actorImageOptions);
-                mPersonImage.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                String imageUrl = MainApplication.getInstance().API.GetPersonImageUrl(mPerson, actorImageOptions);
+                mPersonImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
 
             } else {
-                mPersonImage.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+                mPersonImage.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
             }
         }
         @Override

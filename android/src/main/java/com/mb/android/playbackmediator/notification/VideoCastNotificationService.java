@@ -20,7 +20,7 @@ import static com.mb.android.playbackmediator.utils.LogUtils.LOGD;
 import static com.mb.android.playbackmediator.utils.LogUtils.LOGE;
 
 import com.google.android.gms.cast.MediaStatus;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.RemoteControlActivity;
 import com.mb.android.playbackmediator.cast.VideoCastManager;
@@ -96,7 +96,7 @@ public class VideoCastNotificationService extends Service {
         super.onCreate();
         LOGD(TAG, "onCreate()");
         readPersistedData();
-        mCastManager = MB3Application.getCastManager(this);
+        mCastManager = MainApplication.getCastManager(this);
         if (!mCastManager.isConnected() && !mCastManager.isConnecting()) {
             mCastManager.reconnectSessionIfPossible(this, false);
         }
@@ -441,7 +441,7 @@ public class VideoCastNotificationService extends Service {
             ImageOptions options = new ImageOptions();
             options.setImageType(ImageType.Primary);
             options.setWidth(300);
-            String imgString = MB3Application.getInstance().API.GetImageUrl(mInfo.getNowPlayingItem().getPrimaryImageItemId(), options);
+            String imgString = MainApplication.getInstance().API.GetImageUrl(mInfo.getNowPlayingItem().getPrimaryImageItemId(), options);
 
             if (imgString.equals(mVideoArtUri)) {
                 return null;

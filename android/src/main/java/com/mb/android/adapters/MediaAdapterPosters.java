@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.utils.Utils;
 import mediabrowser.apiinteraction.ApiClient;
@@ -52,11 +51,11 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
         mBaseItems = baseItems;
         mApi = apiClient;
         mDefaultImageId = defaultImageId;
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(MB3Application.getInstance());
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         try {
-            li = (LayoutInflater) MB3Application.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            li = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            DisplayMetrics dm = MB3Application.getInstance().getResources().getDisplayMetrics();
+            DisplayMetrics dm = MainApplication.getInstance().getResources().getDisplayMetrics();
 
             mImageWidth = (dm.widthPixels - (columns * (int) (10 * dm.density))) / columns;
 
@@ -84,7 +83,7 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
             AppLogger.getLogger().Debug("Width", String.valueOf(mImageWidth));
 
             imageEnhancersEnabled = PreferenceManager
-                    .getDefaultSharedPreferences(MB3Application.getInstance())
+                    .getDefaultSharedPreferences(MainApplication.getInstance())
                     .getBoolean("pref_enable_image_enhancers", true);
 
         } catch (Exception e) {
@@ -191,11 +190,11 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
             options.setEnableImageEnhancers(imageEnhancersEnabled);
             imageUrl = mApi.GetImageUrl(mBaseItems.get(position).getParentThumbItemId(), options);
         } else if (mDefaultImageId != null) {
-            holder.imageView.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+            holder.imageView.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
         }
 
         if (options != null) {
-            holder.imageView.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            holder.imageView.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         }
 
         // Process top-right overlays
@@ -210,7 +209,7 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
                 long currentMs = new Date().getTime();
 
                 if (premiereDateMs - currentMs > 0)
-                    holder.missingEpisodeOverlay.setText(MB3Application.getInstance().getResources().getString(R.string.un_aired_overlay));
+                    holder.missingEpisodeOverlay.setText(MainApplication.getInstance().getResources().getString(R.string.un_aired_overlay));
             }
 
             holder.missingEpisodeOverlay.setVisibility(TextView.VISIBLE);

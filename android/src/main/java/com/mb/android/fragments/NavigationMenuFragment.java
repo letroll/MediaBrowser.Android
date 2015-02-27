@@ -16,7 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.MenuEntity;
 import com.mb.android.Playlist;
 import com.mb.android.R;
@@ -91,12 +91,12 @@ public class NavigationMenuFragment extends Fragment {
 
         // Don't start making api requests unless we have valid connection details
         if (ApiProperlyConfigured()) {
-            if (tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().user.getName())) {
-                MB3Application.getInstance().API.GetUserAsync(MB3Application.getInstance().API.getCurrentUserId(), getUserResponse);
+            if (tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().user.getName())) {
+                MainApplication.getInstance().API.GetUserAsync(MainApplication.getInstance().API.getCurrentUserId(), getUserResponse);
             } else {
                 buildUserButton();
             }
-            MB3Application.getInstance().API.GetLiveTvInfoAsync(liveTvInfoResponse);
+            MainApplication.getInstance().API.GetLiveTvInfoAsync(liveTvInfoResponse);
         }
     }
 
@@ -107,9 +107,9 @@ public class NavigationMenuFragment extends Fragment {
 
 
     private boolean ApiProperlyConfigured() {
-        return MB3Application.getInstance().API != null
-                && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getServerAddress())
-                && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MB3Application.getInstance().API.getCurrentUserId());
+        return MainApplication.getInstance().API != null
+                && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getServerAddress())
+                && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getCurrentUserId());
     }
 
 
@@ -117,7 +117,7 @@ public class NavigationMenuFragment extends Fragment {
         @Override
         public void onResponse(UserDto result) {
             if (result == null) return;
-            MB3Application.getInstance().user = result;
+            MainApplication.getInstance().user = result;
             buildUserButton();
         }
     };
@@ -125,10 +125,10 @@ public class NavigationMenuFragment extends Fragment {
 
     private void buildUserButton() {
 
-        DisplayMetrics metrics = MB3Application.getInstance().getResources().getDisplayMetrics();
+        DisplayMetrics metrics = MainApplication.getInstance().getResources().getDisplayMetrics();
 
-        if (MB3Application.getInstance().user != null) {
-            if (MB3Application.getInstance().user.getHasPrimaryImage()) {
+        if (MainApplication.getInstance().user != null) {
+            if (MainApplication.getInstance().user.getHasPrimaryImage()) {
 
                 ImageOptions options = new ImageOptions();
                 options.setImageType(ImageType.Primary);
@@ -136,11 +136,11 @@ public class NavigationMenuFragment extends Fragment {
                 options.setWidth((int) (50 * metrics.density));
                 options.setCropWhitespace(true);
 
-                String imageUrl = MB3Application.getInstance().API.GetUserImageUrl(MB3Application.getInstance().user, options);
-                mAvatar.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+                String imageUrl = MainApplication.getInstance().API.GetUserImageUrl(MainApplication.getInstance().user, options);
+                mAvatar.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             }
 
-            mUsername.setText(MB3Application.getInstance().user.getName());
+            mUsername.setText(MainApplication.getInstance().user.getName());
         }
 
         mUserContainer.setOnClickListener(onUserClick);
@@ -152,10 +152,13 @@ public class NavigationMenuFragment extends Fragment {
         public void onClick(View v) {
             closeDrawer();
             terminateQueuedMedia();
-            if (MB3Application.getInstance().API != null) {
-                MB3Application.getInstance().API.Logout(new EmptyResponse());
-            }
-            showUserSelection();
+            MainApplication.getInstance().getConnectionManager().Logout(new EmptyResponse(){
+
+                @Override
+                public void onResponse(){
+                    showUserSelection();
+                }
+            });
         }
     };
 
@@ -168,17 +171,16 @@ public class NavigationMenuFragment extends Fragment {
 
 
     private void terminateQueuedMedia() {
-        MB3Application.getInstance().PlayerQueue = new Playlist();
-        AudioService.PlayerState currentState = MB3Application.getAudioService().getPlayerState();
+        MainApplication.getInstance().PlayerQueue = new Playlist();
+        AudioService.PlayerState currentState = MainApplication.getAudioService().getPlayerState();
         if (currentState.equals(AudioService.PlayerState.PLAYING) || currentState.equals(AudioService.PlayerState.PAUSED)) {
-            MB3Application.getAudioService().stopMedia();
+            MainApplication.getAudioService().stopMedia();
         }
     }
 
 
     private void showUserSelection() {
-        Intent intent = new Intent(MB3Application.getInstance(), ConnectionActivity.class);
-        intent.putExtra("show_users", true);
+        Intent intent = new Intent(MainApplication.getInstance(), ConnectionActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -190,14 +192,14 @@ public class NavigationMenuFragment extends Fragment {
 
         MenuEntity homeMenuItem = new MenuEntity();
         homeMenuItem.CollectionType = "root";
-        homeMenuItem.Name = MB3Application.getInstance().getResources().getString(R.string.menu_home);
+        homeMenuItem.Name = MainApplication.getInstance().getResources().getString(R.string.menu_home);
 
         menu.add(homeMenuItem);
 
         if (queueHasItems()) {
             MenuEntity queueMenuItem = new MenuEntity();
             queueMenuItem.CollectionType = "queue";
-            queueMenuItem.Name = MB3Application.getInstance().getResources().getString(R.string.queue_string);
+            queueMenuItem.Name = MainApplication.getInstance().getResources().getString(R.string.queue_string);
             menu.add(queueMenuItem);
         }
 
@@ -216,7 +218,7 @@ public class NavigationMenuFragment extends Fragment {
         if (liveTvEnabled) {
             MenuEntity menuItem = new MenuEntity();
             menuItem.CollectionType = "livetv";
-            menuItem.Name = MB3Application.getInstance().getResources().getString(R.string.live_tv_header);
+            menuItem.Name = MainApplication.getInstance().getResources().getString(R.string.live_tv_header);
 
             menu.add(menuItem);
         }
@@ -224,7 +226,7 @@ public class NavigationMenuFragment extends Fragment {
         if (mChannelsEnabled) {
             MenuEntity menuItem = new MenuEntity();
             menuItem.CollectionType = "channels";
-            menuItem.Name = MB3Application.getInstance().getResources().getString(R.string.channels_header);
+            menuItem.Name = MainApplication.getInstance().getResources().getString(R.string.channels_header);
 
             menu.add(menuItem);
         }
@@ -240,7 +242,7 @@ public class NavigationMenuFragment extends Fragment {
                 }
 
                 if (index == 0) {
-                    Intent intent = new Intent(MB3Application.getInstance(), HomescreenActivity.class);
+                    Intent intent = new Intent(MainApplication.getInstance(), HomescreenActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                     Activity activity = getActivity();
@@ -248,30 +250,30 @@ public class NavigationMenuFragment extends Fragment {
                         activity.finish();
                     }
                 } else if (menu.get(index).CollectionType != null && menu.get(index).CollectionType.equalsIgnoreCase("queue")) {
-                    Intent intent = new Intent(MB3Application.getInstance(), PlaylistActivity.class);
+                    Intent intent = new Intent(MainApplication.getInstance(), PlaylistActivity.class);
                     startActivity(intent);
                 } else if (menu.get(index).CollectionType != null && menu.get(index).CollectionType.equalsIgnoreCase("channels")) {
-                    Intent intent = new Intent(MB3Application.getInstance(), ChannelsActivity.class);
+                    Intent intent = new Intent(MainApplication.getInstance(), ChannelsActivity.class);
                     startActivity(intent);
                 } else if (menu.get(index).CollectionType != null && menu.get(index).CollectionType.equalsIgnoreCase("livetv")) {
-                    Intent intent = new Intent(MB3Application.getInstance(), LiveTvActivity.class);
+                    Intent intent = new Intent(MainApplication.getInstance(), LiveTvActivity.class);
                     startActivity(intent);
                 } else if (menu.get(index).CollectionType != null && menu.get(index).CollectionType.equalsIgnoreCase("music")) {
-                    Intent intent = new Intent(MB3Application.getInstance(), MusicActivity.class);
+                    Intent intent = new Intent(MainApplication.getInstance(), MusicActivity.class);
                     intent.putExtra("ParentId", menu.get(index).Id);
                     startActivity(intent);
                 } else {
                     ItemQuery query = new ItemQuery();
                     query.setParentId(menu.get(index).Id);
-                    query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+                    query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
                     query.setSortBy(new String[]{ItemSortBy.SortName});
                     query.setSortOrder(SortOrder.Ascending);
                     query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.ParentId, ItemFields.SortName});
                     query.setLimit(200);
 
-                    String jsonData = MB3Application.getInstance().getJsonSerializer().SerializeToString(query);
+                    String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(query);
 
-                    Intent intent = new Intent(MB3Application.getInstance(), LibraryPresentationActivity.class);
+                    Intent intent = new Intent(MainApplication.getInstance(), LibraryPresentationActivity.class);
                     intent.putExtra("ItemQuery", jsonData);
                     AppLogger.getLogger().Info("Starting Library Presentation Activity");
                     startActivity(intent);
@@ -283,9 +285,9 @@ public class NavigationMenuFragment extends Fragment {
 
 
     private boolean queueHasItems() {
-        return MB3Application.getInstance().PlayerQueue != null
-                && MB3Application.getInstance().PlayerQueue.PlaylistItems != null
-                && MB3Application.getInstance().PlayerQueue.PlaylistItems.size() > 0;
+        return MainApplication.getInstance().PlayerQueue != null
+                && MainApplication.getInstance().PlayerQueue.PlaylistItems != null
+                && MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > 0;
     }
 
 
@@ -296,7 +298,7 @@ public class NavigationMenuFragment extends Fragment {
 
             if (liveTvInfo != null && liveTvInfo.getIsEnabled() && liveTvInfo.getEnabledUsers() != null) {
                 for (String userId : liveTvInfo.getEnabledUsers()) {
-                    if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(userId) && userId.equalsIgnoreCase(MB3Application.getInstance().API.getCurrentUserId())) {
+                    if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(userId) && userId.equalsIgnoreCase(MainApplication.getInstance().API.getCurrentUserId())) {
                         liveTvEnabled = true;
                     }
                 }
@@ -314,9 +316,9 @@ public class NavigationMenuFragment extends Fragment {
 
     private void requestChannels() {
         ChannelQuery query = new ChannelQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
 
-        MB3Application.getInstance().API.GetChannels(query, getChannelsResponse);
+        MainApplication.getInstance().API.GetChannels(query, getChannelsResponse);
     }
 
 
@@ -343,12 +345,12 @@ public class NavigationMenuFragment extends Fragment {
 
     private void getLibraryRoot() {
         ItemQuery query = new ItemQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setSortBy(new String[]{ItemSortBy.SortName});
         query.setSortOrder(SortOrder.Ascending);
         query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio});
 
-        MB3Application.getInstance().API.GetItemsAsync(query, getLibraryResponse);
+        MainApplication.getInstance().API.GetItemsAsync(query, getLibraryResponse);
     }
 
 

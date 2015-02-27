@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +21,7 @@ import com.mb.android.listeners.SongOnItemClickListener;
 import com.mb.android.playbackmediator.cast.exceptions.NoConnectionException;
 import com.mb.android.playbackmediator.cast.exceptions.TransientNetworkDisconnectionException;
 import com.mb.android.playbackmediator.widgets.MiniController;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import com.mb.android.fragments.NavigationMenuFragment;
@@ -164,19 +163,19 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
         if (mIsFresh) {
             if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mAlbumId)) {
 
-                MB3Application.getInstance().API.GetItemAsync(mAlbumId, MB3Application.getInstance().API.getCurrentUserId(), getAlbumResponse);
+                MainApplication.getInstance().API.GetItemAsync(mAlbumId, MainApplication.getInstance().API.getCurrentUserId(), getAlbumResponse);
                 boolean isGenre = getMb3Intent().getBooleanExtra("isGenre", false);
 
                 if (!isGenre) {
                     ItemQuery query = new ItemQuery();
-                    query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+                    query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
                     query.setParentId(mAlbumId);
                     query.setSortBy(new String[]{ItemSortBy.SortName});
                     query.setSortOrder(SortOrder.Ascending);
                     query.setFields(new ItemFields[]{ItemFields.ParentId});
                     query.setRecursive(true);
 
-                    MB3Application.getInstance().API.GetItemsAsync(query, getSongsResponse);
+                    MainApplication.getInstance().API.GetItemsAsync(query, getSongsResponse);
                 }
             }
             mIsFresh = false;
@@ -193,14 +192,14 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
             if ("musicgenre".equalsIgnoreCase(item.getType())) {
                 ItemQuery query = new ItemQuery();
                 query.setParentId(mAlbum.getParentId());
-                query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+                query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
                 query.setRecursive(true);
                 query.setSortBy(new String[]{ItemSortBy.Name});
                 query.setSortOrder(SortOrder.Ascending);
                 query.setFields(new ItemFields[]{ItemFields.ParentId});
                 query.setGenres(new String[] { mAlbum.getName()});
                 query.setIncludeItemTypes(new String[]{"Audio"});
-                MB3Application.getInstance().API.GetItemsAsync(query, getSongsResponse);
+                MainApplication.getInstance().API.GetItemsAsync(query, getSongsResponse);
             }
 
             NetworkImageView albumCover = (NetworkImageView) findViewById(R.id.ivAlbumCoverLarge);
@@ -211,14 +210,14 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
                 options.setMaxWidth((int) (150 * getScreenDensity()));
                 options.setMaxHeight((int) (150 * getScreenDensity()));
                 options.setEnableImageEnhancers(PreferenceManager
-                        .getDefaultSharedPreferences(MB3Application.getInstance())
+                        .getDefaultSharedPreferences(MainApplication.getInstance())
                         .getBoolean("pref_enable_image_enhancers", true));
 
-                String albumCoverImageUrl = MB3Application.getInstance().API.GetImageUrl(mAlbum, options);
-                albumCover.setImageUrl(albumCoverImageUrl, MB3Application.getInstance().API.getImageLoader());
+                String albumCoverImageUrl = MainApplication.getInstance().API.GetImageUrl(mAlbum, options);
+                albumCover.setImageUrl(albumCoverImageUrl, MainApplication.getInstance().API.getImageLoader());
             } else {
                 albumCover.setDefaultImageResId(R.drawable.music_square_bg);
-                albumCover.setImageUrl(null, MB3Application.getInstance().API.getImageLoader());
+                albumCover.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
             }
 
             // Set the backdrop and title
@@ -231,9 +230,9 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
             } else {
                 if (mAlbum.getParentId() != null) {
                     AppLogger.getLogger().Info("MusicAlbumActivity", "Has ParentId");
-                    MB3Application.getInstance().API.GetItemAsync(
+                    MainApplication.getInstance().API.GetItemAsync(
                             mAlbum.getParentId(),
-                            MB3Application.getInstance().API.getCurrentUserId(),
+                            MainApplication.getInstance().API.getCurrentUserId(),
                             getItemResponse);
                 }
             }
@@ -330,28 +329,28 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.favorite_action_bar_button))) {
 
-            MB3Application.getInstance().API.UpdateFavoriteStatusAsync(mAlbum.getId(), MB3Application.getInstance().API.getCurrentUserId(), true, new UpdateFavoriteResponse());
+            MainApplication.getInstance().API.UpdateFavoriteStatusAsync(mAlbum.getId(), MainApplication.getInstance().API.getCurrentUserId(), true, new UpdateFavoriteResponse());
 
         /*
         Remove Favorite
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.un_favorite_action_bar_button))) {
 
-            MB3Application.getInstance().API.UpdateFavoriteStatusAsync(mAlbum.getId(), MB3Application.getInstance().API.getCurrentUserId(), false, new UpdateFavoriteResponse());
+            MainApplication.getInstance().API.UpdateFavoriteStatusAsync(mAlbum.getId(), MainApplication.getInstance().API.getCurrentUserId(), false, new UpdateFavoriteResponse());
 
         /*
         Set Played
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.played_action_bar_button))) {
 
-            MB3Application.getInstance().API.MarkPlayedAsync(mAlbum.getId(), MB3Application.getInstance().API.getCurrentUserId(), null, new UpdatePlaystateReponse());
+            MainApplication.getInstance().API.MarkPlayedAsync(mAlbum.getId(), MainApplication.getInstance().API.getCurrentUserId(), null, new UpdatePlaystateReponse());
 
         /*
         Remove Played
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase(getResources().getString(R.string.un_played_action_bar_button))) {
 
-            MB3Application.getInstance().API.MarkUnplayedAsync(mAlbum.getId(), MB3Application.getInstance().API.getCurrentUserId(), new UpdatePlaystateReponse());
+            MainApplication.getInstance().API.MarkUnplayedAsync(mAlbum.getId(), MainApplication.getInstance().API.getCurrentUserId(), new UpdatePlaystateReponse());
 
         } else {
             return super.onOptionsItemSelected(item);
@@ -361,11 +360,11 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
     }
 
     private void handlePlayOrShuffleRequest(boolean shuffleMedia) {
-        AudioService.PlayerState currentState = MB3Application.getAudioService().getPlayerState();
+        AudioService.PlayerState currentState = MainApplication.getAudioService().getPlayerState();
         if (currentState.equals(AudioService.PlayerState.PLAYING) || currentState.equals(AudioService.PlayerState.PAUSED)) {
-            MB3Application.getAudioService().stopMedia();
+            MainApplication.getAudioService().stopMedia();
         }
-        MB3Application.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
+        MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
         if (mCastManager.isConnected()) {
             mCastManager.playItem(mAlbum, shuffleMedia ? PlayCommand.PlayShuffle : PlayCommand.PlayNow, 0L);
             Intent intent = new Intent(this, RemoteControlActivity.class);
@@ -378,12 +377,12 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
                 playableItem.Type = song.getType();
                 playableItem.Runtime = song.getRunTimeTicks();
 
-                MB3Application.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
+                MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
             }
 
             if (shuffleMedia) {
                 long seed = System.nanoTime();
-                Collections.shuffle(MB3Application.getInstance().PlayerQueue.PlaylistItems, new Random(seed));
+                Collections.shuffle(MainApplication.getInstance().PlayerQueue.PlaylistItems, new Random(seed));
             }
             Intent intent = new Intent(this, AudioPlaybackActivity.class);
             startActivity(intent);
@@ -443,8 +442,8 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
             backOptions.setImageType(ImageType.Backdrop);
             backOptions.setWidth(getScreenWidth() / 2);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mAlbum, backOptions);
-            backdrop.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mAlbum, backOptions);
+            backdrop.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         } else {
             backdrop.setLayoutParams(new RelativeLayout.LayoutParams(getScreenWidth(), (int) ((float) (getScreenWidth() / 16) * 5)));
         }
@@ -460,8 +459,8 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
             backOptions.setImageType(ImageType.Backdrop);
             backOptions.setWidth(getScreenWidth() / 2);
 
-            String imageUrl = MB3Application.getInstance().API.GetImageUrl(mArtist, backOptions);
-            backdrop.setImageUrl(imageUrl, MB3Application.getInstance().API.getImageLoader());
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mArtist, backOptions);
+            backdrop.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         } else {
             backdrop.setLayoutParams(new RelativeLayout.LayoutParams(getScreenWidth(), (int) ((float) (getScreenWidth() / 16) * 5)));
         }

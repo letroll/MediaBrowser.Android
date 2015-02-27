@@ -5,14 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.ui.mobile.album.MusicAlbumActivity;
@@ -61,7 +60,7 @@ public class AlbumsFragment extends Fragment {
         super.onResume();
 
         ItemQuery query = new ItemQuery();
-        query.setUserId(MB3Application.getInstance().API.getCurrentUserId());
+        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
         query.setParentId(artistId);
         query.setSortBy(new String[]{ItemSortBy.ProductionYear});
         query.setSortOrder(SortOrder.Descending);
@@ -69,7 +68,7 @@ public class AlbumsFragment extends Fragment {
         query.setRecursive(true);
         query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.Studios, ItemFields.Genres});
 
-        MB3Application.getInstance().API.GetItemsAsync(query, getItemsResponse);
+        MainApplication.getInstance().API.GetItemsAsync(query, getItemsResponse);
     }
 
     @Override
@@ -105,7 +104,7 @@ public class AlbumsFragment extends Fragment {
                 mArtistActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
                 GridView albumsList = (GridView) mView.findViewById(R.id.gvArtistAlbumList);
-                albumsList.setAdapter(new AlbumAdapter(mArtistActivity, mAlbums, MB3Application.getInstance().API, (int) (125 * metrics.density), (int) (125 * metrics.density)));
+                albumsList.setAdapter(new AlbumAdapter(mArtistActivity, mAlbums, MainApplication.getInstance().API, (int) (125 * metrics.density), (int) (125 * metrics.density)));
                 albumsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

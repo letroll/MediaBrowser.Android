@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
@@ -15,7 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 
@@ -100,15 +99,15 @@ public class RecordSettingsDialogFragment extends DialogFragment implements Comp
 
                         if (isNewRecording) {
                             if (recordSeriesCheckBox.isChecked()) {
-                                MB3Application.getInstance().API.CreateLiveTvSeriesTimerAsync((SeriesTimerInfoDto) timer, new EmptyResponse());
+                                MainApplication.getInstance().API.CreateLiveTvSeriesTimerAsync((SeriesTimerInfoDto) timer, new EmptyResponse());
                             } else {
-                                MB3Application.getInstance().API.CreateLiveTvTimerAsync(timer, new EmptyResponse());
+                                MainApplication.getInstance().API.CreateLiveTvTimerAsync(timer, new EmptyResponse());
                             }
                         } else {
                             if (recordSeriesCheckBox.isChecked()) {
-                                MB3Application.getInstance().API.UpdateLiveTvSeriesTimerAsync((SeriesTimerInfoDto) timer, new EmptyResponse());
+                                MainApplication.getInstance().API.UpdateLiveTvSeriesTimerAsync((SeriesTimerInfoDto) timer, new EmptyResponse());
                             } else {
-                                MB3Application.getInstance().API.UpdateLiveTvTimerAsync((TimerInfoDto)timer, new EmptyResponse());
+                                MainApplication.getInstance().API.UpdateLiveTvTimerAsync((TimerInfoDto)timer, new EmptyResponse());
                             }
                         }
 

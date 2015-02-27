@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.mb.android.ItemListWrapper;
-import com.mb.android.MB3Application;
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.adapters.MediaAdapterPosters;
 
@@ -44,7 +44,7 @@ public class GenericContentFragment extends Fragment {
         if (view != null && mItems != null && mItems.Items != null && mItems.Items.size() > 0) {
             GridView mGenericItemsGrid = (GridView) view.findViewById(R.id.gvSeriesActors);
             mGenericItemsGrid.setNumColumns(5);
-            mGenericItemsGrid.setAdapter(new MediaAdapterPosters(mItems.Items, MB3Application.getInstance().getResources().getInteger(R.integer.tv_library_columns_poster), MB3Application.getInstance().API, null));
+            mGenericItemsGrid.setAdapter(new MediaAdapterPosters(mItems.Items, MainApplication.getInstance().getResources().getInteger(R.integer.tv_library_columns_poster), MainApplication.getInstance().API, null));
             mGenericItemsGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
