@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Environment;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
@@ -12,8 +13,11 @@ import com.mb.android.MainApplication;
 import com.mb.android.utils.Utils;
 
 import ch.qos.logback.classic.Level;
+import mediabrowser.apiinteraction.android.sync.MediaSyncAdapter;
 import mediabrowser.model.logging.ILogger;
 import mediabrowser.model.logging.LogSeverity;
+
+import java.io.File;
 import java.util.UUID;
 import org.slf4j.LoggerFactory;
 
@@ -25,29 +29,26 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.FileAppender;
 
 
-public class AppLogger implements ILogger {
+public class AppLogger {
 
-    private static AppLogger mInstance;
+    private static LogbackLogger mInstance;
 
-    private AppLogger() {
-
-        if (internalLogger == null){
-            configureLogbackDirectly();
-        }
-    }
-
-    public static AppLogger getLogger() {
+    public static ILogger getLogger() {
 
         if (mInstance == null) {
-            mInstance = new AppLogger();
-            mInstance.WriteLogHeader();
+            org.slf4j.Logger internalLogger = configureLogbackDirectly();
+
+            mInstance = new LogbackLogger(internalLogger, "App");
+            MediaSyncAdapter.LoggerFactory = new SyncLoggerFactory(new LogbackLogger(internalLogger, "SyncService"));
+            WriteLogHeader(mInstance);
         }
 
         return mInstance;
     }
 
-    private org.slf4j.Logger internalLogger;
-    private void configureLogbackDirectly() {
+    private static FileAppender<ILoggingEvent> syncServiceFileAppender;
+
+    private static org.slf4j.Logger configureLogbackDirectly() {
 
         // reset the default context (which may already have been initialized)
         // since we want to reconfigure it
@@ -62,17 +63,22 @@ public class AppLogger implements ILogger {
 
         FileAppender<ILoggingEvent> fileAppender = new FileAppender<ILoggingEvent>();
         fileAppender.setContext(lc);
-
-        String path = UUID.randomUUID().toString() + ".log";
-
-        fileAppender.setFile(MainApplication.getInstance().getFileStreamPath(path).getAbsolutePath());
         fileAppender.setEncoder(encoder1);
+        fileAppender.setName("fileAppender");
+        fileAppender.setFile(getLogFilePath(""));
+        fileAppender.addFilter(new LogFileFilter(false));
         fileAppender.start();
 
+        syncServiceFileAppender = new FileAppender<ILoggingEvent>();
+        syncServiceFileAppender.setContext(lc);
+        syncServiceFileAppender.setEncoder(encoder1);
+        syncServiceFileAppender.setName("syncServiceFileAppender");
+        syncServiceFileAppender.addFilter(new LogFileFilter(true));
+
         LogcatAppender logcatAppender = new LogcatAppender();
-        logcatAppender.setEncoder(encoder1);
-        logcatAppender.setName("App");
         logcatAppender.setContext(lc);
+        logcatAppender.setEncoder(encoder1);
+        logcatAppender.setName("logcatAppender");
         logcatAppender.start();
 
         // add the newly created appenders to the root logger;
@@ -80,11 +86,48 @@ public class AppLogger implements ILogger {
         ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         root.addAppender(fileAppender);
         root.addAppender(logcatAppender);
+        root.addAppender(syncServiceFileAppender);
 
-        internalLogger = LoggerFactory.getLogger("App");
+        return LoggerFactory.getLogger("App");
     }
 
-    public void setDebugLoggingEnabled(boolean enabled){
+    public static void ResetSyncLogger(){
+        syncServiceFileAppender.stop();
+        syncServiceFileAppender.setFile(getLogFilePath("syncService"));
+        syncServiceFileAppender.start();
+    }
+
+    private static String getLogFilePath(String prefix){
+
+        String filename = prefix + UUID.randomUUID().toString() + ".log";
+
+        boolean mExternalStorageAvailable = false;
+        boolean mExternalStorageWriteable = false;
+        String state = Environment.getExternalStorageState();
+
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            // We can read and write the media
+            mExternalStorageAvailable = mExternalStorageWriteable = true;
+        } else if (Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            // We can only read the media
+            mExternalStorageAvailable = true;
+            mExternalStorageWriteable = false;
+        } else {
+            // Something else is wrong. It may be one of many other states, but all we need
+            //  to know is we can neither read nor write
+            mExternalStorageAvailable = mExternalStorageWriteable = false;
+        }
+
+        if (mExternalStorageAvailable && mExternalStorageWriteable){
+            String directory = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "mediabrowser").getPath();
+            return new File(directory, filename).getPath();
+        }
+        else{
+            return MainApplication.getInstance().getFileStreamPath(filename).getAbsolutePath();
+        }
+    }
+
+    public static void setDebugLoggingEnabled(boolean enabled){
 
         ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
 
@@ -96,7 +139,7 @@ public class AppLogger implements ILogger {
         }
     }
 
-    private void WriteLogHeader() {
+    private static void WriteLogHeader(ILogger logger) {
 
         PackageInfo pInfo = null;
         try {
@@ -106,97 +149,31 @@ public class AppLogger implements ILogger {
         }
 
         if (pInfo != null) {
-            Info("Application Version: " + pInfo.versionName);
+            logger.Info("Application Version: " + pInfo.versionName);
         }
 
         if (Build.VERSION.RELEASE != null) {
-            Info("Android Version: " + Build.VERSION.RELEASE);
+            logger.Info("Android Version: " + Build.VERSION.RELEASE);
         }
 
         if (Build.MODEL != null && !Build.MODEL.isEmpty())
-            Info("Device: " + Build.MODEL);
+            logger.Info("Device: " + Build.MODEL);
 
         try {
             DisplayMetrics metrics = new DisplayMetrics();
             WindowManager wm = (WindowManager) MainApplication.getInstance().getSystemService(Context.WINDOW_SERVICE);
             Display display = wm.getDefaultDisplay();
             display.getMetrics(metrics);
-            Info("Screen Width: " + String.valueOf(metrics.widthPixels));
-            Info("Screen Height: " + String.valueOf(metrics.heightPixels));
-            Info("Density: " + String.valueOf(metrics.density));
-            Info("DensityDpi: " + String.valueOf(metrics.densityDpi));
+            logger.Info("Screen Width: " + String.valueOf(metrics.widthPixels));
+            logger.Info("Screen Height: " + String.valueOf(metrics.heightPixels));
+            logger.Info("Density: " + String.valueOf(metrics.density));
+            logger.Info("DensityDpi: " + String.valueOf(metrics.densityDpi));
 
         } catch (Exception e) {
 
         }
 
-        Info("Total Memory Available: " + Utils.TotalMemory(MainApplication.getInstance()));
-        Info("Max Memory usable per Application: " + Utils.MaxApplicationMemory());
-    }
-
-    @Override
-    public void Info(String message, Object... paramList) {
-        internalLogger.info(String.format(message, paramList));
-    }
-
-
-    @Override
-    public void Error(String message, Object... paramList) {
-        internalLogger.error(String.format(message, paramList));
-    }
-
-
-    @Override
-    public void Warn(String message, Object... paramList) {
-        internalLogger.warn(String.format(message, paramList));
-    }
-
-
-    @Override
-    public void Debug(String message, Object... paramList) {
-        internalLogger.debug(String.format(message, paramList));
-    }
-
-
-    @Override
-    public void Fatal(String message, Object... paramList) {
-        internalLogger.error(String.format(message, paramList));
-    }
-
-
-    @Override
-    public void FatalException(String message, Exception exception, Object... paramList) {
-        logException(String.format(message, paramList), exception, LogSeverity.Fatal);
-    }
-
-
-    @Override
-    public void ErrorException(String message, Exception exception, Object... paramList) {
-        logException(String.format(message, paramList), exception, LogSeverity.Error);
-    }
-
-    //******************************************************************************************************************
-
-    private void logException(String message, Exception exception, LogSeverity severity) {
-
-        try {
-            message += "\r" + stackTraceToString(exception);
-            if (exception.getCause() != null) {
-                message += "caused by " + stackTraceToString(exception.getCause());
-            }
-        } catch (Exception e) {
-            Error("FileLogger", "failed to parse exception");
-        }
-
-        internalLogger.error(message);
-    }
-
-    private String stackTraceToString(Throwable e) {
-        StringBuilder sb = new StringBuilder();
-        for (StackTraceElement element : e.getStackTrace()) {
-            sb.append(element.toString());
-            sb.append("\r");
-        }
-        return sb.toString();
+        logger.Info("Total Memory Available: " + Utils.TotalMemory(MainApplication.getInstance()));
+        logger.Info("Max Memory usable per Application: " + Utils.MaxApplicationMemory());
     }
 }

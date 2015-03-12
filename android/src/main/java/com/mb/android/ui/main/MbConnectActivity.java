@@ -49,7 +49,7 @@ public class MbConnectActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         // Always show debug logging during initial connection
-        AppLogger.getLogger().setDebugLoggingEnabled(true);
+        AppLogger.setDebugLoggingEnabled(true);
 
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (sharedPrefs.getString("pref_application_profile", "Mobile").equalsIgnoreCase("Mobile")) {

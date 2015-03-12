@@ -90,7 +90,7 @@ public class MainSettingsFragment extends PreferenceFragment implements SharedPr
         } else if (key.equals("pref_debug_logging_enabled")) {
             final CustomSwitchPreference csp = (CustomSwitchPreference) getPreferenceScreen().findPreference(key);
             if (csp == null) return;
-            AppLogger.getLogger().setDebugLoggingEnabled(csp.isChecked());
+            AppLogger.setDebugLoggingEnabled(csp.isChecked());
         }
 
     }

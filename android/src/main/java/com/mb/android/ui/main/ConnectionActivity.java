@@ -92,7 +92,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
             connectSignInButton.setOnClickListener(onMbConnectClick);
 
             // Always show debug logging during initial connection
-            AppLogger.getLogger().setDebugLoggingEnabled(true);
+            AppLogger.setDebugLoggingEnabled(true);
             if (showServerSelection) {
                 onServerSelection();
             } else if (showUserSelection) {
@@ -419,7 +419,7 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         sharedPrefs.edit().putBoolean("is_first_run", false).apply();
 
         // Restore logging to the level defined in the user preferences
-        AppLogger.getLogger().setDebugLoggingEnabled(sharedPrefs.getBoolean("pref_debug_logging_enabled", false));
+        AppLogger.setDebugLoggingEnabled(sharedPrefs.getBoolean("pref_debug_logging_enabled", false));
 
         MainApplication.getInstance().startContentSync();
 
