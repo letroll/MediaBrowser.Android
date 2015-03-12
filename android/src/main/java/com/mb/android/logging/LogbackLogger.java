@@ -21,7 +21,7 @@ public class LogbackLogger implements ILogger {
     public LogbackLogger(Logger internalLogger, String loggerName) {
         this.internalLogger = internalLogger;
         this.loggerName = loggerName;
-        marker = MarkerFactory.getMarker(loggerName);
+        this.marker = MarkerFactory.getMarker(loggerName);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class LogbackLogger implements ILogger {
             Error("FileLogger", "failed to parse exception");
         }
 
-        internalLogger.error(message);
+        internalLogger.error(marker, message);
     }
 
     private String stackTraceToString(Throwable e) {

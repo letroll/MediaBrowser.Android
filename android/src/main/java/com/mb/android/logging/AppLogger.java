@@ -93,7 +93,7 @@ public class AppLogger {
 
     public static void ResetSyncLogger(){
         syncServiceFileAppender.stop();
-        syncServiceFileAppender.setFile(getLogFilePath("syncService"));
+        syncServiceFileAppender.setFile(getLogFilePath("syncService-"));
         syncServiceFileAppender.start();
     }
 
