@@ -14,7 +14,6 @@ import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.UserItemDataDto;
 import mediabrowser.model.querying.ItemsResult;
 import mediabrowser.model.querying.ItemQuery;
-import mediabrowser.model.querying.SimilarItemsByNameQuery;
 import mediabrowser.model.querying.SimilarItemsQuery;
 
 import java.util.ArrayList;
@@ -187,8 +186,8 @@ public class OverflowOnMenuItemClickListener
 
         } else if (mItem.getType().equalsIgnoreCase("musicartist")) {
 
-            SimilarItemsByNameQuery query = new SimilarItemsByNameQuery();
-            query.setName(mItem.getName());
+            SimilarItemsQuery query = new SimilarItemsQuery();
+            query.setId(mItem.getId());
             query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             query.setLimit(50);
 
@@ -196,8 +195,8 @@ public class OverflowOnMenuItemClickListener
 
         } else if (mItem.getType().equalsIgnoreCase("musicgenre")) {
 
-            SimilarItemsByNameQuery query = new SimilarItemsByNameQuery();
-            query.setName(mItem.getName());
+            SimilarItemsQuery query = new SimilarItemsQuery();
+            query.setId(mItem.getId());
             query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
             query.setLimit(50);
 

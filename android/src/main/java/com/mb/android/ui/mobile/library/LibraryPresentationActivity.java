@@ -710,7 +710,7 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
                 } else
                     mSelectedGenres.add(mInitialGenreList.get(i));
 
-                mItemQuery.setAllGenres(mSelectedGenres.toArray(new String[mSelectedGenres.size()]));
+                mItemQuery.setGenres(mSelectedGenres.toArray(new String[mSelectedGenres.size()]));
 
                 mLibraryView.PerformQuery(mItemQuery, new GenreQueryResponse());
             }

@@ -169,7 +169,7 @@ public class ChannelListingsActivity extends BaseMbMobileActivity {
 
                 ProgramQuery query = new ProgramQuery();
                 query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
-                query.setChannelIdList(new String[]{ mChannel.getId() });
+                query.setChannelIds(new String[]{ mChannel.getId() });
 
                 MainApplication.getInstance().API.GetLiveTvProgramsAsync(query, new GetProgramsResponse());
 
