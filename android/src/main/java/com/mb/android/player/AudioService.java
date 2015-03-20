@@ -814,7 +814,13 @@ public class AudioService
         stopInfo.setMediaSourceId(mStreamInfo.getMediaSourceId());
         stopInfo.setPositionTicks(position);
 
-        MainApplication.getInstance().API.ReportPlaybackStoppedAsync(stopInfo, new EmptyResponse());
+        MainApplication.getInstance().getPlaybackManager().reportPlaybackStopped(stopInfo,
+                mStreamInfo,
+                MainApplication.getInstance().API.getServerInfo().getId(),
+                MainApplication.getInstance().API.getCurrentUserId(),
+                MainApplication.getInstance().isOffline(),
+                MainApplication.getInstance().API,
+                new EmptyResponse());
     }
 
     public synchronized void incrementUiCounter() {

@@ -116,7 +116,13 @@ public final class PlayerHelpers {
         stopInfo.setMediaSourceId(streamInfo.getMediaSourceId());
         stopInfo.setPositionTicks(position);
 
-        MainApplication.getInstance().API.ReportPlaybackStoppedAsync(stopInfo, response);
+        MainApplication.getInstance().getPlaybackManager().reportPlaybackStopped(stopInfo,
+                streamInfo,
+                MainApplication.getInstance().API.getServerInfo().getId(),
+                MainApplication.getInstance().API.getCurrentUserId(),
+                MainApplication.getInstance().isOffline(),
+                MainApplication.getInstance().API,
+                new EmptyResponse());
     }
 
     /**

@@ -20,10 +20,12 @@ import com.mb.android.logging.AppLogger;
 import mediabrowser.apiinteraction.IConnectionManager;
 import mediabrowser.apiinteraction.android.AndroidApiClient;
 import mediabrowser.apiinteraction.android.AndroidConnectionManager;
+import mediabrowser.apiinteraction.android.AndroidDevice;
 import mediabrowser.apiinteraction.android.GsonJsonSerializer;
 import mediabrowser.apiinteraction.android.VolleyHttpClient;
 import mediabrowser.apiinteraction.android.profiles.AndroidProfile;
 import mediabrowser.apiinteraction.android.sync.PeriodicSync;
+import mediabrowser.apiinteraction.playback.PlaybackManager;
 import mediabrowser.model.dto.UserDto;
 import mediabrowser.model.serialization.IJsonSerializer;
 import mediabrowser.model.session.ClientCapabilities;
@@ -53,8 +55,11 @@ public class MainApplication extends Application
     public Playlist PlayerQueue;
 //    public String LibretroNativeLibraryPath;
     private MediaPlayer mMediaPlayer;
+    private PlaybackManager mPlaybackManager;
     private DolbyAudioProcessing mDolbyAudioProcessing = null;
     private boolean isDolbyAudioProcessingConnected = false;
+
+    private boolean isOffline = false; //future
 
     public static MainApplication getInstance() {
         return _mb3Application;
@@ -156,6 +161,7 @@ public class MainApplication extends Application
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
 
         this.PlayerQueue = new Playlist();
+        this.mPlaybackManager = new PlaybackManager(new AndroidDevice(this), AppLogger.getLogger());
 
         Utils.saveFloatToPreference(getApplicationContext(),
                 VideoCastManager.PREFS_KEY_VOLUME_INCREMENT, (float) VOLUME_INCREMENT);
@@ -404,5 +410,17 @@ public class MainApplication extends Application
 
     public void startContentSync() {
         new PeriodicSync(_mb3Application).Create();
+    }
+
+    public PlaybackManager getPlaybackManager() {
+        return mPlaybackManager;
+    }
+
+    public boolean isOffline() {
+        return isOffline;
+    }
+
+    public void setOffline(boolean isOffline) {
+        this.isOffline = isOffline;
     }
 }
