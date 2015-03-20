@@ -787,7 +787,11 @@ public class AudioService
         info.setSubtitleStreamIndex(mStreamInfo.getSubtitleStreamIndex());
         info.setVolumeLevel((int) mVolume * 100);
 
-        MainApplication.getInstance().API.ReportPlaybackStartAsync(info, new EmptyResponse());
+        MainApplication.getInstance().getPlaybackManager().reportPlaybackStart(
+                info,
+                MainApplication.getInstance().isOffline(),
+                MainApplication.getInstance().API,
+                new EmptyResponse());
     }
 
     private void sendPlaybackProgressToServer(Long position) {
@@ -804,7 +808,11 @@ public class AudioService
         progressInfo.setSubtitleStreamIndex(mStreamInfo.getSubtitleStreamIndex());
         progressInfo.setVolumeLevel((int) mVolume * 100);
 
-        MainApplication.getInstance().API.ReportPlaybackProgressAsync(progressInfo, new EmptyResponse());
+        MainApplication.getInstance().getPlaybackManager().reportPlaybackProgress(
+                progressInfo,
+                MainApplication.getInstance().isOffline(),
+                MainApplication.getInstance().API,
+                new EmptyResponse());
     }
 
     private void sendPlaybackStoppedToServer(Long position) {
@@ -814,7 +822,8 @@ public class AudioService
         stopInfo.setMediaSourceId(mStreamInfo.getMediaSourceId());
         stopInfo.setPositionTicks(position);
 
-        MainApplication.getInstance().getPlaybackManager().reportPlaybackStopped(stopInfo,
+        MainApplication.getInstance().getPlaybackManager().reportPlaybackStopped(
+                stopInfo,
                 mStreamInfo,
                 MainApplication.getInstance().API.getServerInfo().getId(),
                 MainApplication.getInstance().API.getCurrentUserId(),

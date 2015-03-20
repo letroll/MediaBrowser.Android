@@ -74,7 +74,11 @@ public final class PlayerHelpers {
         info.setSubtitleStreamIndex(streamInfo.getSubtitleStreamIndex());
         info.setVolumeLevel((int) volume * 100);
 
-        MainApplication.getInstance().API.ReportPlaybackStartAsync(info, response);
+        MainApplication.getInstance().getPlaybackManager().reportPlaybackStart(
+                info,
+                MainApplication.getInstance().isOffline(),
+                MainApplication.getInstance().API,
+                new EmptyResponse());
     }
 
     /**
@@ -100,7 +104,11 @@ public final class PlayerHelpers {
         progressInfo.setSubtitleStreamIndex(streamInfo.getSubtitleStreamIndex());
         progressInfo.setVolumeLevel((int) volume * 100);
 
-        MainApplication.getInstance().API.ReportPlaybackProgressAsync(progressInfo, response);
+        MainApplication.getInstance().getPlaybackManager().reportPlaybackProgress(
+                progressInfo,
+                MainApplication.getInstance().isOffline(),
+                MainApplication.getInstance().API,
+                new EmptyResponse());
     }
 
     /**
@@ -116,7 +124,8 @@ public final class PlayerHelpers {
         stopInfo.setMediaSourceId(streamInfo.getMediaSourceId());
         stopInfo.setPositionTicks(position);
 
-        MainApplication.getInstance().getPlaybackManager().reportPlaybackStopped(stopInfo,
+        MainApplication.getInstance().getPlaybackManager().reportPlaybackStopped(
+                stopInfo,
                 streamInfo,
                 MainApplication.getInstance().API.getServerInfo().getId(),
                 MainApplication.getInstance().API.getCurrentUserId(),
