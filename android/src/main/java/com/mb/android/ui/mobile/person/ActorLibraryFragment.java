@@ -80,7 +80,7 @@ public class ActorLibraryFragment extends Fragment {
 
         Bundle args = getArguments();
 
-        String mActorName = args.getString("ActorName");
+        String actorId = args.getString("ActorId");
 
         // Get all the media in the users library containing this person
         ItemQuery query = new ItemQuery();
@@ -89,7 +89,7 @@ public class ActorLibraryFragment extends Fragment {
         query.setSortOrder(SortOrder.Descending);
         query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio});
         query.setRecursive(true);
-        query.setPerson(mActorName);
+        query.setPersonIds(new String[]{actorId});
 
         MainApplication.getInstance().API.GetItemsAsync(query, getItemsResponse);
     }

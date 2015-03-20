@@ -1,8 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) 2013. Mark Linton.
-  ~ This file and all it's contents are the property of Mark Linton, herefor referred to as the developer. This code may not be used or altered without the express consent of the developer.
-  -->
-
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="grid_item_outer_padding">4dp</dimen>
     <dimen name="grid_item_inner_padding">8dp</dimen>

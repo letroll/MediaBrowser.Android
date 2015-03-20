@@ -61,8 +61,6 @@ public class NavigationMenuFragment extends Fragment {
     private TextView mUsername;
     private RelativeLayout mUserContainer;
     private DrawerLayout mDrawerLayout;
-    private boolean liveTvEnabled = false;
-    private boolean mChannelsEnabled = false;
 
 
     @Override
@@ -96,7 +94,7 @@ public class NavigationMenuFragment extends Fragment {
             } else {
                 buildUserButton();
             }
-            MainApplication.getInstance().API.GetLiveTvInfoAsync(liveTvInfoResponse);
+            getLibraryRoot();
         }
     }
 
@@ -215,22 +213,6 @@ public class NavigationMenuFragment extends Fragment {
             }
         }
 
-        if (liveTvEnabled) {
-            MenuEntity menuItem = new MenuEntity();
-            menuItem.CollectionType = "livetv";
-            menuItem.Name = MainApplication.getInstance().getResources().getString(R.string.live_tv_header);
-
-            menu.add(menuItem);
-        }
-
-        if (mChannelsEnabled) {
-            MenuEntity menuItem = new MenuEntity();
-            menuItem.CollectionType = "channels";
-            menuItem.Name = MainApplication.getInstance().getResources().getString(R.string.channels_header);
-
-            menu.add(menuItem);
-        }
-
         mDrawerList.setAdapter(new ViewsAdapter(menu));
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -283,74 +265,14 @@ public class NavigationMenuFragment extends Fragment {
 
     }
 
-
     private boolean queueHasItems() {
         return MainApplication.getInstance().PlayerQueue != null
                 && MainApplication.getInstance().PlayerQueue.PlaylistItems != null
                 && MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > 0;
     }
 
-
-    private Response<LiveTvInfo> liveTvInfoResponse = new Response<LiveTvInfo>() {
-        @Override
-        public void onResponse(LiveTvInfo liveTvInfo) {
-            AppLogger.getLogger().Info(TAG + ": Live TV info response received");
-
-            if (liveTvInfo != null && liveTvInfo.getIsEnabled() && liveTvInfo.getEnabledUsers() != null) {
-                for (String userId : liveTvInfo.getEnabledUsers()) {
-                    if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(userId) && userId.equalsIgnoreCase(MainApplication.getInstance().API.getCurrentUserId())) {
-                        liveTvEnabled = true;
-                    }
-                }
-            }
-
-            requestChannels();
-        }
-        @Override
-        public void onError(Exception ex) {
-            AppLogger.getLogger().Error(TAG + ": Error retrieving Live TV info");
-            requestChannels();
-        }
-    };
-
-
-    private void requestChannels() {
-        ChannelQuery query = new ChannelQuery();
-        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
-
-        MainApplication.getInstance().API.GetChannels(query, getChannelsResponse);
-    }
-
-
-    private Response<ItemsResult> getChannelsResponse = new Response<ItemsResult>() {
-        @Override
-        public void onResponse(ItemsResult response) {
-            AppLogger.getLogger().Info(TAG + ": Channel info response received");
-
-//            if (response != null && response.getItems() != null && response.getItems().length > 0) {
-            if (response != null && response.getTotalRecordCount() > 0) {
-                AppLogger.getLogger().Info(TAG + ": Channels available");
-                mChannelsEnabled = true;
-            }
-
-            getLibraryRoot();
-        }
-        @Override
-        public void onError(Exception ex) {
-            AppLogger.getLogger().Error(TAG + ": Error receiving Channel info");
-            getLibraryRoot();
-        }
-    };
-
-
     private void getLibraryRoot() {
-        ItemQuery query = new ItemQuery();
-        query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
-        query.setSortBy(new String[]{ItemSortBy.SortName});
-        query.setSortOrder(SortOrder.Ascending);
-        query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio});
-
-        MainApplication.getInstance().API.GetItemsAsync(query, getLibraryResponse);
+        MainApplication.getInstance().API.GetUserViews(MainApplication.getInstance().API.getCurrentUserId(), getLibraryResponse);
     }
 
 

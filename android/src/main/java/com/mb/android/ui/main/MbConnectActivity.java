@@ -200,7 +200,7 @@ public class MbConnectActivity extends FragmentActivity {
 
     private void showActivityDialog() {
         dialog = new AlertDialog.Builder(this)
-                .setTitle("Media Browser")
+                .setTitle("Emby")
                 .setMessage("Logging In")
                 .setCancelable(false)
                 .create();

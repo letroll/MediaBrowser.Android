@@ -12,11 +12,13 @@ import android.widget.ProgressBar;
 
 import com.mb.android.MainApplication;
 import com.mb.android.R;
+import com.mb.android.activities.mobile.ChannelsActivity;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.library.LibraryPresentationActivity;
 import com.mb.android.adapters.CollectionAdapter;
 import mediabrowser.apiinteraction.Response;
 import com.mb.android.interfaces.ICommandListener;
+import com.mb.android.ui.mobile.livetv.LiveTvActivity;
 import com.mb.android.ui.mobile.music.MusicActivity;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.querying.ItemsResult;
@@ -60,14 +62,8 @@ public class CollectionsFragment extends Fragment implements ICommandListener {
         if (MainApplication.getInstance().API != null
                 && !tangible.DotNetToJavaStringHelper.isNullOrEmpty(MainApplication.getInstance().API.getCurrentUserId())) {
 
-            ItemQuery query = new ItemQuery();
-            query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
-            query.setSortBy(new String[]{ItemSortBy.SortName});
-            query.setSortOrder(SortOrder.Ascending);
-            query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio});
-
             // Retrieve the root items.
-            MainApplication.getInstance().API.GetItemsAsync(query, getItemsResponse);
+            MainApplication.getInstance().API.GetUserViews(MainApplication.getInstance().API.getCurrentUserId(), getItemsResponse);
         }
     }
 
@@ -98,7 +94,16 @@ public class CollectionsFragment extends Fragment implements ICommandListener {
                                 Intent intent = new Intent(MainApplication.getInstance(), MusicActivity.class);
                                 intent.putExtra("ParentId", mItems[index].getId());
                                 startActivity(intent);
-                            } else {
+                            }
+                            else if (mItems[index].getCollectionType() != null && mItems[index].getCollectionType().equalsIgnoreCase("livetv")) {
+                                Intent intent = new Intent(MainApplication.getInstance(), LiveTvActivity.class);
+                                startActivity(intent);
+                            }
+                            else if (mItems[index].getCollectionType() != null && mItems[index].getCollectionType().equalsIgnoreCase("channels")) {
+                                Intent intent = new Intent(MainApplication.getInstance(), ChannelsActivity.class);
+                                startActivity(intent);
+                            }
+                            else {
                                 String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(mItems[index]);
                                 Intent intent = new Intent(MainApplication.getInstance(), LibraryPresentationActivity.class);
                                 intent.putExtra("Item", jsonData);

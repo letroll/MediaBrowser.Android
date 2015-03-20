@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Media Browser</string>
-    <string name="welcome_title">Welcome to Media Browser</string>
-    <string name="welcome_paragraph">With Media Browser you can easily stream videos, music and photos to Android and other devices from your Media Browser Server.</string>
-    <string name="welcome_server_download_address">To download and install Media Browser Server visit http://mediabrowser.tv</string>
+    <string name="app_name">Emby</string>
+    <string name="welcome_title">Welcome to Emby</string>
+    <string name="welcome_paragraph">With Media Browser you can easily stream videos, music and photos to Android and other devices from your Emby Server.</string>
+    <string name="welcome_server_download_address">To download and install Emby Server visit http://emby.media</string>
     <string name="next_button_text">Next</string>
-    <string name="title_activity_main">Media Browser</string>
-    <string name="mb_connect_welcome_text_with_url">With <a href='http://mediabrowser.tv/connect/'>Media Browser Connect</a> you can easily access your Media Browser Server wherever you are and share with your family and friends.</string>
-    <string name="mb_connect_pin_entry_url_paragraph">To sign in with Media Browser Connect, visit http://mediabrowser.tv/pin and enter the following pin code:</string>
-    <string name="mb_connect_sign_in_header">Sign in with Media Browser Connect</string>
+    <string name="title_activity_main">Emby</string>
+    <string name="mb_connect_welcome_text_with_url">With <a href='http://mediabrowser.tv/connect/'>Emby Connect</a> you can easily access your Emby Server wherever you are and share with your family and friends.</string>
+    <string name="mb_connect_pin_entry_url_paragraph">To sign in with Emby Connect, visit http://mediabrowser.tv/pin and enter the following pin code:</string>
+    <string name="mb_connect_sign_in_header">Sign in with Emby Connect</string>
     <string name="sign_in_button_text">Sign In</string>
     <string name="skip_button_text">Skip</string>
     <string name="manual_connection_text">Connect to my server manually</string>
@@ -59,7 +59,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="change_server">Change Server</string>
-    <string name="select_mb_server">Select a Media Browser server</string>
+    <string name="select_mb_server">Select an Emby server</string>
 
     <!-- Widget Server Tile -->
     <string name="connected">connected</string>

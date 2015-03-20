@@ -127,7 +127,7 @@ public class ActorDetailsActivity extends MbBackdropActivity implements ILongPre
                     query.setSortOrder(SortOrder.Descending);
                     query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio});
                     query.setRecursive(true);
-                    query.setPerson(mPerson.getName());
+                    query.setPersonIds(new String[]{mPerson.getId()});
 
                     MainApplication.getInstance().API.GetItemsAsync(query, getActorMediaResponse);
                 }
