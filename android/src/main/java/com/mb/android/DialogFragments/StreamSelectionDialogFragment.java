@@ -44,6 +44,7 @@ public class StreamSelectionDialogFragment extends DialogFragment {
     private BaseItemDto mMedia;
     private int mSelectedAudioStream;
     private int mSelectedSubtitleStream;
+    private VideoOptions mOptions;
 
     /**
      * Class Constructor
@@ -89,12 +90,10 @@ public class StreamSelectionDialogFragment extends DialogFragment {
 
         mAudioStreamRadioGroup = (RadioGroup) dialogContent.findViewById(R.id.rgAudioStreams);
         mSubtitleStreamRadioGroup = (RadioGroup) dialogContent.findViewById(R.id.rgSubtitleStreams);
-
         RadioButton rButton;
         if (mInfo != null && mInfo.getMediaSource() != null && mInfo.getMediaSource().getMediaStreams() != null) {
-            for (MediaStream ms : mInfo.getMediaSource().getMediaStreams()) {
+            for (MediaStream ms : MainApplication.getInstance().getPlaybackManager().getPrePlaybackSelectableAudioStreams(MainApplication.getInstance().API.getServerInfo().getId(), mOptions)) {
 
-                if (ms.getType() == MediaStreamType.Audio) {
                     rButton = new RadioButton(dialogContent.getContext());
                     rButton.setText(Utils.buildAudioDisplayString(ms));
                     rButton.setTag(String.valueOf(ms.getIndex()));
@@ -102,15 +101,17 @@ public class StreamSelectionDialogFragment extends DialogFragment {
                         rButton.setButtonDrawable(R.drawable.mediabrowser_btn_radio_holo_dark);
                     }
                     mAudioStreamRadioGroup.addView(rButton);
-                } else if (ms.getType() == MediaStreamType.Subtitle) {
-                    rButton = new RadioButton(dialogContent.getContext());
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                        rButton.setButtonDrawable(R.drawable.mediabrowser_btn_radio_holo_dark);
-                    }
-                    rButton.setText(Utils.buildSubtitleDisplayString(ms));
-                    rButton.setTag(String.valueOf(ms.getIndex()));
-                    mSubtitleStreamRadioGroup.addView(rButton);
+            }
+
+            for (MediaStream ms : MainApplication.getInstance().getPlaybackManager().getPrePlaybackSelectableSubtitleStreams(MainApplication.getInstance().API.getServerInfo().getId(), mOptions)) {
+
+                rButton = new RadioButton(dialogContent.getContext());
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    rButton.setButtonDrawable(R.drawable.mediabrowser_btn_radio_holo_dark);
                 }
+                rButton.setText(Utils.buildSubtitleDisplayString(ms));
+                rButton.setTag(String.valueOf(ms.getIndex()));
+                mSubtitleStreamRadioGroup.addView(rButton);
             }
 
             setAudioStreamsInitialCheckedState(mInfo);
@@ -198,15 +199,15 @@ public class StreamSelectionDialogFragment extends DialogFragment {
         boolean h264StrictModeEnabled = prefs.getBoolean("pref_h264_strict", true);
 
         AppLogger.getLogger().Info("Create VideoOptions");
-        VideoOptions options = new VideoOptions();
-        options.setItemId(baseItemDto.getId());
-        options.setMediaSources(baseItemDto.getMediaSources());
-        options.setProfile(new AndroidProfile(hlsEnabled, false));
-        options.setDeviceId(Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
-        options.setMaxBitrate(Integer.valueOf(bitrate));
+        mOptions = new VideoOptions();
+        mOptions.setItemId(baseItemDto.getId());
+        mOptions.setMediaSources(baseItemDto.getMediaSources());
+        mOptions.setProfile(new AndroidProfile(hlsEnabled, false));
+        mOptions.setDeviceId(Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
+        mOptions.setMaxBitrate(Integer.valueOf(bitrate));
 
         AppLogger.getLogger().Info("Create StreamInfo");
-        StreamInfo streamInfo = new StreamBuilder().BuildVideoItem(options);
+        StreamInfo streamInfo = new StreamBuilder().BuildVideoItem(mOptions);
 
         if (streamInfo == null) {
             AppLogger.getLogger().Info("streamInfo is null");

@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.playback.PlaybackActivity;
@@ -39,18 +40,13 @@ public class SubtitleStreamSelectionDialogFragment extends DialogFragment {
         mStreamInfo = ((PlaybackActivity)getActivity()).getStreamInfo();
 
         if (mStreamInfo != null && mStreamInfo.getMediaSource() != null && mStreamInfo.getMediaSource().getMediaStreams() != null) {
-            mStreams = new ArrayList<>();
+            mStreams = MainApplication.getInstance().getPlaybackManager().getInPlaybackSelectableSubtitleStreams(mStreamInfo);
             MediaStream noStream = new MediaStream();
             noStream.setLanguage("");
             noStream.setCodec("NONE");
             noStream.setIndex(-1);
-            mStreams.add(noStream);
+            mStreams.add(0, noStream);
 
-            for (MediaStream stream : mStreamInfo.getMediaSource().getMediaStreams()) {
-                if (stream.getType() != null && stream.getType().equals(MediaStreamType.Subtitle)) {
-                    mStreams.add(stream);
-                }
-            }
         }
     }
 

@@ -56,6 +56,7 @@ public class MainApplication extends Application
 //    public String LibretroNativeLibraryPath;
     private MediaPlayer mMediaPlayer;
     private PlaybackManager mPlaybackManager;
+    private AndroidDevice mDevice;
     private DolbyAudioProcessing mDolbyAudioProcessing = null;
     private boolean isDolbyAudioProcessingConnected = false;
 
@@ -161,7 +162,8 @@ public class MainApplication extends Application
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
 
         this.PlayerQueue = new Playlist();
-        this.mPlaybackManager = new PlaybackManager(new AndroidDevice(this), AppLogger.getLogger());
+        this.mDevice = new AndroidDevice(this);
+        this.mPlaybackManager = new PlaybackManager(mDevice, AppLogger.getLogger());
 
         Utils.saveFloatToPreference(getApplicationContext(),
                 VideoCastManager.PREFS_KEY_VOLUME_INCREMENT, (float) VOLUME_INCREMENT);
@@ -422,5 +424,9 @@ public class MainApplication extends Application
 
     public void setOffline(boolean isOffline) {
         this.isOffline = isOffline;
+    }
+
+    public AndroidDevice getDevice() {
+        return mDevice;
     }
 }

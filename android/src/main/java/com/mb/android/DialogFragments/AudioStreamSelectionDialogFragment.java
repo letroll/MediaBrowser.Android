@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.playback.PlaybackActivity;
@@ -43,13 +44,7 @@ public class AudioStreamSelectionDialogFragment extends DialogFragment {
         mStreamInfo = ((PlaybackActivity)getActivity()).getStreamInfo();
 
         if (mStreamInfo != null && mStreamInfo.getMediaSource() != null && mStreamInfo.getMediaSource().getMediaStreams() != null) {
-            mStreams = new ArrayList<>();
-
-            for (MediaStream stream : mStreamInfo.getMediaSource().getMediaStreams()) {
-                if (stream.getType() != null && stream.getType().equals(MediaStreamType.Audio)) {
-                    mStreams.add(stream);
-                }
-            }
+            mStreams = MainApplication.getInstance().getPlaybackManager().getInPlaybackSelectableAudioStreams(mStreamInfo);
         }
     }
 

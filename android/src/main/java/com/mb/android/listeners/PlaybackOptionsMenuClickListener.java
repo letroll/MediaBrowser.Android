@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.mb.android.MainApplication;
 import com.mb.android.R;
+import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.playback.PlaybackActivity;
 
 import mediabrowser.model.dto.MediaSourceInfo;
@@ -63,5 +64,6 @@ public class PlaybackOptionsMenuClickListener implements View.OnClickListener {
 
         popupMenu.setOnMenuItemClickListener(new PlaybackOptionsMenuItemClickListener((FragmentActivity)v.getContext(), mPlaybackActivity));
         popupMenu.show();
+        AppLogger.getLogger().Debug("Showing playback options menu");
     }
 }
