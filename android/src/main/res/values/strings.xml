@@ -3,12 +3,12 @@
 
     <string name="app_name">Emby</string>
     <string name="welcome_title">Welcome to Emby</string>
-    <string name="welcome_paragraph">With Media Browser you can easily stream videos, music and photos to Android and other devices from your Emby Server.</string>
+    <string name="welcome_paragraph">With Emby you can easily stream videos, music and photos to Android and other devices from your Emby Server.</string>
     <string name="welcome_server_download_address">To download and install Emby Server visit http://emby.media</string>
     <string name="next_button_text">Next</string>
     <string name="title_activity_main">Emby</string>
-    <string name="mb_connect_welcome_text_with_url">With <a href='http://mediabrowser.tv/connect/'>Emby Connect</a> you can easily access your Emby Server wherever you are and share with your family and friends.</string>
-    <string name="mb_connect_pin_entry_url_paragraph">To sign in with Emby Connect, visit http://mediabrowser.tv/pin and enter the following pin code:</string>
+    <string name="mb_connect_welcome_text_with_url">With <a href='http://emby.media/connect/'>Emby Connect</a> you can easily access your Emby Server wherever you are and share with your family and friends.</string>
+    <string name="mb_connect_pin_entry_url_paragraph">To sign in with Emby Connect, visit http://emby.media/pin and enter the following pin code:</string>
     <string name="mb_connect_sign_in_header">Sign in with Emby Connect</string>
     <string name="sign_in_button_text">Sign In</string>
     <string name="skip_button_text">Skip</string>
@@ -39,10 +39,10 @@
     <string name="playlist_clear_string">clear playlist</string>
 
     <!-- First-Run Wizard -->
-    <string name="first_run_introduction">Since this is your first time using the MediaBrowser Android client, we\'re going to try and configure everything automatically for you.</string>
+    <string name="first_run_introduction">Since this is your first time using Emby for Android, we\'re going to try and configure everything automatically for you.</string>
     <string name="first_run_single_discovered_server">The following server was found. Press to connect or long-press to change values.</string>
     <string name="first_run_multi_discovered_servers">The following servers have been found. Select the one you\'d like to connect to or long-press to change values.</string>
-    <string name="first_run_no_servers_found">No MediaBrowser servers could be located. Click the Add Connection button to manually add your server.</string>
+    <string name="first_run_no_servers_found">No Emby servers could be located. Click the Add Connection button to manually add your server.</string>
     <string name="first_run_connection_description">Enter the address of the server to connect to. Supported address formats are:</string>
     <string name="first_run_connection_error">Unable to connect to server</string>
     <string name="add_connection_dialog_title">Add new connection</string>
@@ -253,9 +253,9 @@
     <string name="director_">Director:</string>
     <string name="writer_">"Writer: "</string>
     <string name="server_tile_icon">Server Tile Icon</string>
-    <string name="no_available_mb_server_warning">No MediaBrowser libraries could be found. Click the icon above to add a new connection.</string>
+    <string name="no_available_mb_server_warning">No Emby libraries could be found. Click the icon above to add a new connection.</string>
     <string name="external_player_warning">When playing through an external player, playback over cellular will likely fail. The media is direct streamed rather than transcoded. You will also lose playback position tracking. \r\n \r\nAre you sure you want to enable external player support?</string>
-    <string name="no_content_warning">No content available. Add media libraries through the MediaBrowser Server Dashboard.</string>
+    <string name="no_content_warning">No content available. Add media libraries through the Emby Server Dashboard.</string>
     <string name="no_new_items_warning">No items recently added.</string>
     <string name="no_favorite_items_warning">No items marked as favorites.</string>
     <string name="no_next_up_items_warning">No upcoming episodes. Start watching some TV!</string>
