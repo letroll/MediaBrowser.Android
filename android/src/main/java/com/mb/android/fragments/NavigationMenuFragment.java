@@ -245,19 +245,10 @@ public class NavigationMenuFragment extends Fragment {
                     intent.putExtra("ParentId", menu.get(index).Id);
                     startActivity(intent);
                 } else {
-                    ItemQuery query = new ItemQuery();
-                    query.setParentId(menu.get(index).Id);
-                    query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
-                    query.setSortBy(new String[]{ItemSortBy.SortName});
-                    query.setSortOrder(SortOrder.Ascending);
-                    query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.ParentId, ItemFields.SortName});
-                    query.setLimit(200);
 
-                    String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(query);
-
+                    String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(menu.get(index));
                     Intent intent = new Intent(MainApplication.getInstance(), LibraryPresentationActivity.class);
-                    intent.putExtra("ItemQuery", jsonData);
-                    AppLogger.getLogger().Info("Starting Library Presentation Activity");
+                    intent.putExtra("Item", jsonData);
                     startActivity(intent);
                 }
             }

@@ -34,6 +34,8 @@ import com.mb.android.player.AudioService;
 import com.mb.android.ui.mobile.playback.AudioPlaybackActivity;
 import com.mb.android.ui.mobile.playback.PlaybackActivity;
 import mediabrowser.model.dto.BaseItemDto;
+import mediabrowser.model.entities.CollectionType;
+import mediabrowser.model.extensions.StringHelper;
 import mediabrowser.model.querying.ItemsResult;
 import mediabrowser.model.querying.EpisodeQuery;
 import mediabrowser.model.querying.ItemQuery;
@@ -359,6 +361,20 @@ public class LibraryPresentationActivity extends BaseMbMobileActivity {
             mItemQuery.setSortBy(new String[]{ItemSortBy.SortName});
             mItemQuery.setSortOrder(SortOrder.Ascending);
             mItemQuery.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.SortName, ItemFields.DateCreated, ItemFields.Genres});
+
+            String collectionType = mItem.getCollectionType();
+            if (StringHelper.EqualsIgnoreCase(collectionType, CollectionType.Movies)){
+                mItemQuery.setRecursive(true);
+                mItemQuery.setIncludeItemTypes(new String[]{"Movie"});
+            }
+            else if (StringHelper.EqualsIgnoreCase(collectionType, CollectionType.TvShows)){
+                mItemQuery.setRecursive(true);
+                mItemQuery.setIncludeItemTypes(new String[]{"Series"});
+            }
+            else if (StringHelper.EqualsIgnoreCase(collectionType, CollectionType.games)){
+                mItemQuery.setRecursive(true);
+                mItemQuery.setIncludeItemTypes(new String[]{"GameSystem"});
+            }
             mItemQuery.setLimit(200);
         }
 
