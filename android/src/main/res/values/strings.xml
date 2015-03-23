@@ -314,5 +314,8 @@
     <string name="failed_seek">Failed to seek to the new position on the cast device</string>
     <string name="failed_receiver_player_error">Receiver player has encountered a server error</string>
     <string name="failed_authorization_timeout">Authorization timed out</string>
+    <string name="message_playback_not_allowed">Playback not allowed at this time</string>
+    <string name="message_playback_no_compat">Cannot play this type of item</string>
+    <string name="message_playback_rate_exceeded">Playback limited by the administrator</string>
 
 </resources>

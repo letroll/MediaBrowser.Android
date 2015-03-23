@@ -8,12 +8,15 @@ import android.provider.Settings;
 import android.text.Editable;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.network.Connectivity;
 
+import mediabrowser.apiinteraction.Response;
 import mediabrowser.apiinteraction.android.profiles.AndroidProfile;
+import mediabrowser.model.dlna.PlaybackException;
 import mediabrowser.model.dlna.StreamBuilder;
 import mediabrowser.model.dlna.StreamInfo;
 import mediabrowser.model.dlna.VideoOptions;
@@ -306,17 +309,20 @@ public class Utils {
         }
     }
 
-    /**
-     * Generate the Video URL to be requested from MB Server
-     *
-     * @return A String containing the formed URL.
-     */
-    public static String buildPlaybackUrl(BaseItemDto item,
-                                    Long startPositionTicks,
-                                    String mediaSourceId,
-                                    Integer audioStreamIndex,
-                                    Integer subtitleStreamIndex) {
+    public static void getStreamInfo(BaseItemDto item, Response<StreamInfo> response) {
+        getStreamInfo(item, 0L, null, null, null, response);
+    }
 
+    public static void getStreamInfo(BaseItemDto item, Long startPositionTicks, Response<StreamInfo> response) {
+        getStreamInfo(item, startPositionTicks, null, null, null, response);
+    }
+
+    public static void getStreamInfo(BaseItemDto item,
+                                     final Long startPositionTicks,
+                                     String mediaSourceId,
+                                     Integer audioStreamIndex,
+                                     Integer subtitleStreamIndex,
+                                     final Response<StreamInfo> outerResponse) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
         String bitrate;
@@ -349,18 +355,68 @@ public class Utils {
         }
 
         AppLogger.getLogger().Info("Create StreamInfo");
-        StreamInfo mStreamInfo;
         if (item.getType() != null && item.getType().equalsIgnoreCase("audio")) {
-            mStreamInfo = new StreamBuilder().BuildAudioItem(options);
+            MainApplication.getInstance().getPlaybackManager().getAudioStreamInfo(
+                    MainApplication.getInstance().API.getServerInfo().getId(),
+                    options,
+                    MainApplication.getInstance().isOffline(),
+                    MainApplication.getInstance().API,
+                    new Response<StreamInfo>() {
+                        @Override
+                        public void onResponse(StreamInfo response) {
+                            if (response.getProtocol() == null || !response.getProtocol().equalsIgnoreCase("hls")) {
+                                response.setStartPositionTicks(startPositionTicks);
+                            }
+                            outerResponse.onResponse(response);
+                        }
+
+                        @Override
+                        public void onError(Exception exception) {
+                            handleStreamError((PlaybackException) exception);
+                            outerResponse.onError(exception);
+                        }
+                    }
+            );
         } else {
-            mStreamInfo = new StreamBuilder().BuildVideoItem(options);
-        }
+            MainApplication.getInstance().getPlaybackManager().getVideoStreamInfo(
+                    MainApplication.getInstance().API.getServerInfo().getId(),
+                    options,
+                    MainApplication.getInstance().isOffline(),
+                    MainApplication.getInstance().API,
+                    new Response<StreamInfo>() {
+                        @Override
+                        public void onResponse(StreamInfo response) {
+                            if (response.getProtocol() == null || !response.getProtocol().equalsIgnoreCase("hls")) {
+                                response.setStartPositionTicks(startPositionTicks);
+                            }
+                            outerResponse.onResponse(response);
+                        }
 
-        if (mStreamInfo.getProtocol() == null || !mStreamInfo.getProtocol().equalsIgnoreCase("hls")) {
-            mStreamInfo.setStartPositionTicks(startPositionTicks);
+                        @Override
+                        public void onError(Exception exception) {
+                            handleStreamError((PlaybackException) exception);
+                            outerResponse.onError(exception);
+                        }
+                    }
+            );
         }
+    }
 
-        return mStreamInfo.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken());
+    private static void handleStreamError(PlaybackException ex) {
+        AppLogger.getLogger().ErrorException("Playback stream error", ex);
+
+        switch (ex.getErrorCode()) {
+
+            case NotAllowed:
+                Toast.makeText(MainApplication.getInstance(), R.string.message_playback_not_allowed, Toast.LENGTH_LONG);
+                break;
+            case NoCompatibleStream:
+                Toast.makeText(MainApplication.getInstance(), R.string.message_playback_no_compat, Toast.LENGTH_LONG);
+                break;
+            case RateLimitExceeded:
+                Toast.makeText(MainApplication.getInstance(), R.string.message_playback_rate_exceeded, Toast.LENGTH_LONG);
+                break;
+        }
     }
 
     public static Date convertToLocalDate(Date utcDate) {

@@ -967,12 +967,21 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
             if (themeSongs == null || themeSongs.getItems() == null || themeSongs.getItems().length < 1)
                 return;
 
-            String url = Utils.buildPlaybackUrl(themeSongs.getItems()[0], 0L, null, null, null);
-            MainApplication.getInstance().PlayMedia(url);
+            Utils.getStreamInfo(themeSongs.getItems()[0], new Response<StreamInfo>() {
+                @Override
+                public void onResponse(StreamInfo response) {
+                    MainApplication.getInstance().PlayMedia(response.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken()));
+                }
+
+                @Override
+                public void onError(Exception exception) {
+                    AppLogger.getLogger().ErrorException("Error playing theme media", exception);
+                }
+            });
         }
         @Override
         public void onError(Exception ex) {
-
+            AppLogger.getLogger().ErrorException("Error retrieving theme media", ex);
         }
     };
 
