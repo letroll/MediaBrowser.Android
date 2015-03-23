@@ -3,7 +3,6 @@ package com.mb.android.ui.mobile.playback;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Build;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.text.Html;
 import android.util.DisplayMetrics;
@@ -48,28 +46,6 @@ import com.mb.android.subtitles.TimedTextFileFormat;
 import com.mb.android.subtitles.TimedTextObject;
 import com.mb.android.ui.tv.playback.PlayerHelpers;
 import com.mb.android.utils.Utils;
-import com.mb.network.Connectivity;
-
-import mediabrowser.apiinteraction.EmptyResponse;
-import mediabrowser.apiinteraction.Response;
-import mediabrowser.apiinteraction.android.profiles.AndroidProfile;
-import mediabrowser.model.dlna.DeviceProfile;
-import mediabrowser.model.dlna.StreamBuilder;
-import mediabrowser.model.dlna.StreamInfo;
-import mediabrowser.model.dlna.SubtitleDeliveryMethod;
-import mediabrowser.model.dlna.SubtitleStreamInfo;
-import mediabrowser.model.dlna.VideoOptions;
-import mediabrowser.model.dto.BaseItemDto;
-import mediabrowser.model.dto.ImageOptions;
-import mediabrowser.model.dto.MediaSourceInfo;
-import mediabrowser.model.entities.ImageType;
-import mediabrowser.model.entities.MediaStream;
-import mediabrowser.model.livetv.RecordingInfoDto;
-import mediabrowser.model.session.PlayMethod;
-import mediabrowser.model.session.PlayRequest;
-import mediabrowser.model.session.PlaybackProgressInfo;
-import mediabrowser.model.session.PlaybackStartInfo;
-import mediabrowser.model.session.PlaybackStopInfo;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -78,6 +54,22 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import mediabrowser.apiinteraction.EmptyResponse;
+import mediabrowser.apiinteraction.Response;
+import mediabrowser.model.dlna.StreamInfo;
+import mediabrowser.model.dlna.SubtitleDeliveryMethod;
+import mediabrowser.model.dlna.SubtitleStreamInfo;
+import mediabrowser.model.dto.BaseItemDto;
+import mediabrowser.model.dto.ImageOptions;
+import mediabrowser.model.entities.ImageType;
+import mediabrowser.model.entities.MediaStream;
+import mediabrowser.model.livetv.RecordingInfoDto;
+import mediabrowser.model.session.PlayMethod;
+import mediabrowser.model.session.PlayRequest;
+import mediabrowser.model.session.PlaybackProgressInfo;
+import mediabrowser.model.session.PlaybackStartInfo;
+import mediabrowser.model.session.PlaybackStopInfo;
 
 /**
  * Created by Mark on 12/12/13.
@@ -1190,102 +1182,6 @@ public class PlaybackActivity
     }
 
     /**
-     * Generate the Video URL to be requested from MB Server
-     *
-     * @param id                  The ID of the item to be played
-     * @param mediaSources        The available MediaSourceInfo's for the item being played
-     * @param startPositionTicks  The position in ticks that playback should commence from.
-     * @param audioStreamIndex    Integer representing the media stream index to use for audio.
-     * @param subtitleStreamIndex Integer representing the media stream index to use for subtitles.
-     * @return A String containing the formed URL.
-     */
-    private boolean buildStreamInfo(String id,
-                                    ArrayList<MediaSourceInfo> mediaSources,
-                                    Long startPositionTicks,
-                                    String mediaSourceId,
-                                    Integer audioStreamIndex,
-                                    Integer subtitleStreamIndex) {
-
-        mIsDirectStreaming = false;
-        mIsStreamingHls = false;
-        mStreamDetails.setVisibility(TextView.VISIBLE);
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String bitrate;
-
-        if (Connectivity.isConnectedLAN(this)) {
-            bitrate = prefs.getString("pref_local_bitrate", "1800000");
-        } else {
-            bitrate = prefs.getString("pref_cellular_bitrate", "450000");
-        }
-
-        boolean hlsEnabled = prefs.getBoolean("pref_enable_hls", true);
-//        boolean h264StrictModeEnabled = prefs.getBoolean("pref_h264_strict", true);
-
-        DeviceProfile androidProfile = new AndroidProfile(hlsEnabled, false);
-
-//        DirectPlayProfile directMp4 = new DirectPlayProfile();
-//        directMp4.setContainer("mp4");
-//        directMp4.setType(DlnaProfileType.Video);
-//
-//        DirectPlayProfile directMkv = new DirectPlayProfile();
-//        directMkv.setContainer("mkv");
-//        directMkv.setType(DlnaProfileType.Video);
-//
-//        ArrayList<DirectPlayProfile> directPlayProfiles = new ArrayList<>();
-//
-//        Collections.addAll(directPlayProfiles, androidProfile.getDirectPlayProfiles());
-//
-//        directPlayProfiles.add(directMkv);
-//        directPlayProfiles.add(directMp4);
-//
-//        DirectPlayProfile[] directArray = new DirectPlayProfile[directPlayProfiles.size()];
-//        directPlayProfiles.toArray(directArray);
-//
-//        androidProfile.setDirectPlayProfiles(directArray);
-//
-//        SubtitleProfile srtSubs = new SubtitleProfile();
-//        srtSubs.setFormat("srt");
-//        srtSubs.setMethod(SubtitleDeliveryMethod.External);
-//
-//        androidProfile.setSubtitleProfiles(new SubtitleProfile[] { srtSubs });
-
-        String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(androidProfile);
-        AppLogger.getLogger().Info(jsonData);
-
-        AppLogger.getLogger().Info("Create VideoOptions");
-        VideoOptions options = new VideoOptions();
-        options.setItemId(id);
-        options.setMediaSources(mediaSources);
-        options.setProfile(androidProfile);
-        options.setDeviceId(Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
-        options.setMaxBitrate(Integer.valueOf(bitrate));
-//        options.setMaxAudioChannels(5);
-
-        if (audioStreamIndex != null) {
-            options.setAudioStreamIndex(audioStreamIndex);
-            options.setMediaSourceId(mediaSourceId);
-        }
-        if (subtitleStreamIndex != null) {
-            options.setSubtitleStreamIndex(subtitleStreamIndex);
-            options.setMediaSourceId(mediaSourceId);
-        }
-
-        AppLogger.getLogger().Info("Create StreamInfo");
-        mStreamInfo = new StreamBuilder().BuildVideoItem(options);
-
-        mIsStreamingHls = mStreamInfo.getProtocol() != null && mStreamInfo.getProtocol().equalsIgnoreCase("hls");
-        mIsDirectStreaming = mStreamInfo.getIsDirectStream();
-
-        if (mStreamInfo.getProtocol() == null || !mStreamInfo.getProtocol().equalsIgnoreCase("hls")) {
-            mStreamInfo.setStartPositionTicks(startPositionTicks);
-        }
-
-        return true;
-    }
-
-
-    /**
      * Display a backdrop image for the currently loading video
      *
      * @param item The item to show the backdrop for
@@ -1574,17 +1470,18 @@ public class PlaybackActivity
     }
 
     private void reloadMediaInternal() {
-        buildStreamInfo(
-                mMediaItem.getId(),
-                mMediaItem.getMediaSources(),
-                (long) mPreviousPosition,
-                mMediaItem.getMediaSources().get(0).getId(),
+        Utils.getStreamInfo(
+                mMediaItem,
+                (long) mPreviousPosition, mMediaItem.getMediaSources().get(0).getId(),
                 MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).AudioStreamIndex,
-                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex);
-
-        if (mStreamInfo != null) {
-            loadStreamInfoIntoPlayer();
-        }
+                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex,
+                new Response<StreamInfo>() {
+                    @Override
+                    public void onResponse(StreamInfo response) {
+                        mStreamInfo = response;
+                        loadStreamInfoIntoPlayer();
+                    }
+                });
     }
 
     public void onTimedText(Caption text) {
@@ -1644,23 +1541,30 @@ public class PlaybackActivity
 
             }
 
-            buildStreamInfo(mRecording.getId(),
-                    new ArrayList<>(mRecording.getMediaSources()),
+            Utils.getStreamInfo(
+                    mRecording,
                     MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).startPositionTicks != null
                             ? MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).startPositionTicks
                             : 0L,
                     mRecording.getMediaSources().get(0).getId(),
                     MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).AudioStreamIndex,
-                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex);
+                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex,
+                    new Response<StreamInfo>() {
+                        @Override
+                        public void onResponse(StreamInfo response) {
+                            mStreamInfo = response;
+                            if (mStreamInfo == null) return;
 
-            if (mStreamInfo == null) return;
+                            SetNowPlayingInfo(mRecording);
+                            loadStreamInfoIntoPlayer();
+                            mOptionsMenu.setOnClickListener(new PlaybackOptionsMenuClickListener(mStreamInfo.getMediaSource(), PlaybackActivity.this));
 
-            SetNowPlayingInfo(mRecording);
-            loadStreamInfoIntoPlayer();
-            mOptionsMenu.setOnClickListener(new PlaybackOptionsMenuClickListener(mStreamInfo.getMediaSource(), PlaybackActivity.this));
+                            if (mRecording.getRunTimeTicks() != null)
+                                mRuntime = (int) (mRecording.getRunTimeTicks() / 10000);
+                        }
+                    }
+            );
 
-            if (mRecording.getRunTimeTicks() != null)
-                mRuntime = (int) (mRecording.getRunTimeTicks() / 10000);
         }
     }
 
@@ -1712,14 +1616,20 @@ public class PlaybackActivity
 //                    loadUrlIntoPlayer(mUrl);
 //                }
 
-                mStreamInfo = PlayerHelpers.buildStreamInfoAudio(mMediaItem.getId(), mMediaItem.getMediaSources(), 0L, null);
-                if (mStreamInfo != null) {
-                    loadStreamInfoIntoPlayer();
+                Utils.getStreamInfo(mMediaItem, new Response<StreamInfo>() {
+                    @Override
+                    public void onResponse(StreamInfo response) {
+                        mStreamInfo = response;
+                        if (mStreamInfo != null) {
+                            loadStreamInfoIntoPlayer();
 
-                    mStreamDetails.setText(StreamDetailsFromStreamInfo());
-                    mOptionsMenu.setOnClickListener(new PlaybackOptionsMenuClickListener(mStreamInfo.getMediaSource(), PlaybackActivity.this));
-                }
+                            mStreamDetails.setText(StreamDetailsFromStreamInfo());
+                            mOptionsMenu.setOnClickListener(new PlaybackOptionsMenuClickListener(mStreamInfo.getMediaSource(), PlaybackActivity.this));
+                        }
+                    }
+                });
             } else {
+                final Response<BaseItemDto> outerResponse = this;
                 mResume = currentlyPlayingIndex == 0
                         && MainApplication.getInstance().PlayerQueue != null
                         && MainApplication.getInstance().PlayerQueue.PlaylistItems != null
@@ -1727,44 +1637,49 @@ public class PlaybackActivity
                         && MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks != null
                         && MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks > 0L;
 
-                buildStreamInfo(mMediaItem.getId(),
-                        mMediaItem.getMediaSources(),
-                        mResume
-                                ? mMediaItem.getUserData() != null
+                Utils.getStreamInfo(
+                        mMediaItem,
+                        mResume ? mMediaItem.getUserData() != null
                                 ? mMediaItem.getUserData().getPlaybackPositionTicks()
                                 : 0
                                 : 0,
                         mMediaItem.getMediaSources() != null && !mMediaItem.getMediaSources().isEmpty() ? mMediaItem.getMediaSources().get(0).getId() : null,
                         MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).AudioStreamIndex,
-                        MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex);
+                        MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex,
+                        new Response<StreamInfo>() {
+                            @Override
+                            public void onResponse(StreamInfo response) {
+                                mStreamInfo = response;
+                                if (mStreamInfo != null) {
+                                    loadStreamInfoIntoPlayer();
 
-                if (mStreamInfo != null) {
-                    loadStreamInfoIntoPlayer();
+                                    mStreamDetails.setText(StreamDetailsFromStreamInfo());
+                                    mOptionsMenu.setOnClickListener(new PlaybackOptionsMenuClickListener(mStreamInfo.getMediaSource(), PlaybackActivity.this));
+                                } else {
 
-                    mStreamDetails.setText(StreamDetailsFromStreamInfo());
-                    mOptionsMenu.setOnClickListener(new PlaybackOptionsMenuClickListener(mStreamInfo.getMediaSource(), PlaybackActivity.this));
-                } else {
+                                    if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > currentlyPlayingIndex + 1) {
+                                        currentlyPlayingIndex += 1;
 
-                    if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > currentlyPlayingIndex + 1) {
-                        currentlyPlayingIndex += 1;
+                                        isPrepared = false;
+                                        // Make sure the activity knows to update the playlist
+                                        UpdateCurrentPlayingIndex(currentlyPlayingIndex);
 
-                        isPrepared = false;
-                        // Make sure the activity knows to update the playlist
-                        UpdateCurrentPlayingIndex(currentlyPlayingIndex);
+                                        MainApplication.getInstance().API.GetItemAsync(
+                                                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).Id,
+                                                MainApplication.getInstance().API.getCurrentUserId(),
+                                                outerResponse);
+                                        Toast.makeText(PlaybackActivity.this, MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex - 1).Name + " was skipped due to missing media info", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        mIsPaused = true;
+                                        isPrepared = false;
 
-                        MainApplication.getInstance().API.GetItemAsync(
-                                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).Id,
-                                MainApplication.getInstance().API.getCurrentUserId(),
-                                this);
-                        Toast.makeText(PlaybackActivity.this, MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex - 1).Name + " was skipped due to missing media info", Toast.LENGTH_LONG).show();
-                    } else {
-                        mIsPaused = true;
-                        isPrepared = false;
-
-                        Toast.makeText(PlaybackActivity.this, MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).Name + " was skipped due to missing media info", Toast.LENGTH_LONG).show();
-                        PlaybackActivity.this.finish();
-                    }
-                }
+                                        Toast.makeText(PlaybackActivity.this, MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).Name + " was skipped due to missing media info", Toast.LENGTH_LONG).show();
+                                        PlaybackActivity.this.finish();
+                                    }
+                                }
+                            }
+                        }
+                );
             }
         }
         @Override

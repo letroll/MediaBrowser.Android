@@ -16,13 +16,17 @@ import com.mb.network.Connectivity;
 
 import mediabrowser.apiinteraction.Response;
 import mediabrowser.apiinteraction.android.profiles.AndroidProfile;
+import mediabrowser.model.dlna.AudioOptions;
 import mediabrowser.model.dlna.PlaybackException;
 import mediabrowser.model.dlna.StreamBuilder;
 import mediabrowser.model.dlna.StreamInfo;
 import mediabrowser.model.dlna.VideoOptions;
 import mediabrowser.model.dto.BaseItemDto;
 import com.mb.android.logging.AppLogger;
+
+import mediabrowser.model.dto.MediaSourceInfo;
 import mediabrowser.model.entities.MediaStream;
+import mediabrowser.model.livetv.RecordingInfoDto;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -317,29 +321,59 @@ public class Utils {
         getStreamInfo(item, startPositionTicks, null, null, null, response);
     }
 
-    public static void getStreamInfo(BaseItemDto item,
-                                     final Long startPositionTicks,
-                                     String mediaSourceId,
-                                     Integer audioStreamIndex,
-                                     Integer subtitleStreamIndex,
-                                     final Response<StreamInfo> outerResponse) {
+    public static void getAudioStreamInfo(String id,
+                                          final Long startPositionTicks,
+                                          ArrayList<MediaSourceInfo> mediaSources,
+                                          boolean hlsEnabled,
+                                          String bitrate,
+                                          final Response<StreamInfo> outerResponse) {
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
-        String bitrate;
+        AppLogger.getLogger().Info("Create AudioOptions");
+        AudioOptions options = new AudioOptions();
+        options.setItemId(id);
+        options.setMediaSources(mediaSources);
+        options.setProfile(new AndroidProfile(hlsEnabled, false));
+        options.setDeviceId(Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
+        options.setMaxBitrate(Integer.valueOf(bitrate));
 
-        if (Connectivity.isConnectedLAN(MainApplication.getInstance())) {
-            bitrate = prefs.getString("pref_local_bitrate", "1800000");
-        } else {
-            bitrate = prefs.getString("pref_cellular_bitrate", "450000");
-        }
+        AppLogger.getLogger().Info("Create Audio StreamInfo");
+        MainApplication.getInstance().getPlaybackManager().getAudioStreamInfo(
+                MainApplication.getInstance().API.getServerInfo().getId(),
+                options,
+                MainApplication.getInstance().isOffline(),
+                MainApplication.getInstance().API,
+                new Response<StreamInfo>() {
+                    @Override
+                    public void onResponse(StreamInfo response) {
+                        if (response.getProtocol() == null || !response.getProtocol().equalsIgnoreCase("hls")) {
+                            response.setStartPositionTicks(startPositionTicks);
+                        }
+                        outerResponse.onResponse(response);
+                    }
 
-        boolean hlsEnabled = prefs.getBoolean("pref_enable_hls", true);
-        boolean h264StrictModeEnabled = prefs.getBoolean("pref_h264_strict", true);
+                    @Override
+                    public void onError(Exception exception) {
+                        handleStreamError((PlaybackException) exception);
+                        outerResponse.onError(exception);
+                    }
+                }
+        );
+    }
+
+    public static void getVideoStreamInfo(String id,
+                                          final Long startPositionTicks,
+                                          ArrayList<MediaSourceInfo> mediaSources,
+                                          String mediaSourceId,
+                                          Integer audioStreamIndex,
+                                          Integer subtitleStreamIndex,
+                                          boolean hlsEnabled,
+                                          String bitrate,
+                                          final Response<StreamInfo> outerResponse) {
 
         AppLogger.getLogger().Info("Create VideoOptions");
         VideoOptions options = new VideoOptions();
-        options.setItemId(item.getId());
-        options.setMediaSources(item.getMediaSources());
+        options.setItemId(id);
+        options.setMediaSources(mediaSources);
         options.setProfile(new AndroidProfile(hlsEnabled, false)
         );
         options.setDeviceId(Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
@@ -354,52 +388,86 @@ public class Utils {
             options.setMediaSourceId(mediaSourceId);
         }
 
-        AppLogger.getLogger().Info("Create StreamInfo");
+        AppLogger.getLogger().Info("Create Video StreamInfo");
+        MainApplication.getInstance().getPlaybackManager().getVideoStreamInfo(
+                MainApplication.getInstance().API.getServerInfo().getId(),
+                options,
+                MainApplication.getInstance().isOffline(),
+                MainApplication.getInstance().API,
+                new Response<StreamInfo>() {
+                    @Override
+                    public void onResponse(StreamInfo response) {
+                        if (response.getProtocol() == null || !response.getProtocol().equalsIgnoreCase("hls")) {
+                            response.setStartPositionTicks(startPositionTicks);
+                        }
+                        outerResponse.onResponse(response);
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+                        handleStreamError((PlaybackException) exception);
+                        outerResponse.onError(exception);
+                    }
+                }
+        );
+    }
+
+    public static void getStreamInfo(BaseItemDto item,
+                                     final Long startPositionTicks,
+                                     String mediaSourceId,
+                                     Integer audioStreamIndex,
+                                     Integer subtitleStreamIndex,
+                                     final Response<StreamInfo> outerResponse) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
+
         if (item.getType() != null && item.getType().equalsIgnoreCase("audio")) {
-            MainApplication.getInstance().getPlaybackManager().getAudioStreamInfo(
-                    MainApplication.getInstance().API.getServerInfo().getId(),
-                    options,
-                    MainApplication.getInstance().isOffline(),
-                    MainApplication.getInstance().API,
-                    new Response<StreamInfo>() {
-                        @Override
-                        public void onResponse(StreamInfo response) {
-                            if (response.getProtocol() == null || !response.getProtocol().equalsIgnoreCase("hls")) {
-                                response.setStartPositionTicks(startPositionTicks);
-                            }
-                            outerResponse.onResponse(response);
-                        }
-
-                        @Override
-                        public void onError(Exception exception) {
-                            handleStreamError((PlaybackException) exception);
-                            outerResponse.onError(exception);
-                        }
-                    }
-            );
+            getAudioStreamInfo(item.getId(), startPositionTicks, item.getMediaSources(), prefs.getBoolean("pref_enable_hls", true), getPrefsBitrate(prefs), outerResponse);
         } else {
-            MainApplication.getInstance().getPlaybackManager().getVideoStreamInfo(
-                    MainApplication.getInstance().API.getServerInfo().getId(),
-                    options,
-                    MainApplication.getInstance().isOffline(),
-                    MainApplication.getInstance().API,
-                    new Response<StreamInfo>() {
-                        @Override
-                        public void onResponse(StreamInfo response) {
-                            if (response.getProtocol() == null || !response.getProtocol().equalsIgnoreCase("hls")) {
-                                response.setStartPositionTicks(startPositionTicks);
-                            }
-                            outerResponse.onResponse(response);
-                        }
-
-                        @Override
-                        public void onError(Exception exception) {
-                            handleStreamError((PlaybackException) exception);
-                            outerResponse.onError(exception);
-                        }
-                    }
-            );
+            getVideoStreamInfo(
+                    item.getId(),
+                    startPositionTicks,
+                    item.getMediaSources(),
+                    mediaSourceId,
+                    audioStreamIndex,
+                    subtitleStreamIndex,
+                    prefs.getBoolean("pref_enable_hls", true),
+                    getPrefsBitrate(prefs),
+                    outerResponse);
         }
+
+    }
+
+    public static void getStreamInfo(RecordingInfoDto recording,
+                                     final Long startPositionTicks,
+                                     String mediaSourceId,
+                                     Integer audioStreamIndex,
+                                     Integer subtitleStreamIndex,
+                                     final Response<StreamInfo> outerResponse) {
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
+
+        getVideoStreamInfo(
+                recording.getId(),
+                startPositionTicks,
+                recording.getMediaSources(),
+                mediaSourceId,
+                audioStreamIndex,
+                subtitleStreamIndex,
+                prefs.getBoolean("pref_enable_hls", true),
+                getPrefsBitrate(prefs),
+                outerResponse);
+    }
+
+
+    public static String getPrefsBitrate(SharedPreferences prefs) {
+        if (Connectivity.isConnectedLAN(MainApplication.getInstance())) {
+            return prefs.getString("pref_local_bitrate", "1800000");
+        } else {
+            return prefs.getString("pref_cellular_bitrate", "450000");
+        }
+
+
     }
 
     private static void handleStreamError(PlaybackException ex) {

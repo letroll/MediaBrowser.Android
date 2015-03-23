@@ -1,38 +1,30 @@
 package com.mb.android.player;
 
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
-import android.provider.Settings;
 
 import com.mb.android.MainApplication;
 import com.mb.android.PlaylistItem;
-import mediabrowser.apiinteraction.EmptyResponse;
-import mediabrowser.apiinteraction.Response;
-
 import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.tv.playback.PlayerHelpers;
-import com.mb.network.Connectivity;
-
-import mediabrowser.apiinteraction.android.profiles.AndroidProfile;
-import mediabrowser.model.dlna.AudioOptions;
-import mediabrowser.model.dlna.StreamBuilder;
-import mediabrowser.model.dlna.StreamInfo;
-import mediabrowser.model.dto.BaseItemDto;
-import mediabrowser.model.dto.MediaSourceInfo;
-import mediabrowser.model.session.PlayMethod;
-import mediabrowser.model.session.PlaybackProgressInfo;
-import mediabrowser.model.session.PlaybackStartInfo;
-import mediabrowser.model.session.PlaybackStopInfo;
+import com.mb.android.utils.Utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import mediabrowser.apiinteraction.EmptyResponse;
+import mediabrowser.apiinteraction.Response;
+import mediabrowser.model.dlna.StreamInfo;
+import mediabrowser.model.dto.BaseItemDto;
+import mediabrowser.model.session.PlayMethod;
+import mediabrowser.model.session.PlaybackProgressInfo;
+import mediabrowser.model.session.PlaybackStartInfo;
+import mediabrowser.model.session.PlaybackStopInfo;
 
 /**
  * Created by Mark on 2014-07-08.
@@ -574,33 +566,41 @@ public class AudioService
                         && MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks != null
                         && MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks > 0L;
 
-                buildStreamInfo(mMediaItem.getId(), mMediaItem.getMediaSources());
+                final Response<BaseItemDto> outerResponse = this;
 
-                if (MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).SubtitleStreamIndex == null) {
-                    AppLogger.getLogger().Debug("MediaPlaybackFragment", "Subtitle index is null");
-                } else {
-                    AppLogger.getLogger().Debug("MediaPlaybackFragment", "Subtitle index is " + String.valueOf(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).SubtitleStreamIndex));
-                }
+                Utils.getStreamInfo(mMediaItem, new Response<StreamInfo>() {
+                    @Override
+                    public void onResponse(StreamInfo response) {
+                        mStreamInfo = response;
+                        if (MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).SubtitleStreamIndex == null) {
+                            AppLogger.getLogger().Debug("MediaPlaybackFragment", "Subtitle index is null");
+                        } else {
+                            AppLogger.getLogger().Debug("MediaPlaybackFragment", "Subtitle index is " + String.valueOf(MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).SubtitleStreamIndex));
+                        }
 
-                if (mStreamInfo != null) {
-                    AppLogger.getLogger().Info("Load Media into player");
-                    loadStreamInfoIntoPlayer();
-                } else {
+                        if (mStreamInfo != null) {
+                            AppLogger.getLogger().Info("Load Media into player");
+                            loadStreamInfoIntoPlayer();
+                        } else {
 
-                    if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > mCurrentlyPlayingIndex + 1) {
-                        mCurrentlyPlayingIndex += 1;
+                            if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > mCurrentlyPlayingIndex + 1) {
+                                mCurrentlyPlayingIndex += 1;
 
-                        // Make sure the activity knows to update the playlist
+                                // Make sure the activity knows to update the playlist
 //                        mPlaybackActivity.UpdateCurrentPlayingIndex(currentlyPlayingIndex);
 
-                        MainApplication.getInstance().API.GetItemAsync(
-                                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
-                                MainApplication.getInstance().API.getCurrentUserId(),
-                                this);
-                    } else {
-                        mPlayerState = PlayerState.PREPARING;
+                                MainApplication.getInstance().API.GetItemAsync(
+                                        MainApplication.getInstance().PlayerQueue.PlaylistItems.get(mCurrentlyPlayingIndex).Id,
+                                        MainApplication.getInstance().API.getCurrentUserId(),
+                                        outerResponse);
+                            } else {
+                                mPlayerState = PlayerState.PREPARING;
+                            }
+                        }
+
                     }
-                }
+                });
+
             }
         }
         @Override
@@ -608,42 +608,6 @@ public class AudioService
 
         }
     };
-
-
-    /**
-     * Generate the Audio URL to be requested from MB Server
-     *
-     * @param id                  The ID of the item to be played
-     * @param mediaSources        The available MediaSourceInfo's for the item being played
-     * @return A String containing the formed URL.
-     */
-    private boolean buildStreamInfo(String id, ArrayList<MediaSourceInfo> mediaSources) {
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
-        String bitrate;
-
-        if (Connectivity.isConnectedLAN(MainApplication.getInstance())) {
-            bitrate = prefs.getString("pref_local_bitrate", "1800000");
-        } else {
-            bitrate = prefs.getString("pref_cellular_bitrate", "450000");
-        }
-
-        boolean hlsEnabled = prefs.getBoolean("pref_enable_hls", true);
-
-        AppLogger.getLogger().Info("Create VideoOptions");
-        AudioOptions options = new AudioOptions();
-        options.setItemId(id);
-        options.setMediaSources(mediaSources);
-        options.setProfile(new AndroidProfile(hlsEnabled, false));
-        options.setDeviceId(Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
-        options.setMaxBitrate(Integer.valueOf(bitrate));
-
-        AppLogger.getLogger().Info("Create StreamInfo");
-        mStreamInfo = new StreamBuilder().BuildAudioItem(options);
-
-        return true;
-    }
-
 
     private void loadStreamInfoIntoPlayer() {
 

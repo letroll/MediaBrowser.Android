@@ -526,21 +526,26 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
 
             AppLogger.getLogger().Info("Play requested: External player");
 
-//            String url = MB3Application.getInstance().API.getApiUrl() + "/Videos/" + item.getId() + "/stream?static=true";
-            StreamInfo info = PlayerHelpers.buildExternalPlayerStreamInfo(
-                    item.getId(),
-                    item.getMediaSources(),
+            Utils.getStreamInfo(
+                    item,
                     resume ? item.getUserData().getPlaybackPositionTicks() : 0L,
                     mSelectedMediaSourceId,
                     mSelectedAudioStreamIndex,
-                    mSelectedSubtitleStreamIndex);
-            String url = info.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken());
-            AppLogger.getLogger().Info("External player URL: " + url);
-            AppLogger.getLogger().Debug("External Player url", url);
+                    mSelectedSubtitleStreamIndex,
+                    new Response<StreamInfo>() {
+                        @Override
+                        public void onResponse(StreamInfo response) {
+                            String url = response.ToUrl(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken());
+                            AppLogger.getLogger().Info("External player URL: " + url);
+                            AppLogger.getLogger().Debug("External Player url", url);
 
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-//            intent.setDataAndType(Uri.parse(url), "video/x-msvideo");
-            startActivity(intent);
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                            startActivity(intent);
+
+                        }
+                    }
+            );
+
         /*
         Playback is to commence on the internal player
         */
