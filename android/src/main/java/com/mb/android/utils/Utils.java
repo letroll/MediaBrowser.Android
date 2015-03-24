@@ -317,10 +317,6 @@ public class Utils {
         getStreamInfo(item, 0L, null, null, null, response);
     }
 
-    public static void getStreamInfo(BaseItemDto item, Long startPositionTicks, Response<StreamInfo> response) {
-        getStreamInfo(item, startPositionTicks, null, null, null, response);
-    }
-
     public static void getAudioStreamInfo(String id,
                                           final Long startPositionTicks,
                                           ArrayList<MediaSourceInfo> mediaSources,
@@ -333,7 +329,6 @@ public class Utils {
         options.setItemId(id);
         options.setMediaSources(mediaSources);
         options.setProfile(new AndroidProfile(hlsEnabled, false));
-        options.setDeviceId(Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         AppLogger.getLogger().Info("Create Audio StreamInfo");
@@ -376,7 +371,6 @@ public class Utils {
         options.setMediaSources(mediaSources);
         options.setProfile(new AndroidProfile(hlsEnabled, false)
         );
-        options.setDeviceId(Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         if (audioStreamIndex != null) {

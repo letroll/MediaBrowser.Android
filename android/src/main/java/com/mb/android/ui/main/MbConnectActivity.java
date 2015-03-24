@@ -41,7 +41,6 @@ public class MbConnectActivity extends FragmentActivity {
     private TextView mPin;
     private AlertDialog dialog;
     private AndroidConnectionManager connectionManager;
-    private String deviceId;
     private PinCreationResult pcr;
 
     @Override
@@ -65,8 +64,7 @@ public class MbConnectActivity extends FragmentActivity {
             setContentView(R.layout.activity_welcome2_pin);
             mPin = (TextView) findViewById(R.id.tvPin);
             connectionManager = (AndroidConnectionManager) MainApplication.getInstance().getConnectionManager();
-            deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-            connectionManager.CreatePin(deviceId, pinCreationResultResponse);
+            connectionManager.CreatePin(connectionManager.getDevice().getDeviceId(), pinCreationResultResponse);
         }
         Button skip = (Button) findViewById(R.id.btnSkip);
         skip.setOnClickListener(onSkipClick);
@@ -172,7 +170,7 @@ public class MbConnectActivity extends FragmentActivity {
         public void onResponse(PinStatusResult result) {
             if (result.getIsExpired()) {
                 stopPinTimer();
-                connectionManager.CreatePin(deviceId, pinCreationResultResponse);
+                connectionManager.CreatePin(connectionManager.getDevice().getDeviceId(), pinCreationResultResponse);
             } else if (result.getIsConfirmed()) {
                 stopPinTimer();
                 connectionManager.ExchangePin(pcr, pinExchangeResponse);

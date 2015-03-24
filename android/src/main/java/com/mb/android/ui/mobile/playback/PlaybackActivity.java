@@ -287,6 +287,7 @@ public class PlaybackActivity
         if (mIsStreamingHls)
             MainApplication.getInstance().API.StopTranscodingProcesses(
                     MainApplication.getInstance().API.getDeviceId(),
+                    null,
                     new EmptyResponse()
             );
         if (subtitleDisplayHandler != null) {
@@ -336,6 +337,7 @@ public class PlaybackActivity
                         if (mIsStreamingHls)
                             MainApplication.getInstance().API.StopTranscodingProcesses(
                                     MainApplication.getInstance().API.getDeviceId(),
+                                    null,
                                     new EmptyResponse()
                             );
 
@@ -765,7 +767,8 @@ public class PlaybackActivity
         AppLogger.getLogger().Info(TAG, "onCompletion");
 
         if (mIsStreamingHls)
-            MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), new EmptyResponse());
+            MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), null,
+                    new EmptyResponse());
 
         // kill subtitles
         if (subtitleDisplayHandler != null) {
@@ -868,7 +871,8 @@ public class PlaybackActivity
             PlayerStop();
 
             if (mIsStreamingHls)
-                MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), new EmptyResponse());
+                MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), null,
+                        new EmptyResponse());
 
             sendPlaybackStoppedToServer((long) mTruePlayerPosition * 10000 );
 
@@ -1002,7 +1006,8 @@ public class PlaybackActivity
                     // exists
                 } else {
                     if (mIsStreamingHls) {
-                        MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), new EmptyResponse());
+                        MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), null,
+                                new EmptyResponse());
                     }
                     if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > 1)
                         onNextClick.onClick(view);
@@ -1033,6 +1038,7 @@ public class PlaybackActivity
             if (mIsStreamingHls)
                 MainApplication.getInstance().API.StopTranscodingProcesses(
                         MainApplication.getInstance().API.getDeviceId(),
+                        null,
                         new EmptyResponse()
                 );
 
@@ -1458,7 +1464,8 @@ public class PlaybackActivity
         mResume = true;
 
         if (mIsStreamingHls) {
-            MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), new EmptyResponse() {
+            MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), null,
+                    new EmptyResponse() {
                 @Override
                 public void onResponse() {
                     reloadMediaInternal();

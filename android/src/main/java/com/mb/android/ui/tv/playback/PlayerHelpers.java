@@ -168,8 +168,7 @@ public final class PlayerHelpers {
         options.setItemId(id);
         options.setMediaSources(mediaSources);
         options.setProfile(new AndroidProfile(hlsEnabled, false));
-        options.setDeviceId(
-                Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
+        options.setDeviceId(MainApplication.getInstance().getConnectionManager().getDevice().getDeviceId());
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         if (audioStreamIndex != null) {
@@ -221,8 +220,7 @@ public final class PlayerHelpers {
         options.setItemId(id);
         options.setMediaSources(mediaSources);
         options.setProfile(new AndroidProfile(hlsEnabled, false));
-        options.setDeviceId(
-                Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
+        options.setDeviceId(MainApplication.getInstance().getConnectionManager().getDevice().getDeviceId());
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         AppLogger.getLogger().Info("Create StreamInfo");
@@ -272,7 +270,7 @@ public final class PlayerHelpers {
         options.setItemId(id);
         options.setMediaSources(mediaSources);
         options.setProfile(new ExternalPlayerProfile());
-        options.setDeviceId(Settings.Secure.getString(MainApplication.getInstance().getContentResolver(), Settings.Secure.ANDROID_ID));
+        options.setDeviceId(MainApplication.getInstance().getConnectionManager().getDevice().getDeviceId());
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         AppLogger.getLogger().Info("Create StreamInfo");

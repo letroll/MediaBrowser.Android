@@ -250,7 +250,8 @@ public class VideoPlayer extends FragmentActivity
         clearReferences();
 
         if (mIsStreamingHls)
-            MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), new EmptyResponse());
+            MainApplication.getInstance().API.StopTranscodingProcesses(MainApplication.getInstance().API.getDeviceId(), null,
+                    new EmptyResponse());
 
         if (mSubtitleDisplayHandler != null) {
             mSubtitleDisplayHandler.removeCallbacks(processSubtitles);
@@ -893,7 +894,8 @@ public class VideoPlayer extends FragmentActivity
             mCurrentlyPlayingIndex = position;
             if (mIsStreamingHls) {
                 MainApplication.getInstance().API.StopTranscodingProcesses(
-                        MainApplication.getInstance().API.getDeviceId(), new EmptyResponse() {
+                        MainApplication.getInstance().API.getDeviceId(), null,
+                        new EmptyResponse() {
                     @Override
                     public void onResponse() {
                         getItemAtPosition(mCurrentlyPlayingIndex);

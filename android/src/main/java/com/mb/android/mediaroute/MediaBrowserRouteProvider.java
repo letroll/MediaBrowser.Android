@@ -73,9 +73,7 @@ public final class MediaBrowserRouteProvider extends MediaRouteProvider {
 
                 List<SessionInfoDto> validSessions = new ArrayList<>();
 
-                String deviceId =
-                        Settings.Secure.getString(getContext().getContentResolver(),
-                                Settings.Secure.ANDROID_ID);
+                String deviceId = MainApplication.getInstance().getConnectionManager().getDevice().getDeviceId();
 
                 for (SessionInfoDto session : remoteSessions) {
                     // Don't show this device, or MediaBrowser Chromecast sessions in the list
