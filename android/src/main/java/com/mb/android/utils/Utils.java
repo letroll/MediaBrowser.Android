@@ -320,7 +320,6 @@ public class Utils {
     public static void getAudioStreamInfo(String id,
                                           final Long startPositionTicks,
                                           ArrayList<MediaSourceInfo> mediaSources,
-                                          boolean hlsEnabled,
                                           String bitrate,
                                           final Response<StreamInfo> outerResponse) {
 
@@ -328,7 +327,7 @@ public class Utils {
         AudioOptions options = new AudioOptions();
         options.setItemId(id);
         options.setMediaSources(mediaSources);
-        options.setProfile(new AndroidProfile(hlsEnabled, false));
+        options.setProfile(new AndroidProfile(false, false));
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         AppLogger.getLogger().Info("Create Audio StreamInfo");
@@ -415,8 +414,8 @@ public class Utils {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApplication.getInstance());
 
-        if (item.getType() != null && item.getType().equalsIgnoreCase("audio")) {
-            getAudioStreamInfo(item.getId(), startPositionTicks, item.getMediaSources(), prefs.getBoolean("pref_enable_hls", true), getPrefsBitrate(prefs), outerResponse);
+        if (item.getMediaType() != null && item.getMediaType().equalsIgnoreCase("audio")) {
+            getAudioStreamInfo(item.getId(), startPositionTicks, item.getMediaSources(), getPrefsBitrate(prefs), outerResponse);
         } else {
             getVideoStreamInfo(
                     item.getId(),

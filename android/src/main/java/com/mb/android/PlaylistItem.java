@@ -46,4 +46,6 @@ public class PlaylistItem {
      * The subtitle stream chosen from the advanced play dialog
      */
     public Integer SubtitleStreamIndex;
+
+    public String MediaSourceId;
 }

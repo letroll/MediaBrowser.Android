@@ -1479,7 +1479,8 @@ public class PlaybackActivity
     private void reloadMediaInternal() {
         Utils.getStreamInfo(
                 mMediaItem,
-                (long) mPreviousPosition, mMediaItem.getMediaSources().get(0).getId(),
+                (long) mPreviousPosition,
+                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).MediaSourceId,
                 MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).AudioStreamIndex,
                 MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex,
                 new Response<StreamInfo>() {
@@ -1548,19 +1549,19 @@ public class PlaybackActivity
 
             }
 
+            PlaylistItem playlistItem = MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex);
+
             Utils.getStreamInfo(
                     mRecording,
-                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).startPositionTicks != null
-                            ? MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).startPositionTicks
+                    playlistItem.startPositionTicks != null
+                            ? playlistItem.startPositionTicks
                             : 0L,
-                    mRecording.getMediaSources().get(0).getId(),
-                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).AudioStreamIndex,
-                    MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex,
+                    playlistItem.MediaSourceId,
+                    playlistItem.AudioStreamIndex,
+                    playlistItem.SubtitleStreamIndex,
                     new Response<StreamInfo>() {
                         @Override
                         public void onResponse(StreamInfo response) {
-                            mStreamInfo = response;
-                            if (mStreamInfo == null) return;
 
                             SetNowPlayingInfo(mRecording);
                             loadStreamInfoIntoPlayer();

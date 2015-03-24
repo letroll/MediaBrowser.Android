@@ -451,7 +451,7 @@ public class VideoPlayer extends FragmentActivity
                 itemId,
                 mediaSources,
                 resume ? MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).startPositionTicks : 0L,
-                null,
+                mCurrentlyPlayingIndex == 0 ? MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).MediaSourceId : null,
                 mCurrentlyPlayingIndex == 0 ? MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).AudioStreamIndex : null,
                 mCurrentlyPlayingIndex == 0 ? MainApplication.getInstance().PlayerQueue.PlaylistItems.get(0).SubtitleStreamIndex : null
         );

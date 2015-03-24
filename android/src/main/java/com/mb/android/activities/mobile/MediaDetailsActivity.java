@@ -554,11 +554,11 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
             MainApplication.getInstance().PlayerQueue.PlaylistItems = new ArrayList<>();
 
             if (isTrailer || resume) {
-                addToPlaylist(item, resume, null, null);
+                addToPlaylist(item, resume, null, null, null);
                 Intent intent = new Intent(this, PlaybackActivity.class);
                 startActivity(intent);
             } else {
-                MainApplication.getInstance().API.GetIntrosAsync(item.getId(), MainApplication.getInstance().API.getCurrentUserId(), new GetIntrosResponse(item, mSelectedAudioStreamIndex, mSelectedSubtitleStreamIndex));
+                MainApplication.getInstance().API.GetIntrosAsync(item.getId(), MainApplication.getInstance().API.getCurrentUserId(), new GetIntrosResponse(item, mSelectedMediaSourceId, mSelectedAudioStreamIndex, mSelectedSubtitleStreamIndex));
             }
         }
     }
@@ -568,32 +568,34 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         private BaseItemDto mainFeature;
         private Integer audioStream;
         private Integer subtitleStream;
+        private String mediaSourceId;
 
-        public GetIntrosResponse(BaseItemDto item, Integer audioStreamIndex, Integer subtitleStreamIndex) {
+        public GetIntrosResponse(BaseItemDto item, String mediaSourceId, Integer audioStreamIndex, Integer subtitleStreamIndex) {
             mainFeature = item;
             audioStream = audioStreamIndex;
             subtitleStream = subtitleStreamIndex;
+            this.mediaSourceId = mediaSourceId;
         }
         @Override
         public void onResponse(ItemsResult result) {
             if (result != null && result.getItems() != null) {
                 for (BaseItemDto rItem : result.getItems()) {
-                    addToPlaylist(rItem, false, null, null);
+                    addToPlaylist(rItem, false, mediaSourceId, null, null);
                 }
             }
-            addToPlaylist(mainFeature, false, audioStream, subtitleStream);
+            addToPlaylist(mainFeature, false, mediaSourceId, audioStream, subtitleStream);
             Intent intent = new Intent(MediaDetailsActivity.this, PlaybackActivity.class);
             startActivity(intent);
         }
         @Override
         public void onError(Exception ex) {
-            addToPlaylist(mainFeature, false, audioStream, subtitleStream);
+            addToPlaylist(mainFeature, false, mediaSourceId, audioStream, subtitleStream);
             Intent intent = new Intent(MediaDetailsActivity.this, PlaybackActivity.class);
             startActivity(intent);
         }
     }
 
-    private void addToPlaylist(BaseItemDto item, boolean resume, Integer audioStreamIndex, Integer subtitleStreamIndex) {
+    private void addToPlaylist(BaseItemDto item, boolean resume, String mediaSourceId, Integer audioStreamIndex, Integer subtitleStreamIndex) {
         PlaylistItem playableItem = new PlaylistItem();
         playableItem.Id = item.getId();
         playableItem.Name = item.getName();
@@ -609,6 +611,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         if (subtitleStreamIndex != null && subtitleStreamIndex != -1) {
             playableItem.SubtitleStreamIndex = subtitleStreamIndex;
         }
+        playableItem.MediaSourceId = mediaSourceId;
         MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
     }
 

@@ -426,9 +426,11 @@ public final class PlayerHelpers {
 
         if (audioStreamIndex != null) {
             playableItem.AudioStreamIndex = audioStreamIndex;
+            playableItem.MediaSourceId = item.getMediaSources().get(0).getId();
         }
         if (subtitleStreamIndex != null) {
             playableItem.SubtitleStreamIndex = subtitleStreamIndex;
+            playableItem.MediaSourceId = item.getMediaSources().get(0).getId();
         }
         MainApplication.getInstance().PlayerQueue.PlaylistItems.add(playableItem);
     }
