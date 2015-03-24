@@ -1477,10 +1477,9 @@ public class PlaybackActivity
     }
 
     private void reloadMediaInternal() {
-        Utils.getStreamInfo(
-                mMediaItem,
+        Utils.getNewVideoStreamInfo(
+                mStreamInfo,
                 (long) mPreviousPosition,
-                MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).MediaSourceId,
                 MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).AudioStreamIndex,
                 MainApplication.getInstance().PlayerQueue.PlaylistItems.get(currentlyPlayingIndex).SubtitleStreamIndex,
                 new Response<StreamInfo>() {

@@ -354,6 +354,51 @@ public class Utils {
         );
     }
 
+    public static void getNewVideoStreamInfo(StreamInfo current,
+                                             final Long positionTicks,
+                                             Integer audioStreamIndex,
+                                             Integer subtitleStreamIndex,
+                                             final Response<StreamInfo> outerResponse) {
+
+        AppLogger.getLogger().Info("Create New VideoOptions");
+        VideoOptions options = new VideoOptions();
+        options.setItemId(current.getItemId());
+        options.setMaxBitrate(current.getVideoBitrate());
+
+        if (audioStreamIndex != null) {
+            options.setAudioStreamIndex(audioStreamIndex);
+            options.setMediaSourceId(current.getMediaSourceId());
+        }
+        if (subtitleStreamIndex != null) {
+            options.setSubtitleStreamIndex(subtitleStreamIndex);
+            options.setMediaSourceId(current.getMediaSourceId());
+        }
+
+        AppLogger.getLogger().Info("Create New Stream Info");
+        MainApplication.getInstance().getPlaybackManager().changeVideoStream(
+                current,
+                MainApplication.getInstance().API.getServerInfo().getId(),
+                options,
+                MainApplication.getInstance().API,
+                new Response<StreamInfo>() {
+                    @Override
+                    public void onResponse(StreamInfo response) {
+                        if (response.getProtocol() == null || !response.getProtocol().equalsIgnoreCase("hls")) {
+                            response.setStartPositionTicks(positionTicks);
+                        }
+                        outerResponse.onResponse(response);
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+                        handleStreamError((PlaybackException) exception);
+                        outerResponse.onError(exception);
+                    }
+                });
+
+
+    }
+
     public static void getVideoStreamInfo(String id,
                                           final Long startPositionTicks,
                                           ArrayList<MediaSourceInfo> mediaSources,
