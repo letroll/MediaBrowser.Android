@@ -119,7 +119,8 @@ public class AppLogger {
         }
 
         if (mExternalStorageAvailable && mExternalStorageWriteable){
-            String directory = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "mediabrowser").getPath();
+            File directory = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "emby");
+            directory = new File(directory, "logs");
             return new File(directory, filename).getPath();
         }
         else{
