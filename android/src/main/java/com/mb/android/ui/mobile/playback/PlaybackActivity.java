@@ -1562,6 +1562,9 @@ public class PlaybackActivity
                         @Override
                         public void onResponse(StreamInfo response) {
 
+                            mStreamInfo = response;
+                            mIsStreamingHls = mStreamInfo.getProtocol() != null && mStreamInfo.getProtocol().equalsIgnoreCase("hls");
+
                             SetNowPlayingInfo(mRecording);
                             loadStreamInfoIntoPlayer();
                             mOptionsMenu.setOnClickListener(new PlaybackOptionsMenuClickListener(mStreamInfo.getMediaSource(), PlaybackActivity.this));
@@ -1627,6 +1630,8 @@ public class PlaybackActivity
                     @Override
                     public void onResponse(StreamInfo response) {
                         mStreamInfo = response;
+                        mIsStreamingHls = mStreamInfo.getProtocol() != null && mStreamInfo.getProtocol().equalsIgnoreCase("hls");
+
                         if (mStreamInfo != null) {
                             loadStreamInfoIntoPlayer();
 
@@ -1657,6 +1662,8 @@ public class PlaybackActivity
                             @Override
                             public void onResponse(StreamInfo response) {
                                 mStreamInfo = response;
+                                mIsStreamingHls = mStreamInfo.getProtocol() != null && mStreamInfo.getProtocol().equalsIgnoreCase("hls");
+
                                 if (mStreamInfo != null) {
                                     loadStreamInfoIntoPlayer();
 
