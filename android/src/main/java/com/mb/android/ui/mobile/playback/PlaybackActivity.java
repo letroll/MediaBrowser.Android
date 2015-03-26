@@ -1564,6 +1564,7 @@ public class PlaybackActivity
 
                             mStreamInfo = response;
                             mIsStreamingHls = mStreamInfo.getProtocol() != null && mStreamInfo.getProtocol().equalsIgnoreCase("hls");
+                            mIsDirectStreaming = mStreamInfo.getIsDirectStream();
 
                             SetNowPlayingInfo(mRecording);
                             loadStreamInfoIntoPlayer();
@@ -1631,6 +1632,7 @@ public class PlaybackActivity
                     public void onResponse(StreamInfo response) {
                         mStreamInfo = response;
                         mIsStreamingHls = mStreamInfo.getProtocol() != null && mStreamInfo.getProtocol().equalsIgnoreCase("hls");
+                        mIsDirectStreaming = mStreamInfo.getIsDirectStream();
 
                         if (mStreamInfo != null) {
                             loadStreamInfoIntoPlayer();
@@ -1663,6 +1665,7 @@ public class PlaybackActivity
                             public void onResponse(StreamInfo response) {
                                 mStreamInfo = response;
                                 mIsStreamingHls = mStreamInfo.getProtocol() != null && mStreamInfo.getProtocol().equalsIgnoreCase("hls");
+                                mIsDirectStreaming = mStreamInfo.getIsDirectStream();
 
                                 if (mStreamInfo != null) {
                                     loadStreamInfoIntoPlayer();
