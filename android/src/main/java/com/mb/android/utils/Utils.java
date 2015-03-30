@@ -339,7 +339,7 @@ public class Utils {
                 new Response<StreamInfo>() {
                     @Override
                     public void onResponse(StreamInfo response) {
-                        if (response.getProtocol() == null || !response.getProtocol().equalsIgnoreCase("hls")) {
+                        if (response.getSubProtocol() == null || !response.getSubProtocol().equalsIgnoreCase("hls")) {
                             response.setStartPositionTicks(startPositionTicks);
                         }
                         outerResponse.onResponse(response);
@@ -383,7 +383,7 @@ public class Utils {
                 new Response<StreamInfo>() {
                     @Override
                     public void onResponse(StreamInfo response) {
-                        if (response.getProtocol() == null || !response.getProtocol().equalsIgnoreCase("hls")) {
+                        if (response.getSubProtocol() == null || !response.getSubProtocol().equalsIgnoreCase("hls")) {
                             response.setStartPositionTicks(positionTicks);
                         }
                         outerResponse.onResponse(response);
@@ -435,7 +435,7 @@ public class Utils {
                 new Response<StreamInfo>() {
                     @Override
                     public void onResponse(StreamInfo response) {
-                        if (response.getProtocol() == null || !response.getProtocol().equalsIgnoreCase("hls")) {
+                        if (response.getSubProtocol() == null || !response.getSubProtocol().equalsIgnoreCase("hls")) {
                             response.setStartPositionTicks(startPositionTicks);
                         }
                         outerResponse.onResponse(response);

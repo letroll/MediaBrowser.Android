@@ -106,6 +106,7 @@ public final class PlayerHelpers {
 
         MainApplication.getInstance().getPlaybackManager().reportPlaybackProgress(
                 progressInfo,
+                streamInfo,
                 MainApplication.getInstance().isOffline(),
                 MainApplication.getInstance().API,
                 new EmptyResponse());
@@ -183,7 +184,7 @@ public final class PlayerHelpers {
         AppLogger.getLogger().Info("Create StreamInfo");
         StreamInfo streamInfo = new StreamBuilder().BuildVideoItem(options);
 
-        if (streamInfo.getProtocol() == null || !streamInfo.getProtocol().equalsIgnoreCase("hls")) {
+        if (streamInfo.getSubProtocol() == null || !streamInfo.getSubProtocol().equalsIgnoreCase("hls")) {
             streamInfo.setStartPositionTicks(startPositionTicks);
         }
 
@@ -231,7 +232,7 @@ public final class PlayerHelpers {
             return null;
         }
 
-        if (streamInfo.getProtocol() == null || !streamInfo.getProtocol().equalsIgnoreCase("hls")) {
+        if (streamInfo.getSubProtocol() == null || !streamInfo.getSubProtocol().equalsIgnoreCase("hls")) {
             streamInfo.setStartPositionTicks(startPositionTicks);
         }
 
@@ -276,7 +277,7 @@ public final class PlayerHelpers {
         AppLogger.getLogger().Info("Create StreamInfo");
         StreamInfo streamInfo = new StreamBuilder().BuildVideoItem(options);
 
-        if (streamInfo.getProtocol() == null || !streamInfo.getProtocol().equalsIgnoreCase("hls")) {
+        if (streamInfo.getSubProtocol() == null || !streamInfo.getSubProtocol().equalsIgnoreCase("hls")) {
             streamInfo.setStartPositionTicks(startPositionTicks);
         }
 
@@ -619,7 +620,7 @@ public final class PlayerHelpers {
             return;
         }
         streamInfo.setSubtitleFormat("srt");
-        final List<SubtitleStreamInfo> subtitles = streamInfo.GetExternalSubtitles(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken(), false);
+        final List<SubtitleStreamInfo> subtitles = streamInfo.GetExternalSubtitles(false, MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken());
 
         if (subtitles != null && subtitles.size() > 0) {
             new SubtitleDownloader(new Response<File>() {

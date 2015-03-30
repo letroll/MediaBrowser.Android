@@ -457,7 +457,7 @@ public class VideoPlayer extends FragmentActivity
         );
 
         if (mStreamInfo != null) {
-            mIsStreamingHls = mStreamInfo.getProtocol() != null && mStreamInfo.getProtocol().equalsIgnoreCase("hls");
+            mIsStreamingHls = mStreamInfo.getSubProtocol() != null && mStreamInfo.getSubProtocol().equalsIgnoreCase("hls");
             mIsDirectStreaming = mStreamInfo.getIsDirectStream();
             loadStreamInfoIntoPlayer();
 
@@ -860,7 +860,7 @@ public class VideoPlayer extends FragmentActivity
                 );
                 if (mStreamInfo != null) {
                     mVideoView.stopPlayback();
-                    mIsStreamingHls = mStreamInfo.getProtocol() != null && mStreamInfo.getProtocol().equalsIgnoreCase("hls");
+                    mIsStreamingHls = mStreamInfo.getSubProtocol() != null && mStreamInfo.getSubProtocol().equalsIgnoreCase("hls");
                     mIsDirectStreaming = mStreamInfo.getIsDirectStream();
                     loadStreamInfoIntoPlayer();
 

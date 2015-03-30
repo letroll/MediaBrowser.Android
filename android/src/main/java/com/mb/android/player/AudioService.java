@@ -774,6 +774,7 @@ public class AudioService
 
         MainApplication.getInstance().getPlaybackManager().reportPlaybackProgress(
                 progressInfo,
+                mStreamInfo,
                 MainApplication.getInstance().isOffline(),
                 MainApplication.getInstance().API,
                 new EmptyResponse());

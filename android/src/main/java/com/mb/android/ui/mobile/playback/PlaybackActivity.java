@@ -661,7 +661,7 @@ public class PlaybackActivity
 
         if (!mResume && mStreamInfo.getSubtitleDeliveryMethod().equals(SubtitleDeliveryMethod.External)) {
             mStreamInfo.setSubtitleFormat("srt");
-            final List<SubtitleStreamInfo> subtitles = mStreamInfo.GetExternalSubtitles(MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken(), false);
+            final List<SubtitleStreamInfo> subtitles = mStreamInfo.GetExternalSubtitles(false, MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken());
 
             if (subtitles != null && subtitles.size() > 0) {
                 new SubtitleDownloader(new Response<File>() {
@@ -1563,7 +1563,7 @@ public class PlaybackActivity
                         public void onResponse(StreamInfo response) {
 
                             mStreamInfo = response;
-                            mIsStreamingHls = mStreamInfo.getProtocol() != null && mStreamInfo.getProtocol().equalsIgnoreCase("hls");
+                            mIsStreamingHls = mStreamInfo.getSubProtocol() != null && mStreamInfo.getSubProtocol().equalsIgnoreCase("hls");
                             mIsDirectStreaming = mStreamInfo.getIsDirectStream();
 
                             SetNowPlayingInfo(mRecording);
@@ -1631,7 +1631,7 @@ public class PlaybackActivity
                     @Override
                     public void onResponse(StreamInfo response) {
                         mStreamInfo = response;
-                        mIsStreamingHls = mStreamInfo.getProtocol() != null && mStreamInfo.getProtocol().equalsIgnoreCase("hls");
+                        mIsStreamingHls = mStreamInfo.getSubProtocol() != null && mStreamInfo.getSubProtocol().equalsIgnoreCase("hls");
                         mIsDirectStreaming = mStreamInfo.getIsDirectStream();
 
                         if (mStreamInfo != null) {
@@ -1664,7 +1664,7 @@ public class PlaybackActivity
                             @Override
                             public void onResponse(StreamInfo response) {
                                 mStreamInfo = response;
-                                mIsStreamingHls = mStreamInfo.getProtocol() != null && mStreamInfo.getProtocol().equalsIgnoreCase("hls");
+                                mIsStreamingHls = mStreamInfo.getSubProtocol() != null && mStreamInfo.getSubProtocol().equalsIgnoreCase("hls");
                                 mIsDirectStreaming = mStreamInfo.getIsDirectStream();
 
                                 if (mStreamInfo != null) {
@@ -1777,6 +1777,7 @@ public class PlaybackActivity
 
         MainApplication.getInstance().getPlaybackManager().reportPlaybackProgress(
                 progressInfo,
+                mStreamInfo,
                 MainApplication.getInstance().isOffline(),
                 MainApplication.getInstance().API,
                 new EmptyResponse());
@@ -1802,8 +1803,8 @@ public class PlaybackActivity
     private String StreamDetailsFromStreamInfo() {
         String streamType = (mStreamInfo.getIsDirectStream() ? "DirectStream" : "Transcode") + ": ";
 
-        if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mStreamInfo.getProtocol())) {
-            streamType += mStreamInfo.getProtocol() + ", ";
+        if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mStreamInfo.getSubProtocol())) {
+            streamType += mStreamInfo.getSubProtocol() + ", ";
         }
 
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mStreamInfo.getContainer())) {
