@@ -661,7 +661,7 @@ public class PlaybackActivity
 
         if (!mResume && mStreamInfo.getSubtitleDeliveryMethod().equals(SubtitleDeliveryMethod.External)) {
             mStreamInfo.setSubtitleFormat("srt");
-            final List<SubtitleStreamInfo> subtitles = mStreamInfo.GetExternalSubtitles(false, MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken());
+            final List<SubtitleStreamInfo> subtitles = mStreamInfo.GetExternalSubtitles(false, false, MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken());
 
             if (subtitles != null && subtitles.size() > 0) {
                 new SubtitleDownloader(new Response<File>() {

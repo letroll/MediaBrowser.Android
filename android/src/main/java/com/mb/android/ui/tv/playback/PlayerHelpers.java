@@ -620,7 +620,7 @@ public final class PlayerHelpers {
             return;
         }
         streamInfo.setSubtitleFormat("srt");
-        final List<SubtitleStreamInfo> subtitles = streamInfo.GetExternalSubtitles(false, MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken());
+        final List<SubtitleStreamInfo> subtitles = streamInfo.GetExternalSubtitles(false, false, MainApplication.getInstance().API.getApiUrl(), MainApplication.getInstance().API.getAccessToken());
 
         if (subtitles != null && subtitles.size() > 0) {
             new SubtitleDownloader(new Response<File>() {
