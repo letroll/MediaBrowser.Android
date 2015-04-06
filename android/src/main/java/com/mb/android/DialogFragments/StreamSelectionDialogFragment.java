@@ -29,6 +29,7 @@ import mediabrowser.model.dlna.VideoOptions;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.entities.MediaStream;
 import mediabrowser.model.entities.MediaStreamType;
+import mediabrowser.model.logging.NullLogger;
 
 /**
  * Created by Mark on 12/12/13.
@@ -207,7 +208,7 @@ public class StreamSelectionDialogFragment extends DialogFragment {
         mOptions.setMaxBitrate(Integer.valueOf(bitrate));
 
         AppLogger.getLogger().Info("Create StreamInfo");
-        StreamInfo streamInfo = new StreamBuilder().BuildVideoItem(mOptions);
+        StreamInfo streamInfo = new StreamBuilder(AppLogger.getLogger()).BuildVideoItem(mOptions);
 
         if (streamInfo == null) {
             AppLogger.getLogger().Info("streamInfo is null");

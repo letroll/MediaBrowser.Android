@@ -847,6 +847,7 @@ public class VideoPlayer extends FragmentActivity
 
                 if (stream.getType().equals(MediaStreamType.Audio)) {
                     mStreamInfo.setAudioStreamIndex(stream.getIndex());
+
                 } else if (stream.getType().equals(MediaStreamType.Subtitle)) {
                     mStreamInfo.setSubtitleStreamIndex(stream.getIndex() != -33 ? stream.getIndex() : null);
                 }

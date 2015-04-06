@@ -30,6 +30,7 @@ import mediabrowser.model.dlna.SubtitleStreamInfo;
 import mediabrowser.model.dlna.VideoOptions;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.MediaSourceInfo;
+import mediabrowser.model.logging.NullLogger;
 import mediabrowser.model.querying.ItemsResult;
 import mediabrowser.model.session.PlayMethod;
 import mediabrowser.model.session.PlaybackProgressInfo;
@@ -182,7 +183,7 @@ public final class PlayerHelpers {
         }
 
         AppLogger.getLogger().Info("Create StreamInfo");
-        StreamInfo streamInfo = new StreamBuilder().BuildVideoItem(options);
+        StreamInfo streamInfo = new StreamBuilder(new NullLogger()).BuildVideoItem(options);
 
         if (streamInfo.getSubProtocol() == null || !streamInfo.getSubProtocol().equalsIgnoreCase("hls")) {
             streamInfo.setStartPositionTicks(startPositionTicks);
@@ -225,7 +226,7 @@ public final class PlayerHelpers {
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         AppLogger.getLogger().Info("Create StreamInfo");
-        StreamInfo streamInfo = new StreamBuilder().BuildAudioItem(options);
+        StreamInfo streamInfo = new StreamBuilder(AppLogger.getLogger()).BuildAudioItem(options);
 
         if (streamInfo == null) {
             AppLogger.getLogger().Info("streamInfo is null");
@@ -275,7 +276,7 @@ public final class PlayerHelpers {
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         AppLogger.getLogger().Info("Create StreamInfo");
-        StreamInfo streamInfo = new StreamBuilder().BuildVideoItem(options);
+        StreamInfo streamInfo = new StreamBuilder(AppLogger.getLogger()).BuildVideoItem(options);
 
         if (streamInfo.getSubProtocol() == null || !streamInfo.getSubProtocol().equalsIgnoreCase("hls")) {
             streamInfo.setStartPositionTicks(startPositionTicks);

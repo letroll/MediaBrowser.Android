@@ -417,13 +417,15 @@ public class Utils {
         );
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
-        if (audioStreamIndex != null) {
-            options.setAudioStreamIndex(audioStreamIndex);
-            options.setMediaSourceId(mediaSourceId);
-        }
-        if (subtitleStreamIndex != null) {
-            options.setSubtitleStreamIndex(subtitleStreamIndex);
-            options.setMediaSourceId(mediaSourceId);
+        if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mediaSourceId)) {
+            if (audioStreamIndex != null) {
+                options.setAudioStreamIndex(audioStreamIndex);
+                options.setMediaSourceId(mediaSourceId);
+            }
+            if (subtitleStreamIndex != null) {
+                options.setSubtitleStreamIndex(subtitleStreamIndex);
+                options.setMediaSourceId(mediaSourceId);
+            }
         }
 
         AppLogger.getLogger().Info("Create Video StreamInfo");
