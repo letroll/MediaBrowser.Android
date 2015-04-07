@@ -347,7 +347,11 @@ public class Utils {
 
                     @Override
                     public void onError(Exception exception) {
-                        handleStreamError((PlaybackException) exception);
+
+                        if (exception instanceof PlaybackException) {
+                            handleStreamError((PlaybackException) exception);
+                        }
+
                         outerResponse.onError(exception);
                     }
                 }
@@ -391,7 +395,11 @@ public class Utils {
 
                     @Override
                     public void onError(Exception exception) {
-                        handleStreamError((PlaybackException) exception);
+
+                        if (exception instanceof PlaybackException) {
+                            handleStreamError((PlaybackException) exception);
+                        }
+
                         outerResponse.onError(exception);
                     }
                 });
@@ -445,7 +453,10 @@ public class Utils {
 
                     @Override
                     public void onError(Exception exception) {
-                        handleStreamError((PlaybackException) exception);
+                        if (exception instanceof PlaybackException) {
+                            handleStreamError((PlaybackException) exception);
+                        }
+
                         outerResponse.onError(exception);
                     }
                 }
