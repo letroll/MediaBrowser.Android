@@ -255,7 +255,6 @@ public class LibraryActivity
         mQuery.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.Overview, ItemFields.SortName, ItemFields.DateCreated, ItemFields.Genres,  ItemFields.CumulativeRunTimeTicks, ItemFields.Metascore});
         mQuery.setLimit(200);
         if ("movies".equalsIgnoreCase(mParent.getCollectionType())) {
-            mQuery.setCollapseBoxSetItems(true);
             mQuery.setIncludeItemTypes(new String[] { "movie" });
             mQuery.setRecursive(true);
         } else if ("tvshows".equalsIgnoreCase(mParent.getCollectionType())) {

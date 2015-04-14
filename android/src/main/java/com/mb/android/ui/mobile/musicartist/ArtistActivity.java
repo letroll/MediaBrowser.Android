@@ -260,7 +260,7 @@ public class ArtistActivity extends BaseMbMobileActivity {
     private void handlePlayOrShuffleRequest(boolean shuffleMedia) {
         ItemQuery query = new ItemQuery();
         query.setUserId(MainApplication.getInstance().API.getCurrentUserId());
-        query.setParentId(mArtist.getId());
+        query.setArtists(new String[]{mArtist.getId()});
         query.setSortBy(new String[]{ shuffleMedia ? ItemSortBy.Random : ItemSortBy.Album});
         query.setSortOrder(SortOrder.Ascending);
         query.setIncludeItemTypes(new String[]{"Audio"});
