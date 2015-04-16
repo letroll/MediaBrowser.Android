@@ -368,6 +368,7 @@ public class Utils {
         VideoOptions options = new VideoOptions();
         options.setItemId(current.getItemId());
         options.setMaxBitrate(current.getVideoBitrate());
+        options.setProfile(current.getDeviceProfile());
 
         if (audioStreamIndex != null) {
             options.setAudioStreamIndex(audioStreamIndex);
