@@ -153,6 +153,8 @@ public class MainApplication extends Application
         capabilities.setDeviceProfile(new AndroidProfile(true, false));
         capabilities.setSupportsMediaControl(true);
 
+        capabilities.setIconUrl("https://raw.githubusercontent.com/MediaBrowser/MediaBrowser.Android/master/servericon.png");
+
         return capabilities;
     }
 
