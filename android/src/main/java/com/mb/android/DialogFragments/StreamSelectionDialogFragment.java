@@ -204,6 +204,7 @@ public class StreamSelectionDialogFragment extends DialogFragment {
         mOptions.setItemId(baseItemDto.getId());
         mOptions.setMediaSources(baseItemDto.getMediaSources());
         mOptions.setProfile(new AndroidProfile(hlsEnabled, false));
+        mOptions.setDeviceId(MainApplication.getInstance().API.getDeviceId());
 
         mOptions.setMaxBitrate(Integer.valueOf(bitrate));
 
