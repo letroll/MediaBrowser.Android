@@ -47,7 +47,7 @@ public class ActorLibraryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActorBioActivity);
-        mPostersEnabled = prefs.getBoolean("pref_prefer_posters", false);
+        mPostersEnabled = true;
 
         View mView;
         if (mPostersEnabled) {

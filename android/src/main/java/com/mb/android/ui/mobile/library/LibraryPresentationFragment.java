@@ -69,9 +69,14 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
 
         AppLogger.getLogger().Info(TAG + ": onCreate");
 
+        SharedPreferences mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(mLibraryActivity);
+
+        mPosterViewEnabled = mSharedPrefs.getBoolean("pref_prefer_posters", true);
+
         String jsonData = getArguments().getString("EpisodeQuery");
         if (jsonData != null) {
             mEpisodeQuery = MainApplication.getInstance().getJsonSerializer().DeserializeFromString(jsonData, EpisodeQuery.class);
+            mPosterViewEnabled = false;
         } else {
             jsonData = getArguments().getString("ItemQuery");
             if (jsonData != null) {
@@ -84,9 +89,6 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
             }
         }
         mDisableIndexing = getArguments().getBoolean("DisableIndexing", false);
-
-        SharedPreferences mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(mLibraryActivity);
-        mPosterViewEnabled = mSharedPrefs.getBoolean("pref_prefer_posters", false);
 
         DisplayMetrics metrics = new DisplayMetrics();
         mLibraryActivity.getWindowManager().getDefaultDisplay().getMetrics(metrics);

@@ -5,13 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="4dp">
+    android:paddingBottom="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#30bbbbbb"
-        android:padding="8dp">
+        android:padding="0dp">
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/ivCollectionImage"
@@ -23,11 +22,13 @@
 
         <TextView
             android:id="@+id/tvCollectionName"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ivCollectionImage"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="0dp"
             android:fontFamily="sans-serif-condensed"
+            android:textAlignment="center"
+            android:gravity="center"
             android:singleLine="true"
             android:textColor="@color/white"
             android:textSize="@dimen/grid_item_primary_text" />

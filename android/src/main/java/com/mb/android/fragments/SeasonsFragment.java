@@ -52,7 +52,7 @@ public class SeasonsFragment extends Fragment {
         AppLogger.getLogger().Info("SeasonsFragment: onCreateView");
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mSeriesActivity);
-        mPostersEnabled = prefs.getBoolean("pref_prefer_posters", false);
+        mPostersEnabled = true;
 
         if (mPostersEnabled)
             mView = inflater.inflate(R.layout.fragment_library_presentation_poster,

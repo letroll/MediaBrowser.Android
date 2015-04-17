@@ -26,8 +26,8 @@
         app:rowHeight="210dp"
         app:numColumns="auto_fit"
         app:numRows="2"
-        app:verticalSpacing="16dp"
-        app:horizontalSpacing="16dp"
+        app:verticalSpacing="0dp"
+        app:horizontalSpacing="0dp"
         app:stretchMode="spacingWidthUniform"
         app:scrollDirectionPortrait="vertical"
         app:scrollDirectionLandscape="horizontal"/>

@@ -25,7 +25,9 @@ import mediabrowser.apiinteraction.android.GsonJsonSerializer;
 import mediabrowser.apiinteraction.android.VolleyHttpClient;
 import mediabrowser.apiinteraction.android.profiles.AndroidProfile;
 import mediabrowser.apiinteraction.android.sync.PeriodicSync;
+import mediabrowser.apiinteraction.android.sync.data.AndroidAssetManager;
 import mediabrowser.apiinteraction.playback.PlaybackManager;
+import mediabrowser.apiinteraction.sync.data.ILocalAssetManager;
 import mediabrowser.model.dto.UserDto;
 import mediabrowser.model.serialization.IJsonSerializer;
 import mediabrowser.model.session.ClientCapabilities;
@@ -146,7 +148,8 @@ public class MainApplication extends Application
         capabilities.setPlayableMediaTypes(playableTypes);
         capabilities.setSupportedCommands(supportedCommands);
         capabilities.setSupportsContentUploading(true);
-        capabilities.setSupportsSync(false);
+        capabilities.setSupportsSync(true);
+        capabilities.setSupportsOfflineAccess(true);
         capabilities.setDeviceProfile(new AndroidProfile(true, false));
         capabilities.setSupportsMediaControl(true);
 
@@ -163,7 +166,8 @@ public class MainApplication extends Application
 
         this.PlayerQueue = new Playlist();
         this.mDevice = new AndroidDevice(this);
-        this.mPlaybackManager = new PlaybackManager(mDevice, AppLogger.getLogger());
+        ILocalAssetManager localAssetManager = new AndroidAssetManager(this, AppLogger.getLogger(), jsonSerializer);
+        this.mPlaybackManager = new PlaybackManager(localAssetManager, mDevice, AppLogger.getLogger());
 
         Utils.saveFloatToPreference(getApplicationContext(),
                 VideoCastManager.PREFS_KEY_VOLUME_INCREMENT, (float) VOLUME_INCREMENT);
