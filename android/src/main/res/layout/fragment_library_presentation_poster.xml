@@ -8,9 +8,9 @@
         android:id="@+id/gvLibrary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         android:numColumns="@integer/library_columns_poster"
-        android:verticalSpacing="15dp"
+        android:verticalSpacing="0dp"
         android:horizontalSpacing="0dp" />
 
     <ProgressBar

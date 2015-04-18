@@ -152,8 +152,13 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
                 title += mBaseItems.get(position).getName();
                 holder.titleText.setText(title);
             }
-
-        } else {
+            holder.titleText.setVisibility(View.VISIBLE);
+        }
+        else if (type.equalsIgnoreCase("Series")){
+            holder.titleText.setVisibility(View.GONE);
+        }
+        else {
+            holder.titleText.setVisibility(View.VISIBLE);
             holder.titleText.setText(mBaseItems.get(position).getName());
         }
 
