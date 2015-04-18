@@ -41,8 +41,8 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
     LayoutInflater li;
     ApiClient mApi;
     SharedPreferences mSharedPreferences;
-    int mImageWidth;
-    int mImageHeight;
+    double mImageWidth;
+    double mImageHeight;
     Integer mDefaultImageId;
     private boolean imageEnhancersEnabled;
     private String sections_ = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -63,10 +63,10 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
             Double displayAspectRatio = ItemLayout.GetDisplayAspectRatio(baseItems);
 
             if (displayAspectRatio != null && displayAspectRatio > 0) {
-                mImageHeight = (int) (mImageWidth / displayAspectRatio);
+                mImageHeight = (mImageWidth / displayAspectRatio);
                 AppLogger.getLogger().Debug("CAR","greater than 0");
             } else {
-                mImageHeight = (int)Math.round(mImageWidth * 1.5);
+                mImageHeight = mImageWidth * 1.5;
             }
             AppLogger.getLogger().Debug("Height", String.valueOf(mImageHeight));
             AppLogger.getLogger().Debug("Width", String.valueOf(mImageWidth));
@@ -106,7 +106,7 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
             holder.missingEpisodeOverlay = (TextView) convertView.findViewById(R.id.tvMissingEpisodeOverlay);
             holder.playedProgress = (ProgressBar) convertView.findViewById(R.id.pbPlaybackProgress);
 
-            holder.imageView.setLayoutParams(new RelativeLayout.LayoutParams(mImageWidth, mImageHeight));
+            holder.imageView.setLayoutParams(new RelativeLayout.LayoutParams((int)mImageWidth, (int)mImageHeight));
 
             if (mDefaultImageId != null) {
                 holder.imageView.setDefaultImageResId(mDefaultImageId);
@@ -175,7 +175,7 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
         if (currentItem.getHasPrimaryImage()) {
             options = new ImageOptions();
             options.setImageType(ImageType.Primary);
-            options.setWidth(mImageWidth);
+            options.setWidth((int)mImageWidth);
             Double aspectRatio = ItemLayout.GetDisplayAspectRatio(currentItem);
             if (aspectRatio != null && aspectRatio > 0){
                 options.setHeight((int) (mImageWidth / aspectRatio));
@@ -187,7 +187,7 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
                 && currentItem.getParentThumbItemId() != null) {
             options = new ImageOptions();
             options.setImageType(ImageType.Thumb);
-            options.setMaxWidth(mImageWidth);
+            options.setMaxWidth((int)mImageWidth);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
             imageUrl = mApi.GetImageUrl(currentItem.getParentThumbItemId(), options);
         } else if (mDefaultImageId != null) {

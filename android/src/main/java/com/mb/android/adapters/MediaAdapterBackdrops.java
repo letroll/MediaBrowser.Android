@@ -44,8 +44,8 @@ public class MediaAdapterBackdrops extends BaseAdapter implements SectionIndexer
     LayoutInflater li;
     ApiClient mApi;
     SharedPreferences mSharedPreferences;
-    int mImageWidth;
-    int mImageHeight;
+    double mImageWidth;
+    double mImageHeight;
     private Integer mDefaultImageId;
     private boolean imageEnhancersEnabled;
     private String sections_ = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -98,7 +98,7 @@ public class MediaAdapterBackdrops extends BaseAdapter implements SectionIndexer
             holder.playedProgress = (ProgressBar) convertView.findViewById(R.id.pbPlaybackProgress);
             holder.missingEpisodeOverlay = (TextView) convertView.findViewById(R.id.tvMissingEpisodeOverlay);
 
-            holder.imageView.setLayoutParams(new RelativeLayout.LayoutParams(mImageWidth, mImageHeight));
+            holder.imageView.setLayoutParams(new RelativeLayout.LayoutParams((int)mImageWidth, (int)mImageHeight));
             if (mDefaultImageId != null) {
                 holder.imageView.setDefaultImageResId(mDefaultImageId);
             }
@@ -186,16 +186,16 @@ public class MediaAdapterBackdrops extends BaseAdapter implements SectionIndexer
         if (!type.equalsIgnoreCase("Episode") && mBaseItems.get(position).getHasThumb()) {
             options = new ImageOptions();
             options.setImageType(ImageType.Thumb);
-            options.setWidth(mImageWidth);
-            options.setMaxHeight(mImageHeight);
+            options.setWidth((int)mImageWidth);
+            options.setMaxHeight((int)mImageHeight);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
             imageUrl = mApi.GetImageUrl(mBaseItems.get(position).getId(), options);
 
         } else if (!type.equalsIgnoreCase("Episode") && mBaseItems.get(position).getBackdropCount() > 0) {
             options = new ImageOptions();
             options.setImageType(ImageType.Backdrop);
-            options.setWidth(mImageWidth);
-            options.setMaxHeight(mImageHeight);
+            options.setWidth((int)mImageWidth);
+            options.setMaxHeight((int)mImageHeight);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
             options.setImageIndex(0);
             imageUrl = mApi.GetImageUrl(mBaseItems.get(position), options);
@@ -203,8 +203,8 @@ public class MediaAdapterBackdrops extends BaseAdapter implements SectionIndexer
         } else if (mBaseItems.get(position).getHasPrimaryImage()) {
             options = new ImageOptions();
             options.setImageType(ImageType.Primary);
-            options.setWidth(mImageWidth);
-            options.setMaxHeight(mImageHeight);
+            options.setWidth((int)mImageWidth);
+            options.setMaxHeight((int)mImageHeight);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
             imageUrl = mApi.GetImageUrl(mBaseItems.get(position), options);
 
@@ -212,8 +212,8 @@ public class MediaAdapterBackdrops extends BaseAdapter implements SectionIndexer
                 mBaseItems.get(position).getParentThumbItemId() != null) {
             options = new ImageOptions();
             options.setImageType(ImageType.Thumb);
-            options.setWidth(mImageWidth);
-            options.setMaxHeight(mImageHeight);
+            options.setWidth((int)mImageWidth);
+            options.setMaxHeight((int)mImageHeight);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
             imageUrl = mApi.GetImageUrl(mBaseItems.get(position).getParentThumbItemId(), options);
 
