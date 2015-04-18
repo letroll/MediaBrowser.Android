@@ -56,7 +56,7 @@ public class SearchResultsAdapter extends BaseAdapter implements SectionIndexer 
             int columns = mContext.getResources().getInteger(R.integer.library_columns_poster);
             DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
 
-            mImageHeight = mImageWidth = (dm.widthPixels - (columns * (int) (10 * dm.density))) / columns;
+            mImageHeight = mImageWidth / columns;
 
             imageEnhancersEnabled = PreferenceManager
                     .getDefaultSharedPreferences(MainApplication.getInstance())

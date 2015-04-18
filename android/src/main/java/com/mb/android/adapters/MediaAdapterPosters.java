@@ -57,7 +57,7 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
 
             DisplayMetrics dm = MainApplication.getInstance().getResources().getDisplayMetrics();
 
-            mImageWidth = (dm.widthPixels - (columns * (int) (10 * dm.density))) / columns;
+            mImageWidth = dm.widthPixels / columns;
 
             int count = 0;
             double combinedAspectRatio = 0;
@@ -159,13 +159,14 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
 
         // Set Secondary text
 
-        if (type.equalsIgnoreCase("Boxset") || type.equalsIgnoreCase("Folder") || type.equalsIgnoreCase("Season") || type.equalsIgnoreCase("PhotoFolder")) {
+        if (type.equalsIgnoreCase("Boxset") || type.equalsIgnoreCase("Folder") || type.equalsIgnoreCase("Season") || type.equalsIgnoreCase("PhotoFolder") || type.equalsIgnoreCase("Series")) {
 
-            holder.secondaryText.setText(String.valueOf(mBaseItems.get(position).getChildCount()) + " Items");
+            holder.secondaryText.setVisibility(View.GONE);
 
         } else {
 
             if (mBaseItems.get(position).getProductionYear() != null && mBaseItems.get(position).getProductionYear() != 0) {
+                holder.secondaryText.setVisibility(View.VISIBLE);
                 holder.secondaryText.setText(String.valueOf(mBaseItems.get(position).getProductionYear()));
             }
         }

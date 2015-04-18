@@ -45,7 +45,7 @@ public class GenreAdapter extends AbstractMediaAdapter {
 
             int columns = MainApplication.getInstance().getResources().getInteger(R.integer.library_columns_poster);
 
-            mImageWidth = (int)((float)dm.widthPixels - (columns * (int)(10 * dm.density))) / columns;
+            mImageWidth = dm.widthPixels  / columns;
 
             int count = 0;
             double combinedAspectRatio = 0;

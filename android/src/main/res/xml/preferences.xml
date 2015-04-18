@@ -118,27 +118,6 @@
                 android:summaryOn="@string/settings_hls_summary_on"
                 android:title="@string/settings_hls" />
 
-            <com.mb.android.widget.customswitchpreference.CustomSwitchPreference
-                android:defaultValue="true"
-                android:key="pref_h264_strict"
-                android:summaryOff="support all profiles for H264"
-                android:summaryOn="only support baseline profile for H264"
-                android:title="H264 strict mode" />
-
-            <!--<com.mb.android.widget.customswitchpreference.CustomSwitchPreference-->
-            <!--android:defaultValue="false"-->
-            <!--android:key="pref_enable_dd"-->
-            <!--android:summaryOff="Device does not support Dolby Digital"-->
-            <!--android:summaryOn="Device supports Dolby Digital"-->
-            <!--android:title="Dolby Digital" />-->
-
-            <!--<com.mb.android.widget.customswitchpreference.CustomSwitchPreference-->
-            <!--android:defaultValue="false"-->
-            <!--android:key="pref_enable_dts"-->
-            <!--android:summaryOff="Device does not support DTS Audio"-->
-            <!--android:summaryOn="Device supports DTS Audio"-->
-            <!--android:title="DTS Audio" />-->
-
         </PreferenceScreen>
 
         <ListPreference

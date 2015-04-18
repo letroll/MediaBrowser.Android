@@ -62,7 +62,7 @@ public class ChannelsAdapter extends BaseAdapter implements SectionIndexer {
             int columns = mContext.getResources().getInteger(R.integer.library_columns);
             DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
 
-            mImageWidth = (dm.widthPixels - ((columns * 2) * (int) (4 * dm.density))) / columns;
+            mImageWidth = dm.widthPixels / columns;
             mImageHeight = (mImageWidth / 16) * 9;
 
             imageEnhancersEnabled = PreferenceManager

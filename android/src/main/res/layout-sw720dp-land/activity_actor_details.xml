@@ -45,7 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:background="#30bbbbbb"
+                    android:background="#111111"
                     android:fontFamily="sans-serif-condensed"
                     android:padding="8dp"
                     android:text="@string/media_header"
@@ -74,7 +74,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/shadow7"
+        android:background="#222222"
         android:visibility="gone" />
 
 </RelativeLayout>

@@ -197,7 +197,6 @@ public class StreamSelectionDialogFragment extends DialogFragment {
         }
 
         boolean hlsEnabled = prefs.getBoolean("pref_enable_hls", true);
-        boolean h264StrictModeEnabled = prefs.getBoolean("pref_h264_strict", true);
 
         AppLogger.getLogger().Info("Create VideoOptions");
         mOptions = new VideoOptions();

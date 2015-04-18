@@ -40,7 +40,7 @@ public class HomeScreenItemsAdapter extends BaseAdapter {
 
             int mColumns = MainApplication.getInstance().getResources().getInteger(R.integer.homescreen_item_columns);
 
-            mWidth = (mScreenWidth - ((mColumns * 2) * (int) (4 * MainApplication.getInstance().getResources().getDisplayMetrics().density))) / mColumns;
+            mWidth = mScreenWidth / mColumns;
             mHeight = (mWidth / 16) * 9;
 
             imageEnhancersEnabled = PreferenceManager

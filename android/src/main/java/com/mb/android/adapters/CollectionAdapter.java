@@ -43,7 +43,7 @@ public class CollectionAdapter extends BaseAdapter {
 
             int mColumns = context.getResources().getInteger(R.integer.homescreen_item_columns);
 
-            mWidth = (mScreenWidth - (mColumns * 2 * context.getResources().getDimensionPixelSize(R.dimen.grid_item_inner_padding))) / mColumns;
+            mWidth = mScreenWidth / mColumns;
             mHeight = (mWidth / 16) * 9;
 
             imageEnhancersEnabled = PreferenceManager

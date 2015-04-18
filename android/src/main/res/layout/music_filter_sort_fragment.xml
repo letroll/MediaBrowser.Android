@@ -16,7 +16,7 @@
         android:text="Content"
         android:textSize="18sp"
         android:textColor="@color/sexy_blue"
-        android:background="#30bbbbbb"/>
+        android:background="#111111"/>
 
     <ListView
         android:id="@+id/lvContent"

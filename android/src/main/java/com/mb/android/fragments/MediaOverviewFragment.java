@@ -50,7 +50,6 @@ public class MediaOverviewFragment extends Fragment {
     private NetworkImageView mBackdropImage1;
     private NetworkImageView mBackdropImage2;
     private List<String> mBackdropUrls;
-    private int mBackdropIndex = 0;
     private View miRuntime;
     private View miYear;
     private View miOfficialRating;
@@ -78,17 +77,6 @@ public class MediaOverviewFragment extends Fragment {
 
         return mView;
     }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-        if (mBackdropSwitcher != null) {
-            mBackdropSwitcher.removeCallbacks(CycleBackdrop);
-        }
-    }
-
 
     @Override
     public void onResume() {
@@ -223,11 +211,7 @@ public class MediaOverviewFragment extends Fragment {
         }
 
         if (mBackdropUrls != null && mBackdropUrls.size() > 0 ) {
-            if (mBackdropUrls.size() == 1) {
-                setBackdropImage(mBackdropUrls.get(0));
-            } else {
-                mBackdropSwitcher.post(CycleBackdrop);
-            }
+            setBackdropImage(mBackdropUrls.get(0));
         } else {
             setBackdropImage(null);
         }
@@ -426,18 +410,4 @@ public class MediaOverviewFragment extends Fragment {
             mBackdropSwitcher.showPrevious();
         }
     }
-
-    private Runnable CycleBackdrop = new Runnable() {
-
-        @Override
-        public void run() {
-
-            if (mBackdropIndex >= mBackdropUrls.size())
-                mBackdropIndex = 0;
-
-            setBackdropImage(mBackdropUrls.get(mBackdropIndex));
-            mBackdropIndex += 1;
-            mBackdropSwitcher.postDelayed(this, 8000);
-        }
-    };
 }

@@ -65,7 +65,6 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
     private boolean mSetPlayedMenuItemVisible;
     private boolean mSetUnPlayedMenuItemVisible;
     private NetworkImageView mBackdropImage;
-    private int mImageIndex = 1;
     private boolean mDying = false;
     private boolean shouldPlayThemeSong;
     private SeriesDetailsFragment seriesDetailsFragment;
@@ -489,9 +488,6 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
 
                 String imageUrl = MainApplication.getInstance().API.GetImageUrl(item, options);
                 mBackdropImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
-
-                if (item.getBackdropCount() > 1)
-                    mBackdropImage.postDelayed(CycleBackdrop, 8000);
             }
         }
         @Override
@@ -607,32 +603,6 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
         @Override
         public void onError(Exception ex) {
             AppLogger.getLogger().ErrorException("Error retrieving theme media", ex);
-        }
-    };
-
-
-    private Runnable CycleBackdrop = new Runnable() {
-
-        @Override
-        public void run() {
-
-            if (mDying)
-                return;
-
-            if (mImageIndex >= mSeries.getBackdropCount())
-                mImageIndex = 0;
-
-            ImageOptions options = new ImageOptions();
-            options.setImageType(ImageType.Backdrop);
-            options.setWidth(getResources().getDisplayMetrics().widthPixels);
-            options.setImageIndex(mImageIndex);
-
-            mImageIndex += 1;
-
-            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mSeries, options);
-            mBackdropImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
-
-            mBackdropImage.postDelayed(CycleBackdrop, 8000);
         }
     };
 }

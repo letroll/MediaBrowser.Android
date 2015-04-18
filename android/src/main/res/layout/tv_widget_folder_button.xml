@@ -4,7 +4,7 @@
     android:id="@+id/rlFolderButtonImageHolder"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="9dp"
+    android:padding="1dp"
     android:gravity="center_horizontal|bottom">
 
     <com.android.volley.toolbox.NetworkImageView
@@ -60,7 +60,7 @@
         android:layout_below="@+id/pbPlaybackProgress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
+        android:layout_marginTop="2dp"
         android:ellipsize="end"
         android:singleLine="true"
         android:textColor="@color/white"

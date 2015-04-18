@@ -35,7 +35,6 @@ public class SeriesDetailsFragment extends Fragment {
     private View mView;
     private BaseItemDto mSeries;
     private NetworkImageView mBackdropImage;
-    private int mImageIndex = 0;
     private String mTvdbBaseUrl = "http://thetvdb.com/index.php?tab=series&id=";
     private SeriesViewActivity mSeriesActivity;
 
@@ -73,10 +72,6 @@ public class SeriesDetailsFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-
-        if (mBackdropImage != null) {
-            mBackdropImage.removeCallbacks(CycleBackdrop);
-        }
     }
 
     public void setSeries(BaseItemDto series) {
@@ -99,17 +94,11 @@ public class SeriesDetailsFragment extends Fragment {
                 options.setImageType(ImageType.Thumb);
                 options.setImageIndex(0);
 
-                if (mSeries.getBackdropCount() > 1)
-                    mBackdropImage.postDelayed(CycleBackdrop, 8000);
-
             } else if (mSeries.getBackdropCount() > 0) {
 
                 options = new ImageOptions();
                 options.setImageType(ImageType.Backdrop);
                 options.setImageIndex(0);
-
-                if (mSeries.getBackdropCount() > 1)
-                    mBackdropImage.postDelayed(CycleBackdrop, 8000);
             }
 
             if (options != null) {
@@ -192,27 +181,4 @@ public class SeriesDetailsFragment extends Fragment {
             }
         }
     }
-
-
-    private Runnable CycleBackdrop = new Runnable() {
-
-        @Override
-        public void run() {
-
-            if (mImageIndex >= mSeries.getBackdropCount())
-                mImageIndex = 0;
-
-            ImageOptions options = new ImageOptions();
-            options.setImageType(ImageType.Backdrop);
-            options.setWidth(getResources().getDisplayMetrics().widthPixels);
-            options.setImageIndex(mImageIndex);
-
-            mImageIndex += 1;
-
-            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mSeries, options);
-            mBackdropImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
-
-            mBackdropImage.postDelayed(CycleBackdrop, 8000);
-        }
-    };
 }

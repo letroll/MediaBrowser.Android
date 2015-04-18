@@ -163,7 +163,6 @@ public final class PlayerHelpers {
         }
 
         boolean hlsEnabled = prefs.getBoolean("pref_enable_hls", true);
-        boolean h264StrictModeEnabled = prefs.getBoolean("pref_h264_strict", true);
 
         AppLogger.getLogger().Info("Create VideoOptions");
         VideoOptions options = new VideoOptions();

@@ -81,9 +81,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
     private ViewPager mViewPager;
     private ViewSwitcher mBackdropSwitcher;
     private NetworkImageView mBackdropImage1;
-    private NetworkImageView mBackdropImage2;
     private List<String> mBackdropUrls;
-    private int mBackdropIndex = 0;
     private boolean mDying = false;
     private boolean mLaunchedFromHomeScreen;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -809,7 +807,6 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
 
                     mBackdropImage1 = (NetworkImageView) findViewById(R.id.ivMediaBackdrop1);
                     mBackdropImage1.setDefaultImageResId(R.drawable.default_backdrop);
-                    mBackdropImage2 = (NetworkImageView) findViewById(R.id.ivMediaBackdrop2);
 
                     ImageOptions options;
                     mBackdropUrls = new ArrayList<>();
@@ -818,10 +815,8 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                         if (mItem.getParentBackdropImageTags() != null &&
                                 mItem.getParentBackdropImageTags().size() > 0) {
 
-                            // TODO cycle parent backdrops
                             options = new ImageOptions();
                             options.setImageType(ImageType.Backdrop);
-                            //mBackdropImage1.postDelayed(CycleBackdrop, 8000);
 
                             String imageUrl = MainApplication.getInstance().API.GetImageUrl(
                                     mItem.getParentBackdropItemId(), options);
@@ -842,12 +837,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                     }
 
                     if (mBackdropUrls != null && mBackdropUrls.size() > 0) {
-                        if (mBackdropUrls.size() == 1) {
-                            mBackdropImage1.setImageUrl(mBackdropUrls.get(0),
-                                    MainApplication.getInstance().API.getImageLoader());
-                        } else if (mBackdropUrls.size() > 1) {
-                            mBackdropSwitcher.post(CycleBackdrop);
-                        }
+                        mBackdropImage1.setImageUrl(mBackdropUrls.get(0), MainApplication.getInstance().API.getImageLoader());
                     } else {
                         mBackdropImage1.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
                     }
@@ -992,39 +982,4 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
             AppLogger.getLogger().ErrorException("Error retrieving theme media", ex);
         }
     };
-
-    private void setBackdropImage(String imageUrl) {
-
-        if (imageUrl == null || imageUrl.isEmpty()) {
-            AppLogger.getLogger().Error("Error setting backdrop - imageUrl is null or empty");
-            return;
-        }
-
-        if (mBackdropSwitcher.getDisplayedChild() == 0) {
-            mBackdropImage2.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
-            mBackdropSwitcher.showNext();
-        } else {
-            mBackdropImage1.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
-            mBackdropSwitcher.showPrevious();
-        }
-    }
-
-    private Runnable CycleBackdrop = new Runnable() {
-
-        @Override
-        public void run() {
-
-            if (mDying)
-                return;
-
-            if (mBackdropIndex >= mBackdropUrls.size())
-                mBackdropIndex = 0;
-
-            setBackdropImage(mBackdropUrls.get(mBackdropIndex));
-            mBackdropIndex += 1;
-            mBackdropSwitcher.postDelayed(this, 8000);
-        }
-    };
-
-
 }

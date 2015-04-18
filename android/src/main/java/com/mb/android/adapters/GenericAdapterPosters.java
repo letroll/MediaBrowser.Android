@@ -45,7 +45,7 @@ public class GenericAdapterPosters extends AbstractMediaAdapter {
 
             DisplayMetrics dm = MainApplication.getInstance().getResources().getDisplayMetrics();
 
-            mImageWidth = (int)((float)dm.widthPixels - (columns * (int)(18 * dm.density))) / columns;
+            mImageWidth = dm.widthPixels / columns;
 
             int count = 0;
             double combinedAspectRatio = 0;
