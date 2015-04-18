@@ -104,7 +104,7 @@ public class ResumableFragment extends Fragment implements ICommandListener {
 
                 if (mResumableItemsGrid == null) return;
 
-                mResumableItemsGrid.setAdapter(new HomeScreenItemsAdapter(mItems));
+                mResumableItemsGrid.setAdapter(new HomeScreenItemsAdapter(mItems, true));
                 mResumableItemsGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View v, int index, long id) {

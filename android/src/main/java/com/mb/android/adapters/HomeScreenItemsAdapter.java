@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,12 +28,14 @@ public class HomeScreenItemsAdapter extends BaseAdapter {
 
     private BaseItemDto[] mItems;
     private LayoutInflater mLayoutInflater;
-    private int mWidth;
-    private int mHeight;
+    private double mWidth;
+    private double mHeight;
     private boolean imageEnhancersEnabled;
+    private boolean forceShowTitle;
 
-    public HomeScreenItemsAdapter(BaseItemDto[] items) {
+    public HomeScreenItemsAdapter(BaseItemDto[] items, boolean forceShowTitle) {
         mItems = items;
+        this.forceShowTitle = forceShowTitle;
 
         try {
             mLayoutInflater = (LayoutInflater) MainApplication.getInstance().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -84,12 +87,13 @@ public class HomeScreenItemsAdapter extends BaseAdapter {
             if (convertView != null) {
 
                 holder.CollectionImage = (NetworkImageView) convertView.findViewById(R.id.ivLibraryTilePrimaryImage);
+                holder.Gradient = (ImageView) convertView.findViewById(R.id.ivGradient);
                 holder.CollectionName = (TextView) convertView.findViewById(R.id.tvLibraryTileTitle);
                 holder.CollectionSecondaryText = (TextView) convertView.findViewById(R.id.tvLibraryTileSubTitle);
                 holder.CollectionProgress = (ProgressBar) convertView.findViewById(R.id.pbPlaybackProgress);
                 holder.UnwatchedCount = (TextView) convertView.findViewById(R.id.tvOverlay);
 
-                holder.CollectionImage.setLayoutParams(new RelativeLayout.LayoutParams(mWidth, mHeight));
+                holder.CollectionImage.setLayoutParams(new RelativeLayout.LayoutParams((int)mWidth, (int)mHeight));
                 holder.CollectionImage.setDefaultImageResId(R.drawable.default_video_landscape);
 
                 convertView.setTag(holder);
@@ -132,53 +136,54 @@ public class HomeScreenItemsAdapter extends BaseAdapter {
             }
         }
 
-        if (mItems[i].getHasThumb()) {
-            holder.CollectionName.setVisibility(View.INVISIBLE);
-            holder.CollectionSecondaryText.setVisibility(View.INVISIBLE);
-        } else {
-            holder.CollectionName.setVisibility(View.VISIBLE);
-            holder.CollectionSecondaryText.setVisibility(View.VISIBLE);
-        }
+        boolean showText = false;
 
         try {
 
             String imageUrl = "";
             ImageOptions options = new ImageOptions();
 
-            if ((mItems[i].getType().equalsIgnoreCase("episode") || mItems[i].getType().equalsIgnoreCase("photo")) && mItems[i].getHasPrimaryImage()) {
+            if ((mItems[i].getType().equalsIgnoreCase("photo")) && mItems[i].getHasPrimaryImage()) {
                 options.setImageType(ImageType.Primary);
                 options.setEnableImageEnhancers(imageEnhancersEnabled);
 
                 if (mItems[i].getPrimaryImageAspectRatio() > 1.777) {
-                    options.setHeight(mHeight);
+                    options.setHeight((int)mHeight);
                 } else {
-                    options.setWidth(mWidth);
+                    options.setWidth((int)mWidth);
                 }
 
                 imageUrl = MainApplication.getInstance().API.GetImageUrl(mItems[i], options);
             } else if (mItems[i].getHasThumb()) {
                 options.setImageType(ImageType.Thumb);
-                options.setWidth(mWidth);
+                options.setWidth((int) mWidth);
                 options.setEnableImageEnhancers(imageEnhancersEnabled);
                 imageUrl = MainApplication.getInstance().API.GetImageUrl(mItems[i], options);
             } else if (mItems[i].getBackdropCount() > 0) {
                 options.setImageType(ImageType.Backdrop);
-                options.setWidth(mWidth);
+                options.setWidth((int)mWidth);
                 imageUrl = MainApplication.getInstance().API.GetImageUrl(mItems[i], options);
+                showText = true;
+            } else if (mItems[i].getSeriesThumbImageTag() != null) {
+                options.setImageType(ImageType.Thumb);
+                options.setWidth((int)mWidth);
+                imageUrl = MainApplication.getInstance().API.GetImageUrl(mItems[i].getSeriesId(), options);
             } else if (mItems[i].getParentBackdropImageTags() != null && mItems[i].getParentBackdropImageTags().size() > 0) {
                 options.setImageType(ImageType.Backdrop);
-                options.setWidth(mWidth);
+                options.setWidth((int) mWidth);
                 imageUrl = MainApplication.getInstance().API.GetImageUrl(mItems[i].getParentBackdropItemId(), options);
+                showText = true;
             } else if (mItems[i].getHasPrimaryImage()) {
                 options.setImageType(ImageType.Primary);
                 options.setEnableImageEnhancers(imageEnhancersEnabled);
 
                 if (mItems[i].getPrimaryImageAspectRatio() != null && mItems[i].getPrimaryImageAspectRatio() > 1.777) {
-                    options.setHeight(mHeight);
+                    options.setHeight((int)mHeight);
                 } else {
-                    options.setWidth(mWidth);
+                    options.setWidth((int)mWidth);
                 }
                 imageUrl = MainApplication.getInstance().API.GetImageUrl(mItems[i], options);
+                showText = true;
             }
 
             if (options.getImageType() != null) {
@@ -189,6 +194,17 @@ public class HomeScreenItemsAdapter extends BaseAdapter {
 
         } catch (Exception e) {
             AppLogger.getLogger().ErrorException("Error setting image: ", e);
+        }
+
+        if (showText || forceShowTitle) {
+            holder.CollectionName.setVisibility(View.VISIBLE);
+            holder.CollectionSecondaryText.setVisibility(View.VISIBLE);
+            holder.Gradient.setVisibility(View.VISIBLE);
+        } else {
+
+            holder.CollectionName.setVisibility(View.INVISIBLE);
+            holder.CollectionSecondaryText.setVisibility(View.INVISIBLE);
+            holder.Gradient.setVisibility(View.INVISIBLE);
         }
 
 
@@ -212,6 +228,7 @@ public class HomeScreenItemsAdapter extends BaseAdapter {
 
     private class ViewHolder {
         NetworkImageView CollectionImage;
+        ImageView Gradient;
         TextView CollectionName;
         TextView CollectionSecondaryText;
         TextView UnwatchedCount;

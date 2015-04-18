@@ -71,7 +71,7 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
 
         SharedPreferences mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(mLibraryActivity);
 
-        mPosterViewEnabled = mSharedPrefs.getBoolean("pref_prefer_posters", true);
+        mPosterViewEnabled = mSharedPrefs.getBoolean("pref_preferposters", true);
 
         String jsonData = getArguments().getString("EpisodeQuery");
         if (jsonData != null) {

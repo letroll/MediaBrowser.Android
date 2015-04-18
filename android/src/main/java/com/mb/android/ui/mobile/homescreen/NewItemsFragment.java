@@ -119,7 +119,7 @@ public class NewItemsFragment extends Fragment implements ICommandListener {
             adapter.addNewDataset(mItems);
             adapter.notifyDataSetChanged();
         } else if (null != mItems) {
-            mNewItemsGrid.setAdapter(new HomeScreenItemsAdapter(mItems));
+            mNewItemsGrid.setAdapter(new HomeScreenItemsAdapter(mItems, false));
             mNewItemsGrid.setOnItemClickListener(onItemClickListener);
         }
     }

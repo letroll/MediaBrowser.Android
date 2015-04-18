@@ -22,6 +22,7 @@ import com.mb.android.utils.Utils;
 import mediabrowser.apiinteraction.ApiClient;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
+import mediabrowser.model.dto.ItemLayout;
 import mediabrowser.model.entities.ImageType;
 import mediabrowser.model.entities.LocationType;
 import com.mb.android.logging.AppLogger;
@@ -59,22 +60,10 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
 
             mImageWidth = dm.widthPixels / columns;
 
-            int count = 0;
-            double combinedAspectRatio = 0;
+            Double displayAspectRatio = ItemLayout.GetDisplayAspectRatio(baseItems);
 
-            for (BaseItemDto item : baseItems) {
-                if (item.getHasPrimaryImage() && item.getPrimaryImageAspectRatio() != null && item.getPrimaryImageAspectRatio() > 0) {
-                    combinedAspectRatio += item.getPrimaryImageAspectRatio();
-                    count++;
-                }
-
-                if (count == 5) {
-                    break;
-                }
-            }
-
-            if (combinedAspectRatio > 0) {
-                mImageHeight = (int) (mImageWidth / (combinedAspectRatio / count));
+            if (displayAspectRatio != null && displayAspectRatio > 0) {
+                mImageHeight = (int) (mImageWidth / displayAspectRatio);
                 AppLogger.getLogger().Debug("CAR","greater than 0");
             } else {
                 mImageHeight = (int)Math.round(mImageWidth * 1.5);
@@ -131,48 +120,50 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
 
         holder.position = position;
 
-        String type = mBaseItems.get(position).getType();
+        BaseItemDto currentItem = mBaseItems.get(position);
+
+        String type = currentItem.getType();
 
         // Set primary text
 
-        if (type.equalsIgnoreCase("Episode") && mBaseItems.get(position).getIndexNumber() != null) {
+        if (type.equalsIgnoreCase("Episode") && currentItem.getIndexNumber() != null) {
 
-            if (mBaseItems.get(position).getAirsBeforeSeasonNumber() != null ||
-                    mBaseItems.get(position).getAirsAfterSeasonNumber() != null ||
-                    mBaseItems.get(position).getAirsBeforeEpisodeNumber() != null) {
+            if (currentItem.getAirsBeforeSeasonNumber() != null ||
+                    currentItem.getAirsAfterSeasonNumber() != null ||
+                    currentItem.getAirsBeforeEpisodeNumber() != null) {
 
-                holder.titleText.setText(mBaseItems.get(position).getName());
+                holder.titleText.setText(currentItem.getName());
 
             } else {
-                String title = mBaseItems.get(position).getIndexNumber().toString();
-                if (mBaseItems.get(position).getIndexNumberEnd() != null && !mBaseItems.get(position).getIndexNumberEnd().equals(mBaseItems.get(position).getIndexNumber()))
-                    title += " - " + mBaseItems.get(position).getIndexNumberEnd() + ". ";
+                String title = currentItem.getIndexNumber().toString();
+                if (currentItem.getIndexNumberEnd() != null && !currentItem.getIndexNumberEnd().equals(currentItem.getIndexNumber()))
+                    title += " - " + currentItem.getIndexNumberEnd() + ". ";
                 else
                     title += ". ";
-                title += mBaseItems.get(position).getName();
+                title += currentItem.getName();
                 holder.titleText.setText(title);
             }
             holder.titleText.setVisibility(View.VISIBLE);
         }
-        else if (type.equalsIgnoreCase("Series")){
+        else if (type.equalsIgnoreCase("Series") || type.equalsIgnoreCase("Movie")){
             holder.titleText.setVisibility(View.GONE);
         }
         else {
             holder.titleText.setVisibility(View.VISIBLE);
-            holder.titleText.setText(mBaseItems.get(position).getName());
+            holder.titleText.setText(currentItem.getName());
         }
 
         // Set Secondary text
 
-        if (type.equalsIgnoreCase("Boxset") || type.equalsIgnoreCase("Folder") || type.equalsIgnoreCase("Season") || type.equalsIgnoreCase("PhotoFolder") || type.equalsIgnoreCase("Series")) {
+        if (type.equalsIgnoreCase("Boxset") || type.equalsIgnoreCase("Folder") || type.equalsIgnoreCase("Season") || type.equalsIgnoreCase("PhotoFolder") || type.equalsIgnoreCase("Series") || type.equalsIgnoreCase("Movie")) {
 
             holder.secondaryText.setVisibility(View.GONE);
 
         } else {
 
-            if (mBaseItems.get(position).getProductionYear() != null && mBaseItems.get(position).getProductionYear() != 0) {
+            if (currentItem.getProductionYear() != null && currentItem.getProductionYear() != 0) {
                 holder.secondaryText.setVisibility(View.VISIBLE);
-                holder.secondaryText.setText(String.valueOf(mBaseItems.get(position).getProductionYear()));
+                holder.secondaryText.setText(String.valueOf(currentItem.getProductionYear()));
             }
         }
 
@@ -181,20 +172,24 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
 
         ImageOptions options = null;
 
-        if (mBaseItems.get(position).getHasPrimaryImage()) {
+        if (currentItem.getHasPrimaryImage()) {
             options = new ImageOptions();
             options.setImageType(ImageType.Primary);
             options.setWidth(mImageWidth);
+            Double aspectRatio = ItemLayout.GetDisplayAspectRatio(currentItem);
+            if (aspectRatio != null && aspectRatio > 0){
+                options.setHeight((int) (mImageWidth / aspectRatio));
+            }
             options.setEnableImageEnhancers(imageEnhancersEnabled);
-            imageUrl = mApi.GetImageUrl(mBaseItems.get(position), options);
+            imageUrl = mApi.GetImageUrl(currentItem, options);
 
-        } else if (mBaseItems.get(position).getType().equalsIgnoreCase("episode")
-                && mBaseItems.get(position).getParentThumbItemId() != null) {
+        } else if (currentItem.getType().equalsIgnoreCase("episode")
+                && currentItem.getParentThumbItemId() != null) {
             options = new ImageOptions();
             options.setImageType(ImageType.Thumb);
             options.setMaxWidth(mImageWidth);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
-            imageUrl = mApi.GetImageUrl(mBaseItems.get(position).getParentThumbItemId(), options);
+            imageUrl = mApi.GetImageUrl(currentItem.getParentThumbItemId(), options);
         } else if (mDefaultImageId != null) {
             holder.imageView.setImageUrl(null, MainApplication.getInstance().API.getImageLoader());
         }
@@ -204,12 +199,12 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
         }
 
         // Process top-right overlays
-        if (mBaseItems.get(position).getLocationType().equals(LocationType.Virtual) && mBaseItems.get(position).getType().equalsIgnoreCase("episode")) {
+        if (currentItem.getLocationType().equals(LocationType.Virtual) && currentItem.getType().equalsIgnoreCase("episode")) {
             holder.isNewOverlay.setVisibility(View.INVISIBLE);
 
-            if (mBaseItems.get(position).getPremiereDate() != null) {
+            if (currentItem.getPremiereDate() != null) {
 
-                Date premiereDate = Utils.convertToLocalDate(mBaseItems.get(position).getPremiereDate());
+                Date premiereDate = Utils.convertToLocalDate(currentItem.getPremiereDate());
 
                 long premiereDateMs = premiereDate.getTime();
                 long currentMs = new Date().getTime();
@@ -221,31 +216,31 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
             holder.missingEpisodeOverlay.setVisibility(TextView.VISIBLE);
         } else {
             holder.missingEpisodeOverlay.setVisibility(TextView.GONE);
-            if (mBaseItems.get(position).getType().equalsIgnoreCase("boxset") ||
-                    mBaseItems.get(position).getType().equalsIgnoreCase("season") ||
-                    mBaseItems.get(position).getType().equalsIgnoreCase("series")) {
-                if (mBaseItems.get(position).getUserData().getUnplayedItemCount() != null && mBaseItems.get(position).getUserData().getUnplayedItemCount() > 0) {
-                    holder.isNewOverlay.setText(String.valueOf(mBaseItems.get(position).getUserData().getUnplayedItemCount()));
+            if (currentItem.getType().equalsIgnoreCase("boxset") ||
+                    currentItem.getType().equalsIgnoreCase("season") ||
+                    currentItem.getType().equalsIgnoreCase("series")) {
+                if (currentItem.getUserData().getUnplayedItemCount() != null && currentItem.getUserData().getUnplayedItemCount() > 0) {
+                    holder.isNewOverlay.setText(String.valueOf(currentItem.getUserData().getUnplayedItemCount()));
                     holder.isNewOverlay.setVisibility(View.VISIBLE);
-                } else if (mBaseItems.get(position).getUserData().getUnplayedItemCount() != null && mBaseItems.get(position).getUserData().getUnplayedItemCount() == 0) {
+                } else if (currentItem.getUserData().getUnplayedItemCount() != null && currentItem.getUserData().getUnplayedItemCount() == 0) {
                     holder.isNewOverlay.setText("\u2714");
                     holder.isNewOverlay.setVisibility(View.VISIBLE);
                 } else {
                     holder.isNewOverlay.setVisibility(View.GONE);
                 }
             } else {
-                new AsyncProcessOverlay(holder.isNewOverlay, mBaseItems.get(position)).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                new AsyncProcessOverlay(holder.isNewOverlay, currentItem).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }
 
 
         try {
 
-            if (mBaseItems.get(position).getUserData() != null && mBaseItems.get(position).getUserData().getPlaybackPositionTicks() > 1) {
+            if (currentItem.getUserData() != null && currentItem.getUserData().getPlaybackPositionTicks() > 1) {
 
                 holder.playedProgress.setVisibility(View.VISIBLE);
                 holder.playedProgress.setMax(100);
-                double percentWatched = (double) mBaseItems.get(position).getUserData().getPlaybackPositionTicks() / (double) mBaseItems.get(position).getRunTimeTicks();
+                double percentWatched = (double)currentItem.getUserData().getPlaybackPositionTicks() / (double) currentItem.getRunTimeTicks();
                 int roundedValue = (int) (percentWatched * 100);
                 holder.playedProgress.setProgress(roundedValue);
 

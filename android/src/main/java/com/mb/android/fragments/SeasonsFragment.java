@@ -118,7 +118,7 @@ public class SeasonsFragment extends Fragment {
                             )
                     );
                 } else {
-                    seasonsList.setAdapter(new HomeScreenItemsAdapter(response.getItems()));
+                    seasonsList.setAdapter(new HomeScreenItemsAdapter(response.getItems(), true));
                 }
 
                 seasonsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

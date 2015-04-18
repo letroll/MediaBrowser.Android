@@ -88,8 +88,8 @@
         android:title="@string/settings_library">
 
         <com.mb.android.widget.customswitchpreference.CustomSwitchPreference
-            android:defaultValue="false"
-            android:key="pref_prefer_posters"
+            android:defaultValue="true"
+            android:key="pref_preferposters"
             android:summaryOff="@string/settings_prefer_posters_summary_off"
             android:summaryOn="@string/settings_prefer_posters_summary_on"
             android:title="@string/settings_prefer_posters" />

@@ -148,7 +148,7 @@ public class FavoritesFragment extends Fragment implements ICommandListener {
             adapter.addNewDataset(mItems);
             adapter.notifyDataSetChanged();
         } else if (null != mItems) {
-            mFavoriteItemsGrid.setAdapter(new HomeScreenItemsAdapter(mItems));
+            mFavoriteItemsGrid.setAdapter(new HomeScreenItemsAdapter(mItems, false));
             mFavoriteItemsGrid.setOnItemClickListener(onItemClickListener);
         }
     }
