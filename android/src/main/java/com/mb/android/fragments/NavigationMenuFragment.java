@@ -149,9 +149,9 @@ public class NavigationMenuFragment extends Fragment {
     private View.OnClickListener onUserClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            closeDrawer();
 
             if (MainApplication.getInstance().user.getPolicy().getEnableUserPreferenceAccess()) {
+                // closeDrawer();
                 //Intent intent = new Intent(MainApplication.getInstance(), UserPreferencesActivity.class);
                 //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 //startActivity(intent);
