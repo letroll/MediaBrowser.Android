@@ -104,6 +104,9 @@ public class ViewsAdapter extends BaseAdapter {
 
             else if (mLibraryFolders.get(index).CollectionType.equalsIgnoreCase("channels"))
                 viewImage.setImageResource(R.drawable.channels);
+
+            else if (mLibraryFolders.get(index).CollectionType.equalsIgnoreCase("logout"))
+                viewImage.setImageResource(R.drawable.logout);
         }
 
 

@@ -140,6 +140,7 @@
     <string name="remote_control_title_string">Remote Control</string>
     <string name="clients_string">Clients</string>
     <string name="queue_string">Queue</string>
+    <string name="signout_string">Sign out</string>
     <string name="play_now_string">Play now</string>
     <string name="play_next_string">Play next</string>
     <string name="play_last_string">Play last</string>

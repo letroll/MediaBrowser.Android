@@ -130,8 +130,8 @@ public class NavigationMenuFragment extends Fragment {
 
                 ImageOptions options = new ImageOptions();
                 options.setImageType(ImageType.Primary);
-                options.setHeight((int) (50 * metrics.density));
-                options.setWidth((int) (50 * metrics.density));
+                options.setHeight((int) (56 * metrics.density));
+                options.setWidth((int) (56 * metrics.density));
                 options.setCropWhitespace(true);
 
                 String imageUrl = MainApplication.getInstance().API.GetUserImageUrl(MainApplication.getInstance().user, options);
@@ -166,7 +166,6 @@ public class NavigationMenuFragment extends Fragment {
             mDrawerLayout.closeDrawer(Gravity.START);
         }
     }
-
 
     private void terminateQueuedMedia() {
         MainApplication.getInstance().PlayerQueue = new Playlist();
@@ -213,7 +212,13 @@ public class NavigationMenuFragment extends Fragment {
             }
         }
 
+        MenuEntity logoutMenuItem = new MenuEntity();
+        logoutMenuItem.CollectionType = "logout";
+        logoutMenuItem.Name = MainApplication.getInstance().getResources().getString(R.string.signout_string);
+        menu.add(logoutMenuItem);
+
         mDrawerList.setAdapter(new ViewsAdapter(menu));
+
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -244,7 +249,19 @@ public class NavigationMenuFragment extends Fragment {
                     Intent intent = new Intent(MainApplication.getInstance(), MusicActivity.class);
                     intent.putExtra("ParentId", menu.get(index).Id);
                     startActivity(intent);
-                } else {
+
+                }  else if (menu.get(index).CollectionType != null && menu.get(index).CollectionType.equalsIgnoreCase("logout")) {
+                    closeDrawer();
+                    terminateQueuedMedia();
+                    MainApplication.getInstance().getConnectionManager().Logout(new EmptyResponse(){
+
+                        @Override
+                        public void onResponse(){
+                            showUserSelection();
+                        }
+                    });
+                }
+                else {
 
                     String jsonData = MainApplication.getInstance().getJsonSerializer().SerializeToString(menu.get(index));
                     Intent intent = new Intent(MainApplication.getInstance(), LibraryPresentationActivity.class);
