@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.support.multidex.MultiDex;
 import android.util.Log;
 
 import com.dolby.dap.DolbyAudioProcessing;
@@ -194,6 +195,11 @@ public class MainApplication extends Application
         mMediaPlayer.setVolume(.2f, .2f);
     }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 
     public void StopMedia() {
 
