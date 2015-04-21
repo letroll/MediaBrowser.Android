@@ -81,6 +81,8 @@ public class LogbackLogger implements ILogger {
 
     private String stackTraceToString(Throwable e) {
         StringBuilder sb = new StringBuilder();
+        sb.append(e.getClass().getName());
+        sb.append("\r");
         for (StackTraceElement element : e.getStackTrace()) {
             sb.append(element.toString());
             sb.append("\r");

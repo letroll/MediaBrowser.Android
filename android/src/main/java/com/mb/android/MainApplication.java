@@ -148,8 +148,8 @@ public class MainApplication extends Application
         capabilities.setPlayableMediaTypes(playableTypes);
         capabilities.setSupportedCommands(supportedCommands);
         capabilities.setSupportsContentUploading(true);
-        capabilities.setSupportsSync(false);
-        capabilities.setSupportsOfflineAccess(false);
+        capabilities.setSupportsSync(true);
+        capabilities.setSupportsOfflineAccess(true);
         capabilities.setDeviceProfile(new AndroidProfile(true, false));
         capabilities.setSupportsMediaControl(true);
 
