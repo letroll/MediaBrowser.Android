@@ -21,6 +21,7 @@ import com.mb.android.MenuEntity;
 import com.mb.android.Playlist;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.ChannelsActivity;
+import com.mb.android.activities.mobile.UserPreferencesActivity;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.homescreen.HomescreenActivity;
 import com.mb.android.ui.mobile.library.LibraryPresentationActivity;
@@ -149,14 +150,12 @@ public class NavigationMenuFragment extends Fragment {
         @Override
         public void onClick(View v) {
             closeDrawer();
-            terminateQueuedMedia();
-            MainApplication.getInstance().getConnectionManager().Logout(new EmptyResponse(){
 
-                @Override
-                public void onResponse(){
-                    showUserSelection();
-                }
-            });
+            if (MainApplication.getInstance().user.getPolicy().getEnableUserPreferenceAccess()) {
+                //Intent intent = new Intent(MainApplication.getInstance(), UserPreferencesActivity.class);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                //startActivity(intent);
+            }
         }
     };
 
@@ -253,10 +252,10 @@ public class NavigationMenuFragment extends Fragment {
                 }  else if (menu.get(index).CollectionType != null && menu.get(index).CollectionType.equalsIgnoreCase("logout")) {
                     closeDrawer();
                     terminateQueuedMedia();
-                    MainApplication.getInstance().getConnectionManager().Logout(new EmptyResponse(){
+                    MainApplication.getInstance().getConnectionManager().Logout(new EmptyResponse() {
 
                         @Override
-                        public void onResponse(){
+                        public void onResponse() {
                             showUserSelection();
                         }
                     });

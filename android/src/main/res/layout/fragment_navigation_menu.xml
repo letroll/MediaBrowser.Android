@@ -19,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp">
 
-                <com.android.volley.toolbox.NetworkImageView
+                <com.mb.android.widget.CircularNetworkImageView
                     android:id="@+id/ivUserAvatar"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
@@ -40,7 +40,7 @@
                     android:textSize="16sp"
                     android:textColor="#ffffff"
                     android:fontFamily="sans-serif"
-                    android:layout_marginTop="14dp" />
+                    android:layout_marginTop="16dp" />
 
             </RelativeLayout>
 
