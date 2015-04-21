@@ -113,7 +113,6 @@ public class LatestItemsDialogFragment extends DialogFragment {
         query.setParentId(mParent.getId());
         query.setLimit(limit);
         query.setIncludeItemTypes(new String[] { "episode" });
-        query.setIsPlayed(false);
         query.setGroupItems(false);
 
         MainApplication.getInstance().API.GetLatestItems(query, getNewItemsResponse);

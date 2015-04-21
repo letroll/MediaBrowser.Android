@@ -168,7 +168,7 @@ public final class PlayerHelpers {
         VideoOptions options = new VideoOptions();
         options.setItemId(id);
         options.setMediaSources(mediaSources);
-        options.setProfile(new AndroidProfile(hlsEnabled, false));
+        options.setProfile(MainApplication.getInstance().getDeviceProfile());
         options.setDeviceId(MainApplication.getInstance().getConnectionManager().getDevice().getDeviceId());
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
@@ -220,7 +220,7 @@ public final class PlayerHelpers {
         AudioOptions options = new AudioOptions();
         options.setItemId(id);
         options.setMediaSources(mediaSources);
-        options.setProfile(new AndroidProfile(hlsEnabled, false));
+        options.setProfile(MainApplication.getInstance().getDeviceProfile());
         options.setDeviceId(MainApplication.getInstance().getConnectionManager().getDevice().getDeviceId());
         options.setMaxBitrate(Integer.valueOf(bitrate));
 

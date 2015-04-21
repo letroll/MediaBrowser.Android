@@ -327,7 +327,7 @@ public class Utils {
         AudioOptions options = new AudioOptions();
         options.setItemId(id);
         options.setMediaSources(mediaSources);
-        options.setProfile(new AndroidProfile(false, false));
+        options.setProfile(MainApplication.getInstance().getDeviceProfile());
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         AppLogger.getLogger().Info("Create Audio StreamInfo");
@@ -422,8 +422,7 @@ public class Utils {
         VideoOptions options = new VideoOptions();
         options.setItemId(id);
         options.setMediaSources(mediaSources);
-        options.setProfile(new AndroidProfile(hlsEnabled, false)
-        );
+        options.setProfile(MainApplication.getInstance().getDeviceProfile());
         options.setMaxBitrate(Integer.valueOf(bitrate));
 
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mediaSourceId)) {

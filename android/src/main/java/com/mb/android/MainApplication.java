@@ -29,6 +29,7 @@ import mediabrowser.apiinteraction.android.sync.PeriodicSync;
 import mediabrowser.apiinteraction.android.sync.data.AndroidAssetManager;
 import mediabrowser.apiinteraction.playback.PlaybackManager;
 import mediabrowser.apiinteraction.sync.data.ILocalAssetManager;
+import mediabrowser.model.dlna.DeviceProfile;
 import mediabrowser.model.dto.UserDto;
 import mediabrowser.model.serialization.IJsonSerializer;
 import mediabrowser.model.session.ClientCapabilities;
@@ -151,12 +152,16 @@ public class MainApplication extends Application
         capabilities.setSupportsContentUploading(true);
         capabilities.setSupportsSync(true);
         capabilities.setSupportsOfflineAccess(true);
-        capabilities.setDeviceProfile(new AndroidProfile(true, false));
+        capabilities.setDeviceProfile(getDeviceProfile());
         capabilities.setSupportsMediaControl(true);
 
         capabilities.setIconUrl("https://raw.githubusercontent.com/MediaBrowser/MediaBrowser.Android/master/servericon.png");
 
         return capabilities;
+    }
+
+    public DeviceProfile getDeviceProfile() {
+        return new AndroidProfile(true, 41);
     }
 
     @Override

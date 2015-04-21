@@ -227,7 +227,6 @@ public class NewItemsFragment extends Fragment implements ICommandListener {
         query.setFields(new ItemFields[]{ItemFields.PrimaryImageAspectRatio, ItemFields.ParentId, ItemFields.DateCreated});
         query.setParentId(seriesId);
         query.setIncludeItemTypes(new String[] { "episode" });
-        query.setIsPlayed(false);
         query.setGroupItems(false);
 
         MainApplication.getInstance().API.GetLatestItems(query, new getSeriesUnwatchedItemsResponse());

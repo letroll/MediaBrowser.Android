@@ -107,19 +107,6 @@
         android:summary="@string/settings_playback_summary"
         android:title="@string/settings_playback">
 
-        <PreferenceScreen
-            android:key="streaming_options"
-            android:title="Streaming Options">
-
-            <com.mb.android.widget.customswitchpreference.CustomSwitchPreference
-                android:defaultValue="true"
-                android:key="pref_enable_hls"
-                android:summaryOff="@string/settings_hls_summary_off"
-                android:summaryOn="@string/settings_hls_summary_on"
-                android:title="@string/settings_hls" />
-
-        </PreferenceScreen>
-
         <ListPreference
             android:defaultValue="5872000"
             android:dialogTitle="@string/settings_lan_dialog"
@@ -146,6 +133,13 @@
             android:key="pref_chromecast_bitrate"
             android:summary="@string/settings_chromecast_summary"
             android:title="@string/settings_chromecast_title" />
+
+        <com.mb.android.widget.customswitchpreference.CustomSwitchPreference
+            android:defaultValue="true"
+            android:key="pref_enable_hls"
+            android:summaryOff="@string/settings_hls_summary_off"
+            android:summaryOn="@string/settings_hls_summary_on"
+            android:title="@string/settings_hls" />
 
         <com.mb.android.widget.customswitchpreference.CustomSwitchPreference
             android:defaultValue="false"

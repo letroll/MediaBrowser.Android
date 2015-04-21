@@ -92,10 +92,10 @@
     <string name="live_tv_header">Live TV</string>
     <string name="channels_header">Channels</string>
     <string name="favorites_header">Favorites</string>
-    <string name="new_header">New</string>
+    <string name="new_header">Latest</string>
     <string name="next_up_header">Next Up</string>
     <string name="resume_header">Resume</string>
-    <string name="library_header">Library</string>
+    <string name="library_header">My Media</string>
     <string name="added_on_date">Added on %s</string>
 
     <!-- Media Details Activity -->
