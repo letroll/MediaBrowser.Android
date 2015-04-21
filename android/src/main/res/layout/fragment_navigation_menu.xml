@@ -39,7 +39,7 @@
                     android:ellipsize="end"
                     android:textSize="16sp"
                     android:textColor="#ffffff"
-                    android:fontFamily="sans-serif-thin"
+                    android:fontFamily="sans-serif"
                     android:layout_marginTop="14dp" />
 
             </RelativeLayout>
@@ -51,6 +51,7 @@
                 android:choiceMode="singleChoice"
                 android:headerDividersEnabled="false"
                 android:fastScrollEnabled="false"
+				android:divider="@android:color/transparent"
                 android:dividerHeight="0dp" />
 
         </LinearLayout>
