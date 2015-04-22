@@ -25,6 +25,7 @@ import mediabrowser.apiinteraction.android.AndroidDevice;
 import mediabrowser.apiinteraction.android.GsonJsonSerializer;
 import mediabrowser.apiinteraction.android.VolleyHttpClient;
 import mediabrowser.apiinteraction.android.profiles.AndroidProfile;
+import mediabrowser.apiinteraction.android.profiles.AndroidProfileOptions;
 import mediabrowser.apiinteraction.android.sync.PeriodicSync;
 import mediabrowser.apiinteraction.android.sync.data.AndroidAssetManager;
 import mediabrowser.apiinteraction.playback.PlaybackManager;
@@ -33,6 +34,7 @@ import mediabrowser.model.dlna.DeviceProfile;
 import mediabrowser.model.dto.UserDto;
 import mediabrowser.model.serialization.IJsonSerializer;
 import mediabrowser.model.session.ClientCapabilities;
+import mediabrowser.model.sync.SyncProfileOption;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -161,7 +163,13 @@ public class MainApplication extends Application
     }
 
     public DeviceProfile getDeviceProfile() {
-        return new AndroidProfile(true, 41);
+
+        AndroidProfileOptions options = new AndroidProfileOptions();
+        options.DefaultH264Level = 41;
+        options.SupportsHls = true;
+        options.SupportsAc3 = true;
+
+        return new AndroidProfile(options);
     }
 
     @Override
