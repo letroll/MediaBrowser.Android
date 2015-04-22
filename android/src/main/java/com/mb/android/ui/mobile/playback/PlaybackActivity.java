@@ -158,12 +158,10 @@ public class PlaybackActivity
         mMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
 
-//        if (!MB3Application.getInstance().isDolbyAvailable()) {
-//
-//            if (MB3Application.getInstance().createDolbyAudioProcessing()) {
-//                Toast.makeText(mPlaybackActivity, "Dolby capable", Toast.LENGTH_LONG).show();
-//            }
-//        }
+        if (!MainApplication.getInstance().isDolbyAvailable()) {
+
+            MainApplication.getInstance().createDolbyAudioProcessing();
+       }
 
         // acquire UI elements
         mMediaControlsOverlay = (RelativeLayout) findViewById(R.id.rlControlOverlay);

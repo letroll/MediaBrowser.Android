@@ -245,14 +245,20 @@ public class MainApplication extends Application
 
     public boolean createDolbyAudioProcessing() {
 
+        AppLogger.getLogger().Info("createDolbyAudioProcessing");
+
         try {
             mDolbyAudioProcessing = DolbyAudioProcessing.getDolbyAudioProcessing(this, DolbyAudioProcessing.PROFILE.MOVIE, this);
+            AppLogger.getLogger().Info("createDolbyAudioProcessing succeeded");
+
         } catch (IllegalStateException ex) {
-            handleIllegalStateException(ex);
+            AppLogger.getLogger().ErrorException("createDolbyAudioProcessing failed", ex);
         } catch (IllegalArgumentException ex) {
-            handleIllegalArgumentException(ex);
+            AppLogger.getLogger().ErrorException("createDolbyAudioProcessing failed", ex);
         } catch (RuntimeException ex) {
-            handleRuntimeException(ex);
+            AppLogger.getLogger().ErrorException("createDolbyAudioProcessing failed", ex);
+        } catch (Exception ex) {
+            AppLogger.getLogger().ErrorException("createDolbyAudioProcessing failed", ex);
         }
 
         if (mDolbyAudioProcessing == null) {
@@ -272,9 +278,11 @@ public class MainApplication extends Application
                 mDolbyAudioProcessing.release();
                 mDolbyAudioProcessing = null;
             } catch (IllegalStateException ex) {
-                handleIllegalStateException(ex);
+                AppLogger.getLogger().ErrorException("releaseDolbyAudioProcessing failed", ex);
             } catch (RuntimeException ex) {
-                handleRuntimeException(ex);
+                AppLogger.getLogger().ErrorException("releaseDolbyAudioProcessing failed", ex);
+            } catch (Exception ex) {
+                AppLogger.getLogger().ErrorException("releaseDolbyAudioProcessing failed", ex);
             }
         }
 
@@ -288,9 +296,9 @@ public class MainApplication extends Application
             try{
                 bRet = mDolbyAudioProcessing.isEnabled();
             } catch (IllegalStateException ex) {
-                handleIllegalStateException(ex);
+                AppLogger.getLogger().ErrorException("isDolbyAudioProcessingEnabled failed", ex);
             } catch (RuntimeException ex) {
-                handleRuntimeException(ex);
+                AppLogger.getLogger().ErrorException("isDolbyAudioProcessingEnabled failed", ex);
             }
         }
         return bRet;
@@ -303,47 +311,12 @@ public class MainApplication extends Application
             try {
                 profile = mDolbyAudioProcessing.getSelectedProfile();
             } catch (IllegalStateException ex) {
-                handleIllegalStateException(ex);
+                AppLogger.getLogger().ErrorException("getCurrentSelectedProfile failed", ex);
             } catch (RuntimeException ex) {
-                handleRuntimeException(ex);
+                AppLogger.getLogger().ErrorException("getCurrentSelectedProfile failed", ex);
             }
         }
         return profile;
-    }
-
-    // Enable/disable the Dolby Audio Processing
-    public void setDolbyAudioProcessingEnabled(boolean enable) {
-        if (mDolbyAudioProcessing != null && isDolbyAudioProcessingConnected) {
-            try {
-
-                // Enable/disable Dolby Audio Processing
-                mDolbyAudioProcessing.setEnabled(enable);
-                AppLogger.getLogger().Info("Dolby Enabled");
-
-            } catch (IllegalStateException ex) {
-                handleIllegalStateException(ex);
-            } catch (RuntimeException ex) {
-                handleRuntimeException(ex);
-            }
-        }
-    }
-
-    // Set the active Dolby Audio Processing profile
-    public void setDolbyAudioProcessingProfile(String profile) {
-        if (mDolbyAudioProcessing != null && isDolbyAudioProcessingConnected) {
-            try {
-
-                // Set Dolby Audio Processing profile
-                mDolbyAudioProcessing.setProfile(DolbyAudioProcessing.PROFILE.valueOf(profile));
-
-            } catch (IllegalStateException ex) {
-                handleIllegalStateException(ex);
-            } catch (IllegalArgumentException ex) {
-                handleIllegalArgumentException(ex);
-            } catch (RuntimeException ex) {
-                handleRuntimeException(ex);
-            }
-        }
     }
 
     @Override
@@ -365,33 +338,6 @@ public class MainApplication extends Application
     @Override
     public void onDolbyAudioProcessingProfileSelected(DolbyAudioProcessing.PROFILE profile) {
 
-    }
-
-    /** Generic handler for IllegalStateException */
-    private void handleIllegalStateException(Exception ex)
-    {
-        AppLogger.getLogger().Error("Dolby Audio Processing has a wrong state");
-        handleGenericException(ex);
-    }
-
-    /** Generic handler for IllegalArgumentException */
-    private void handleIllegalArgumentException(Exception ex)
-    {
-        AppLogger.getLogger().Error("One of the passed arguments is invalid");
-        handleGenericException(ex);
-    }
-
-    /** Generic handler for RuntimeException */
-    private void handleRuntimeException(Exception ex)
-    {
-        AppLogger.getLogger().Error("Internal error occured in Dolby Audio Processing");
-        handleGenericException(ex);
-    }
-
-    /** Logs out the stack trace associated with the Exception*/
-    private void handleGenericException(Exception ex)
-    {
-        AppLogger.getLogger().Error(Log.getStackTraceString(ex));
     }
 
     public String getApplicationVersion() {
