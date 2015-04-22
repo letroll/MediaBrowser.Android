@@ -174,7 +174,7 @@ public class MainApplication extends Application
 
         this.PlayerQueue = new Playlist();
         this.mDevice = new AndroidDevice(this);
-        ILocalAssetManager localAssetManager = new AndroidAssetManager(this, AppLogger.getLogger(), jsonSerializer);
+        ILocalAssetManager localAssetManager = new AndroidAssetManager(this, AppLogger.getLogger(), getJsonSerializer());
         this.mPlaybackManager = new PlaybackManager(localAssetManager, mDevice, AppLogger.getLogger());
 
         Utils.saveFloatToPreference(getApplicationContext(),
