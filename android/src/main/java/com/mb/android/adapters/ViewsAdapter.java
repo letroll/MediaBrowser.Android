@@ -75,15 +75,6 @@ public class ViewsAdapter extends BaseAdapter {
             else if (mLibraryFolders.get(index).CollectionType.equalsIgnoreCase("movies"))
                 viewImage.setImageResource(R.drawable.movies);
 
-            else if (mLibraryFolders.get(index).CollectionType.equalsIgnoreCase("queue"))
-                viewImage.setImageResource(R.drawable.folder);
-
-            else if (mLibraryFolders.get(index).CollectionType.equalsIgnoreCase("boxsets"))
-                viewImage.setImageResource(R.drawable.folder);
-
-            else if (mLibraryFolders.get(index).CollectionType.equalsIgnoreCase("playlists"))
-                viewImage.setImageResource(R.drawable.folder);
-
             else if (mLibraryFolders.get(index).CollectionType.equalsIgnoreCase("homevideos"))
                 viewImage.setImageResource(R.drawable.homevideos);
 
@@ -107,6 +98,9 @@ public class ViewsAdapter extends BaseAdapter {
 
             else if (mLibraryFolders.get(index).CollectionType.equalsIgnoreCase("logout"))
                 viewImage.setImageResource(R.drawable.logout);
+
+            else
+                viewImage.setImageResource(R.drawable.folder);
         }
 
 

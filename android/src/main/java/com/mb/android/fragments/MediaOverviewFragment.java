@@ -174,16 +174,14 @@ public class MediaOverviewFragment extends Fragment {
         mBackdropImage1.setDefaultImageResId(R.drawable.default_backdrop);
         mBackdropImage2 = (NetworkImageView) mView.findViewById(R.id.ivMediaBackdrop2);
 
-        mBackdropUrls = new ArrayList<>();
         ImageOptions options;
-        String imageUrl;
 
         if (mItem.getType().equalsIgnoreCase("episode") && mItem.getHasPrimaryImage()) {
 
             options = new ImageOptions();
             options.setImageType(ImageType.Primary);
             options.setEnableImageEnhancers(false);
-            imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem, options);
+            String imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem, options);
             setBackdropImage(imageUrl);
 
             if (mPrimaryImage != null) {
@@ -191,13 +189,15 @@ public class MediaOverviewFragment extends Fragment {
             }
 
         } else {
+            mBackdropUrls = new ArrayList<>();
+
             if (mItem.getBackdropCount() > 0) {
                 for (int i = 0; i < mItem.getBackdropCount(); i++) {
                     options = new ImageOptions();
                     options.setImageType(ImageType.Backdrop);
                     options.setImageIndex(i);
                     options.setMaxWidth(mMediaDetailsActivity.getResources().getDisplayMetrics().widthPixels);
-                    imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem, options);
+                    String imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem, options);
 
                     mBackdropUrls.add(imageUrl);
                 }
@@ -205,15 +205,13 @@ public class MediaOverviewFragment extends Fragment {
                 options = new ImageOptions();
                 options.setImageType(ImageType.Backdrop);
 
-                imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem.getParentBackdropItemId(), options);
+                String imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem.getParentBackdropItemId(), options);
                 mBackdropUrls.add(imageUrl);
             }
-        }
 
-        if (mBackdropUrls != null && mBackdropUrls.size() > 0 ) {
-            setBackdropImage(mBackdropUrls.get(0));
-        } else {
-            setBackdropImage(null);
+            if (mBackdropUrls != null && mBackdropUrls.size() > 0 ) {
+                setBackdropImage(mBackdropUrls.get(0));
+            }
         }
     }
 

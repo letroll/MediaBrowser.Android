@@ -1,12 +1,13 @@
 package com.mb.android;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.support.multidex.MultiDex;
-import android.util.Log;
 
 import com.dolby.dap.DolbyAudioProcessing;
 import com.dolby.dap.OnDolbyAudioProcessingEventListener;
@@ -34,7 +35,6 @@ import mediabrowser.model.dlna.DeviceProfile;
 import mediabrowser.model.dto.UserDto;
 import mediabrowser.model.serialization.IJsonSerializer;
 import mediabrowser.model.session.ClientCapabilities;
-import mediabrowser.model.sync.SyncProfileOption;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,7 +44,11 @@ public class MainApplication extends Application
         implements MediaPlayer.OnPreparedListener,
         MediaPlayer.OnCompletionListener, OnDolbyAudioProcessingEventListener {
 
-    private static final String TAG = "MB3Application";
+    // This constant is to show that depending on your application's logic
+    // You might choose to handle pause/resume Dolby audio processing session
+    // When the application goes background/foreground
+    private static final boolean RELEASE_DOLBY_CONTROL_WHEN_IN_BACKGROUND = true;
+
     public static final double VOLUME_INCREMENT = 0.05;
     private static MainApplication _mb3Application;
     // v1 Id AE4DA10A
@@ -63,8 +67,18 @@ public class MainApplication extends Application
     private MediaPlayer mMediaPlayer;
     private PlaybackManager mPlaybackManager;
     private AndroidDevice mDevice;
+
+    private Object  mLock = null;
+    // The Activity list, the list will be empty when the application goes background
+    private final java.util.List<String> mActList = new java.util.ArrayList<String>();
+
+    // Handle to Dolby Audio Processing
     private DolbyAudioProcessing mDolbyAudioProcessing = null;
+
+    // Internal flag to maintain the connection status
     private boolean isDolbyAudioProcessingConnected = false;
+
+    private IDolbyActivity mDolbyActivity;
 
     private boolean isOffline = false; //future
 
@@ -162,12 +176,14 @@ public class MainApplication extends Application
         return capabilities;
     }
 
+    private boolean isDolbySupported = false;
+
     public DeviceProfile getDeviceProfile() {
 
         AndroidProfileOptions options = new AndroidProfileOptions();
         options.DefaultH264Level = 41;
         options.SupportsHls = true;
-        options.SupportsAc3 = true;
+        options.SupportsAc3 = isDolbySupported;
 
         return new AndroidProfile(options);
     }
@@ -180,13 +196,17 @@ public class MainApplication extends Application
         AppLogger.getLogger().Info("Application object initialized");
         Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
 
+        isDolbySupported = createDolbyAudioProcessing();
+
         this.PlayerQueue = new Playlist();
         this.mDevice = new AndroidDevice(this);
         ILocalAssetManager localAssetManager = new AndroidAssetManager(this, AppLogger.getLogger(), getJsonSerializer());
         this.mPlaybackManager = new PlaybackManager(localAssetManager, mDevice, AppLogger.getLogger());
 
-        Utils.saveFloatToPreference(getApplicationContext(),
-                VideoCastManager.PREFS_KEY_VOLUME_INCREMENT, (float) VOLUME_INCREMENT);
+        Utils.saveFloatToPreference(getApplicationContext(), VideoCastManager.PREFS_KEY_VOLUME_INCREMENT, (float) VOLUME_INCREMENT);
+
+        // When the application is created, it registers to listen for all it's activities' lifecycle
+        registerAppCallbacks();
     }
 
     public void PlayMedia(String url) {
@@ -248,28 +268,138 @@ public class MainApplication extends Application
     // Dolby Methods
     //**********************************************************************************************
 
-    // The Dolby Audio Processing instance is created or not
-    public boolean isDolbyAvailable() { return (mDolbyAudioProcessing != null); }
+    // The ActivityLifecycleCallbacks for the application Activities
+    private AppActivityLifecycleCallbacks mAppCallback = new AppActivityLifecycleCallbacks();
 
-    public boolean createDolbyAudioProcessing() {
+    private class AppActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks
+    {
 
-        AppLogger.getLogger().Info("createDolbyAudioProcessing");
-
-        try {
-            mDolbyAudioProcessing = DolbyAudioProcessing.getDolbyAudioProcessing(this, DolbyAudioProcessing.PROFILE.MOVIE, this);
-            AppLogger.getLogger().Info("createDolbyAudioProcessing succeeded");
-
-        } catch (IllegalStateException ex) {
-            AppLogger.getLogger().ErrorException("createDolbyAudioProcessing failed", ex);
-        } catch (IllegalArgumentException ex) {
-            AppLogger.getLogger().ErrorException("createDolbyAudioProcessing failed", ex);
-        } catch (RuntimeException ex) {
-            AppLogger.getLogger().ErrorException("createDolbyAudioProcessing failed", ex);
-        } catch (Exception ex) {
-            AppLogger.getLogger().ErrorException("createDolbyAudioProcessing failed", ex);
+        @Override
+        public void onActivityCreated(Activity activity,
+                                      Bundle savedInstanceState) {
         }
 
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+            synchronized (mLock) {
+                String name = activity.getClass().getName();
+                AppLogger.getLogger().Info("onActivityResumed: " + name);
+                if(!mActList.contains(name)){
+                    mActList.add(name);
+                    AppLogger.getLogger().Info("Activitys:"+mActList.toString());
+                }
+
+                //
+                // If audio playback is not required while your application is in the background, restore the Dolby audio processing system
+                // configuration to its original state by suspendSession().
+                // This ensures that the use of the system-wide audio processing is sandboxed to your application.
+
+                if (RELEASE_DOLBY_CONTROL_WHEN_IN_BACKGROUND) {
+                    restartSession();
+                }
+            }
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity,
+                                                Bundle outState) {
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            // The developer can detect if the application goes background here
+            // and broadcast some intents to notify that the application is going background and call suspendSession().
+            synchronized (mLock) {
+                String name = activity.getClass().getName();
+                AppLogger.getLogger().Info("onActivityStopped: " + name );
+                if(mActList.contains(name)){
+                    mActList.remove(name);
+                    AppLogger.getLogger().Info("Activitys:"+mActList.toString());
+                }
+
+                if (RELEASE_DOLBY_CONTROL_WHEN_IN_BACKGROUND) {
+                    if (isAppInBackground()) {
+                        AppLogger.getLogger().Info("The application is in background, supsendSession");
+                        //
+                        // If audio playback is not required while your application is in the background, restore the Dolby audio processing system
+                        // configuration to its original state by suspendSession().
+                        // This ensures that the use of the system-wide audio processing is sandboxed to your application.
+                        suspendSession();
+                    }
+                }
+            }
+        }
+
+    }
+
+    public void registerAppCallbacks() {
+
+        mLock = this;
+        // Register the Application.registerActivityLifecycleCallbacks to help detect the application's background
+        synchronized (mLock) {
+            this.registerActivityLifecycleCallbacks(mAppCallback);
+            AppLogger.getLogger().Info("registerActivityLifecycleCallbacks is done.");
+        }
+    }
+
+    // Unregister the Application ActivityLifecycleCallbacks
+    public void unregisterAppCallbacks() {
+        synchronized (mLock) {
+            this.unregisterActivityLifecycleCallbacks(mAppCallback);
+            AppLogger.getLogger().Info("unregisterActivityLifecycleCallbacks is done.");
+        }
+    }
+
+    // If there is an Activity is showing in foreground
+    public boolean isAppInBackground() {
+        boolean empty = mActList.isEmpty();
+        AppLogger.getLogger().Info("isAppInBackground:" + empty + " Activitys:"+mActList.toString());
+        return empty;
+    }
+
+    // Set the UI Activity instance
+    public void setDolbyActivity(IDolbyActivity act) {
+        mDolbyActivity = act;
+    }
+
+    // The Dolby Audio Processing instance is created or not
+    public boolean isDolbyAvailable() {
+        return (mDolbyAudioProcessing != null);
+    }
+
+    // Create the Dolby Audio Processing instance
+    public boolean createDolbyAudioProcessing() {
+
+        // Obtain the handle to Dolby Audio Processing
+        // DolbyAudioProcessing objects shall not be used until onClientConnected() is called.
+        // Use the Movie profile on Kindle Fire
+        try{
+            mDolbyAudioProcessing = DolbyAudioProcessing.getDolbyAudioProcessing(this, DolbyAudioProcessing.PROFILE.MOVIE, this);
+        } catch (IllegalStateException ex) {
+            handleIllegalStateException(ex);
+        } catch (IllegalArgumentException ex) {
+            handleIllegalArgumentException(ex);
+        } catch (RuntimeException ex) {
+            handleRuntimeException(ex);
+        }
+
+
+        // Not all Android devices have Dolby Audio Processing integrated. So DolbyAudioProcessing may not be available.
         if (mDolbyAudioProcessing == null) {
+
+            AppLogger.getLogger().Info("Dolby Audio Processing can't be instantiated on this device.");
 
             return false;
         }
@@ -279,6 +409,33 @@ public class MainApplication extends Application
         return true;
     }
 
+    // Backup the system-wide audio effect configuration and restore the application configuration
+    public void restartSession() {
+        if (mDolbyAudioProcessing != null && isDolbyAudioProcessingConnected) {
+            try{
+                mDolbyAudioProcessing.restartSession();
+            } catch (IllegalStateException ex) {
+                handleIllegalStateException(ex);
+            } catch (RuntimeException ex) {
+                handleRuntimeException(ex);
+            }
+        }
+    }
+
+    // Backup the application Dolb Audio Processing configuration and restore the system-wide configuration
+    public void suspendSession() {
+
+        if (mDolbyAudioProcessing != null && isDolbyAudioProcessingConnected) {
+            try{
+                mDolbyAudioProcessing.suspendSession();
+            } catch (IllegalStateException ex) {
+                handleIllegalStateException(ex);
+            } catch (RuntimeException ex) {
+                handleRuntimeException(ex);
+            }
+        }
+    }
+
     // Release the instance of Dolby Audio Processing
     public void releaseDolbyAudioProcessing() {
         if (mDolbyAudioProcessing != null) {
@@ -286,11 +443,9 @@ public class MainApplication extends Application
                 mDolbyAudioProcessing.release();
                 mDolbyAudioProcessing = null;
             } catch (IllegalStateException ex) {
-                AppLogger.getLogger().ErrorException("releaseDolbyAudioProcessing failed", ex);
+                handleIllegalStateException(ex);
             } catch (RuntimeException ex) {
-                AppLogger.getLogger().ErrorException("releaseDolbyAudioProcessing failed", ex);
-            } catch (Exception ex) {
-                AppLogger.getLogger().ErrorException("releaseDolbyAudioProcessing failed", ex);
+                handleRuntimeException(ex);
             }
         }
 
@@ -304,9 +459,9 @@ public class MainApplication extends Application
             try{
                 bRet = mDolbyAudioProcessing.isEnabled();
             } catch (IllegalStateException ex) {
-                AppLogger.getLogger().ErrorException("isDolbyAudioProcessingEnabled failed", ex);
+                handleIllegalStateException(ex);
             } catch (RuntimeException ex) {
-                AppLogger.getLogger().ErrorException("isDolbyAudioProcessingEnabled failed", ex);
+                handleRuntimeException(ex);
             }
         }
         return bRet;
@@ -319,32 +474,123 @@ public class MainApplication extends Application
             try {
                 profile = mDolbyAudioProcessing.getSelectedProfile();
             } catch (IllegalStateException ex) {
-                AppLogger.getLogger().ErrorException("getCurrentSelectedProfile failed", ex);
+                handleIllegalStateException(ex);
             } catch (RuntimeException ex) {
-                AppLogger.getLogger().ErrorException("getCurrentSelectedProfile failed", ex);
+                handleRuntimeException(ex);
             }
         }
         return profile;
     }
 
+    // Enable/disable the Dolby Audio Processing
+    public void setDolbyAudioProcessingEnabled(boolean enable) {
+        if (mDolbyAudioProcessing != null && isDolbyAudioProcessingConnected) {
+            try {
+
+                // Enable/disable Dolby Audio Processing
+                mDolbyAudioProcessing.setEnabled(enable);
+
+            } catch (IllegalStateException ex) {
+                handleIllegalStateException(ex);
+            } catch (RuntimeException ex) {
+                handleRuntimeException(ex);
+            }
+        }
+    }
+
+    // Set the active Dolby Audio Processing profile
+    public void setDolbyAudioProcessingProfile(String profile) {
+        if (mDolbyAudioProcessing != null && isDolbyAudioProcessingConnected) {
+            try {
+
+                // Set Dolby Audio Processing profile
+                mDolbyAudioProcessing.setProfile(DolbyAudioProcessing.PROFILE.valueOf(profile));
+
+            } catch (IllegalStateException ex) {
+                handleIllegalStateException(ex);
+            } catch (IllegalArgumentException ex) {
+                handleIllegalArgumentException(ex);
+            } catch (RuntimeException ex) {
+                handleRuntimeException(ex);
+            }
+        }
+    }
+
+    /** Generic handler for IllegalStateException */
+    private void handleIllegalStateException(Exception ex)
+    {
+        handleGenericException(ex);
+    }
+
+    /** Generic handler for IllegalArgumentException */
+    private void handleIllegalArgumentException(Exception ex)
+    {
+        handleGenericException(ex);
+    }
+
+    /** Generic handler for RuntimeException */
+    private void handleRuntimeException(Exception ex)
+    {
+        handleGenericException(ex);
+    }
+
+    /** Logs out the stack trace associated with the Exception*/
+    private void handleGenericException(Exception ex)
+    {
+        AppLogger.getLogger().ErrorException("Error in Dolby Processing", ex);
+    }
+
+    /******************************************************************************
+     * Following methods provide an implementation of the listener interface
+     * {@link com.dolby.ds.OnDolbyAudioProcessingEventListener}
+     ******************************************************************************/
     @Override
     public void onDolbyAudioProcessingClientConnected() {
-        mDolbyAudioProcessing.setEnabled(true);
-        AppLogger.getLogger().Debug("DOLBY AUDIO PROCESSING", "DAP is enabled!");
+        // Dolby Audio Processing has connected we can now initialise the UI elements
+        isDolbyAudioProcessingConnected = true;
+
+        if (mDolbyActivity != null) {
+            mDolbyActivity.clientConnected();
+        }
     }
 
     @Override
     public void onDolbyAudioProcessingClientDisconnected() {
-        mDolbyAudioProcessing.setEnabled(false);
+        // Application's Dolby Audio Processing handle has been abnormally disconnected from the system service
+        isDolbyAudioProcessingConnected = false;
+
+        if (mDolbyActivity != null) {
+            mDolbyActivity.clientDisconnected();
+        }
     }
 
     @Override
-    public void onDolbyAudioProcessingEnabled(boolean b) {
+    public void onDolbyAudioProcessingEnabled(boolean on) {
+        // Called when the system Dolby audio processing has been set
+        // by another running application.
+        // Intended to be used for notification purposes only, the application should
+        // choose an appropriate action based on the use-case.
+        // The foreground application has the full control of Dolby audio processing and the external system-wide changes will be overridden.
+        // When the application is in the background, this callback is invoked to notify the application of a state setting event.
+        //
+        // Note: To avoid a system state race condition, this callback should never
+        // be used to reset the Dolby audio processing enabled state.
+        AppLogger.getLogger().Info("onDolbyAudioProcessingEnabled is received : "+on);
 
     }
 
     @Override
     public void onDolbyAudioProcessingProfileSelected(DolbyAudioProcessing.PROFILE profile) {
+        // Called when the system Dolby audio processing profile has been selected
+        // by another running application.
+        // Intended to be used for notification purposes only, the application should
+        // choose an appropriate action based on the use-case.
+        // The foreground application has the full control of Dolby audio processing and the external system-wide changes will be overridden.
+        // When the application is in the background, this callback is invoked to notify the application of a profile selection event.
+        //
+        // Note: To avoid a system state race condition, this callback should never
+        // be used to reset the Dolby audio processing profile selection.
+        AppLogger.getLogger().Info("onDolbyAudioProcessingProfileSelected is received : "+profile);
 
     }
 

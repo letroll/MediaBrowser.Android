@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
@@ -31,6 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.mb.android.IDolbyActivity;
 import com.mb.android.MainApplication;
 import com.mb.android.Playlist;
 import com.mb.android.PlaylistItem;
@@ -51,6 +53,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -79,7 +82,7 @@ import mediabrowser.model.session.PlaybackStopInfo;
 public class PlaybackActivity
         extends BaseMbMobileActivity
         implements MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener,
-        SurfaceHolder.Callback, MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener {
+        SurfaceHolder.Callback, MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener, IDolbyActivity {
 
     private static final String TAG = "PlaybackActivity";
     private static final int SUBTITLE_DISPLAY_INTERVAL = 100;
@@ -130,8 +133,80 @@ public class PlaybackActivity
     private TimedTextFileFormat ttff;
     private TimedTextObject tto;
 
+    // Handler to facilitate application's needs on handling callbacks
+    private static CallbackHandler mHandler;
+
     public StreamInfo getStreamInfo() {
         return mStreamInfo;
+    }
+
+    /**
+     * Internal Handler implementation to facilitate application's needs on handling callbacks.
+     *
+     * <p>
+     * Android requires that all UI updates to be done from within the application's UI thread.
+     * Therefore, all of the callback updates from the Dolby audio processing library post messages
+     * to the internal handler, allowing the events to be processed in the application's UI thread.
+     *
+     * Declaring Handler derived CallbackHandler as a static nested class with a WeakReference to its
+     * outer class to avoid memory leaks.
+     */
+    private static class CallbackHandler extends Handler
+    {
+        public static final int MSG_ON_CLIENT_CONNECTED = 0;
+        public static final int MSG_ON_CLIENT_DISCONNECTED = 1;
+        public static final int MSG_ON_ENABLED = 2;
+        public static final int MSG_ON_PROFILE_SELECTED = 3;
+
+        private static WeakReference<PlaybackActivity> sActivityRef;
+
+        public CallbackHandler(WeakReference<PlaybackActivity> ref)
+        {
+            sActivityRef = ref;
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            PlaybackActivity activity = sActivityRef.get();
+
+            if (activity == null) {
+                // Do not process the messages if Activity no longer exists
+                return;
+            }
+
+            switch (msg.what) {
+                case MSG_ON_CLIENT_CONNECTED: {
+                    AppLogger.getLogger().Info("MSG_ON_CLIENT_CONNECTED");
+
+                    activity.handleOnClientConnected();
+                    break;
+                }
+                case MSG_ON_CLIENT_DISCONNECTED: {
+                    AppLogger.getLogger().Info("MSG_ON_CLIENT_DISCONNECTED");
+
+                    activity.handleOnClientDisconnected();
+                    break;
+                }
+                case MSG_ON_ENABLED: {
+                    AppLogger.getLogger().Info("MSG_ON_ENABLED");
+
+                    boolean updatedEnabled = (Boolean) msg.obj;
+                    activity.handleOnEnabled(updatedEnabled);
+                    break;
+                }
+                case MSG_ON_PROFILE_SELECTED: {
+                    AppLogger.getLogger().Info("MSG_ON_PROFILE_SELECTED");
+
+                    int updatedProfile = msg.arg1;
+                    activity.handleOnProfileSelected(updatedProfile);
+                    break;
+                }
+                default: {
+                    // Unknown message - pass it over to the base class
+                    super.handleMessage(msg);
+                }
+            }
+        }
     }
 
     @SuppressLint("InflateParams")
@@ -157,11 +232,6 @@ public class PlaybackActivity
 
         mMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(mMetrics);
-
-        if (!MainApplication.getInstance().isDolbyAvailable()) {
-
-            MainApplication.getInstance().createDolbyAudioProcessing();
-       }
 
         // acquire UI elements
         mMediaControlsOverlay = (RelativeLayout) findViewById(R.id.rlControlOverlay);
@@ -223,6 +293,11 @@ public class PlaybackActivity
             public void onStopTrackingTouch(SeekBar seekBar) { handleSeek(progressValue);  }
         });
 
+        if (!MainApplication.getInstance().isDolbyAvailable()) {
+
+            MainApplication.getInstance().registerAppCallbacks();
+        }
+
         // Setup surface
         mSurface.setOnClickListener(onSurfaceClick);
         mHolder = mSurface.getHolder();
@@ -241,6 +316,14 @@ public class PlaybackActivity
         }
 
         hidePanels(true);
+
+        // Android requires all UI updates to be made from the UI thread. Therefore, all Dolby audio processing
+        // callbacks will schedule UI updates into mHandler.
+        // Declaring the Handler derived CallbackHandler as a static nested class with a WeakReference to its
+        // outer class to avoid memory leaks
+        mHandler = new CallbackHandler(new WeakReference<PlaybackActivity>(this));
+
+        MainApplication.getInstance().setDolbyActivity(this);
     }
 
     @Override
@@ -269,6 +352,12 @@ public class PlaybackActivity
         super.onStop();
         AppLogger.getLogger().Info("PlaybackActivity", "onStop");
         AppLogger.getLogger().Info("Playback Activity: onStop");
+
+        // Need to cancel any outstanding UI update as the application goes on pause
+        mHandler.removeMessages(CallbackHandler.MSG_ON_ENABLED);
+        mHandler.removeMessages(CallbackHandler.MSG_ON_PROFILE_SELECTED);
+        mHandler.removeMessages(CallbackHandler.MSG_ON_CLIENT_CONNECTED);
+        mHandler.removeMessages(CallbackHandler.MSG_ON_CLIENT_DISCONNECTED);
     }
 
     @Override
@@ -308,7 +397,11 @@ public class PlaybackActivity
             }
         }
 
+        // Release Dolby Audio Processing resource
         MainApplication.getInstance().releaseDolbyAudioProcessing();
+
+        //Release the Application lifecycle callbacks
+        MainApplication.getInstance().unregisterAppCallbacks();
     }
 
     @Override
@@ -1883,5 +1976,47 @@ public class PlaybackActivity
             AppLogger.getLogger().ErrorException("onStopTrackingTouch: IOException", e);
             e.printStackTrace();
         }
+    }
+
+    /** Called when connected to the Dolby audio processing background service. */
+    private void handleOnClientConnected()
+    {
+        // Initialise the application's UI
+    }
+
+    /** Called when abnormally disconnected from the Dolby audio processing background service. */
+    private void handleOnClientDisconnected()
+    {
+        // Application's Dolby Audio Processing handle has been disconnected from the system service
+        // The application tries to establish connection again by releasing the current handle and obtaining a new one.
+        MainApplication.getInstance().releaseDolbyAudioProcessing();
+
+        // Exit application if not able to connect to Dolby Audio Processing anymore.
+        if( !MainApplication.getInstance().createDolbyAudioProcessing()) {
+            finish();
+        }
+    }
+
+
+    /** Called when an external application has changed the system-wide Dolby audio processing enable state. */
+    private void handleOnEnabled(boolean enabled)
+    {
+
+    }
+
+    /** Called when an external application has changed the system-wide Dolby audio processing profile selection. */
+    private void handleOnProfileSelected(int profileIndex)
+    {
+
+    }
+
+    public void clientConnected() {
+
+        //mHandler.sendEmptyMessage(CallbackHandler.MSG_ON_CLIENT_CONNECTED);
+    }
+
+    public void clientDisconnected() {
+
+        //mHandler.sendEmptyMessage(CallbackHandler.MSG_ON_CLIENT_DISCONNECTED);
     }
 }
