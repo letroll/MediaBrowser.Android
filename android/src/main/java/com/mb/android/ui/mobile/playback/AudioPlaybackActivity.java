@@ -505,8 +505,7 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
 
             if (currentArtist != null && currentArtist.getBackdropCount() > 0) {
 
-                ImageOptions backdropOptions = new ImageOptions();
-                backdropOptions.setImageType(ImageType.Backdrop);
+                ImageOptions backdropOptions = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
                 backdropOptions.setImageIndex(0);
                 backdropOptions.setMaxHeight(Math.min(getScreenHeight(), 720));
 

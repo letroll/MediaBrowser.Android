@@ -173,8 +173,7 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
         ImageOptions options = null;
 
         if (currentItem.getHasPrimaryImage()) {
-            options = new ImageOptions();
-            options.setImageType(ImageType.Primary);
+            options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
             options.setWidth((int)mImageWidth);
             Double aspectRatio = ItemLayout.GetDisplayAspectRatio(currentItem);
             if (aspectRatio != null && aspectRatio > 0){
@@ -185,8 +184,7 @@ public class MediaAdapterPosters extends BaseAdapter implements SectionIndexer {
 
         } else if (currentItem.getType().equalsIgnoreCase("episode")
                 && currentItem.getParentThumbItemId() != null) {
-            options = new ImageOptions();
-            options.setImageType(ImageType.Thumb);
+            options = MainApplication.getInstance().getImageOptions(ImageType.Thumb);
             options.setMaxWidth((int)mImageWidth);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
             imageUrl = mApi.GetImageUrl(currentItem.getParentThumbItemId(), options);

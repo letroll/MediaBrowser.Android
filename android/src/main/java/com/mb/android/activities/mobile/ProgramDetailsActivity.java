@@ -332,8 +332,7 @@ public class ProgramDetailsActivity extends BaseMbMobileActivity implements View
     }
 
     private void setPrimaryImageUsingItemId(String itemId) {
-        ImageOptions options = new ImageOptions();
-        options.setImageType(ImageType.Primary);
+        ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
         options.setHeight(500);
         String imageUrl = MainApplication.getInstance().API.GetImageUrl(itemId, options);
         primaryImage.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());

@@ -105,8 +105,7 @@ public class BioFragment extends Fragment {
 
                     if (backdrop != null) {
                         backdrop.setLayoutParams(new RelativeLayout.LayoutParams(metrics.widthPixels, (metrics.widthPixels / 16) * 9));
-                        ImageOptions options = new ImageOptions();
-                        options.setImageType(ImageType.Backdrop);
+                        ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
                         options.setMaxWidth(metrics.widthPixels);
 
                         String imageUrl = MainApplication.getInstance().API.GetImageUrl(item, options);

@@ -129,8 +129,7 @@ public class SearchResultsAdapter extends BaseAdapter implements SectionIndexer 
 
             // Download from server
             if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mBaseItems.get(position).getPrimaryImageTag())) {
-                ImageOptions options = new ImageOptions();
-                options.setImageType(ImageType.Primary);
+                ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
                 options.setMaxWidth(mImageWidth);
                 options.setEnableImageEnhancers(imageEnhancersEnabled);
 

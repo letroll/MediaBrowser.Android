@@ -32,7 +32,9 @@ import mediabrowser.apiinteraction.android.sync.data.AndroidAssetManager;
 import mediabrowser.apiinteraction.playback.PlaybackManager;
 import mediabrowser.apiinteraction.sync.data.ILocalAssetManager;
 import mediabrowser.model.dlna.DeviceProfile;
+import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.dto.UserDto;
+import mediabrowser.model.entities.ImageType;
 import mediabrowser.model.serialization.IJsonSerializer;
 import mediabrowser.model.session.ClientCapabilities;
 
@@ -294,7 +296,7 @@ public class MainApplication extends Application
                 AppLogger.getLogger().Info("onActivityResumed: " + name);
                 if(!mActList.contains(name)){
                     mActList.add(name);
-                    AppLogger.getLogger().Info("Activitys:"+mActList.toString());
+                    AppLogger.getLogger().Info("Activitys:" + mActList.toString());
                 }
 
                 //
@@ -323,10 +325,10 @@ public class MainApplication extends Application
             // and broadcast some intents to notify that the application is going background and call suspendSession().
             synchronized (mLock) {
                 String name = activity.getClass().getName();
-                AppLogger.getLogger().Info("onActivityStopped: " + name );
+                AppLogger.getLogger().Info("onActivityStopped: " + name);
                 if(mActList.contains(name)){
                     mActList.remove(name);
-                    AppLogger.getLogger().Info("Activitys:"+mActList.toString());
+                    AppLogger.getLogger().Info("Activitys:" + mActList.toString());
                 }
 
                 if (RELEASE_DOLBY_CONTROL_WHEN_IN_BACKGROUND) {
@@ -645,5 +647,20 @@ public class MainApplication extends Application
 
     public AndroidDevice getDevice() {
         return mDevice;
+    }
+
+    public ImageOptions getImageOptions(ImageType type){
+
+        ImageOptions options = new ImageOptions();
+        options.setImageType(type);
+
+        if (type == ImageType.Backdrop){
+            options.setQuality(60);
+        }
+        else{
+            options.setQuality(80);
+        }
+
+        return options;
     }
 }

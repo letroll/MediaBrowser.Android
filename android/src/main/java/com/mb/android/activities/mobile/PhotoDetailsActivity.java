@@ -143,8 +143,7 @@ public class PhotoDetailsActivity extends BaseMbMobileActivity {
         lastViewed = photo.getId();
 
         ImageOptions options;
-        options = new ImageOptions();
-        options.setImageType(ImageType.Primary);
+        options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
         options.setMaxWidth(getScreenWidth());
         options.setMaxHeight(getScreenHeight());
 

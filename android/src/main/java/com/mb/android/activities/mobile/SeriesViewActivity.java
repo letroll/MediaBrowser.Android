@@ -482,8 +482,7 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
 
             if (item.getBackdropCount() > 0) {
 
-                ImageOptions options = new ImageOptions();
-                options.setImageType(ImageType.Backdrop);
+                ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
                 options.setWidth(getResources().getDisplayMetrics().widthPixels);
 
                 String imageUrl = MainApplication.getInstance().API.GetImageUrl(item, options);

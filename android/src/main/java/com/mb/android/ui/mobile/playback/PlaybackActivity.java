@@ -1292,9 +1292,7 @@ public class PlaybackActivity
             if (item.getParentBackdropImageTags() != null &&
                     item.getParentBackdropImageTags().size() > 0) {
 
-                options = new ImageOptions();
-                options.setImageType(ImageType.Backdrop);
-
+                options = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
                 String imageUrl = MainApplication.getInstance().API.GetImageUrl(item.getParentBackdropItemId(), options);
                 mLoadingSplashScreen.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
             }
@@ -1309,8 +1307,7 @@ public class PlaybackActivity
 
             if (item.getBackdropCount() > 0) {
 
-                options = new ImageOptions();
-                options.setImageType(ImageType.Backdrop);
+                options = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
                 options.setWidth(getResources().getDisplayMetrics().widthPixels);
 
                 String imageUrl = MainApplication.getInstance().API.GetImageUrl(item, options);

@@ -129,8 +129,7 @@ public class NavigationMenuFragment extends Fragment {
         if (MainApplication.getInstance().user != null) {
             if (MainApplication.getInstance().user.getHasPrimaryImage()) {
 
-                ImageOptions options = new ImageOptions();
-                options.setImageType(ImageType.Primary);
+                ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
                 options.setHeight((int) (56 * metrics.density));
                 options.setWidth((int) (56 * metrics.density));
                 options.setCropWhitespace(true);

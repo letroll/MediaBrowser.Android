@@ -178,8 +178,7 @@ public class RottenTomatoesActivity extends BaseMbMobileActivity {
 
                 NetworkImageView mBackdropImage = (NetworkImageView) findViewById(R.id.ivMediaBackdrop);
 
-                ImageOptions backdropOptions = new ImageOptions();
-                backdropOptions.setImageType(ImageType.Backdrop);
+                ImageOptions backdropOptions = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
                 backdropOptions.setImageIndex(0);
                 backdropOptions.setMaxWidth(getScreenWidth() / 2);
                 backdropOptions.setMaxHeight(getScreenHeight() / 2);
@@ -199,8 +198,7 @@ public class RottenTomatoesActivity extends BaseMbMobileActivity {
 
             if (mItem.getHasPrimaryImage()) {
 
-                ImageOptions options = new ImageOptions();
-                options.setImageType(ImageType.Primary);
+                ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
                 options.setImageIndex(0);
                 options.setMaxHeight((int) (240 * getScreenDensity()));
                 options.setEnableImageEnhancers(PreferenceManager

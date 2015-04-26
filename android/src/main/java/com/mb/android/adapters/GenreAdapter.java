@@ -120,8 +120,7 @@ public class GenreAdapter extends AbstractMediaAdapter {
         if (!isFastScrolling) {
 
             if (mBaseItems.get(position).getHasPrimaryImage()) {
-                ImageOptions options = new ImageOptions();
-                options.setImageType(ImageType.Primary);
+                ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
                 options.setWidth(mImageWidth);
                 options.setEnableImageEnhancers(imageEnhancersEnabled);
 

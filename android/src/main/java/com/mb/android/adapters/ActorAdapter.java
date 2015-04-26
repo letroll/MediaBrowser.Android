@@ -90,10 +90,9 @@ public class ActorAdapter extends BaseAdapter {
         }
 
         if (mPeople[position].getHasPrimaryImage()) {
-            ImageOptions actorImageOptions = new ImageOptions();
+            ImageOptions actorImageOptions = MainApplication.getInstance().getImageOptions(ImageType.Primary);
             actorImageOptions.setMaxWidth(93);
             actorImageOptions.setMaxHeight(140);
-            actorImageOptions.setImageType(ImageType.Primary);
             actorImageOptions.setEnableImageEnhancers(imageEnhancersEnabled);
 
             String actorImageUrl = mApi.GetImageUrl(mPeople[position].getId(), actorImageOptions);

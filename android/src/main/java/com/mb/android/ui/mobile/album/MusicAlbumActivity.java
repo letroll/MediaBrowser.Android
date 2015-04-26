@@ -205,8 +205,7 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
             NetworkImageView albumCover = (NetworkImageView) findViewById(R.id.ivAlbumCoverLarge);
 
             if (mAlbum.getHasPrimaryImage()) {
-                ImageOptions options = new ImageOptions();
-                options.setImageType(ImageType.Primary);
+                ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
                 options.setMaxWidth((int) (150 * getScreenDensity()));
                 options.setMaxHeight((int) (150 * getScreenDensity()));
                 options.setEnableImageEnhancers(PreferenceManager
@@ -438,8 +437,7 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
 
         if (mAlbum.getBackdropCount() > 0) {
             AppLogger.getLogger().Info("MusicAlbumActivity", "Has Backdrop");
-            ImageOptions backOptions = new ImageOptions();
-            backOptions.setImageType(ImageType.Backdrop);
+            ImageOptions backOptions = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
             backOptions.setWidth(getScreenWidth() / 2);
 
             String imageUrl = MainApplication.getInstance().API.GetImageUrl(mAlbum, backOptions);
@@ -455,8 +453,7 @@ public class MusicAlbumActivity extends BaseMbMobileActivity {
 
         if (mArtist.getBackdropCount() > 0) {
             AppLogger.getLogger().Info("MusicAlbumActivity", "Has Backdrop");
-            ImageOptions backOptions = new ImageOptions();
-            backOptions.setImageType(ImageType.Backdrop);
+            ImageOptions backOptions = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
             backOptions.setWidth(getScreenWidth() / 2);
 
             String imageUrl = MainApplication.getInstance().API.GetImageUrl(mArtist, backOptions);

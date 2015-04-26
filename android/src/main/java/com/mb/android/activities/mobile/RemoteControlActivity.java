@@ -339,8 +339,7 @@ public class RemoteControlActivity extends BaseMbMobileActivity {
 
         if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(itemInfo.getBackdropItemId())) {
 
-            options = new ImageOptions();
-            options.setImageType(ImageType.Backdrop);
+            options = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
             options.setMaxHeight(getScreenHeight());
             options.setQuality(80);
 

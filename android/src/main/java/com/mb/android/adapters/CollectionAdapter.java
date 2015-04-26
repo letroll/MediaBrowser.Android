@@ -101,20 +101,17 @@ public class CollectionAdapter extends BaseAdapter {
 
         if (mItems[i].getHasPrimaryImage()) {
 
-            options = new ImageOptions();
-            options.setImageType(ImageType.Primary);
+            options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
 
         } else if (mItems[i].getHasThumb()) {
 
-            options = new ImageOptions();
-            options.setImageType(ImageType.Thumb);
+            options = MainApplication.getInstance().getImageOptions(ImageType.Thumb);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
 
         } else if (mItems[i].getBackdropCount() > 0) {
 
-            options = new ImageOptions();
-            options.setImageType(ImageType.Backdrop);
+            options = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
         }
 
         if (options != null) {

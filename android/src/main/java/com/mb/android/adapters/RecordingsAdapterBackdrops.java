@@ -113,8 +113,7 @@ public class RecordingsAdapterBackdrops extends BaseAdapter implements SectionIn
             if (mBaseItems.get(position).getImageTags() != null) {
                 if (mBaseItems.get(position).getHasPrimaryImage()) {
 
-                    options = new ImageOptions();
-                    options.setImageType(ImageType.Primary);
+                    options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
                     options.setMaxWidth(mImageWidth);
                     options.setMaxHeight(mImageHeight);
                     options.setEnableImageEnhancers(imageEnhancersEnabled);
@@ -122,8 +121,7 @@ public class RecordingsAdapterBackdrops extends BaseAdapter implements SectionIn
 
                 } else if (mBaseItems.get(position).getImageTags().containsKey(ImageType.Thumb)) {
 
-                    options = new ImageOptions();
-                    options.setImageType(ImageType.Thumb);
+                    options = MainApplication.getInstance().getImageOptions(ImageType.Thumb);
                     options.setMaxWidth(mImageWidth);
                     options.setMaxHeight(mImageHeight);
                     options.setEnableImageEnhancers(imageEnhancersEnabled);

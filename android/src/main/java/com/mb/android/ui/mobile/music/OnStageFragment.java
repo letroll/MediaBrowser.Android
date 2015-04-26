@@ -249,8 +249,7 @@ public class OnStageFragment extends Fragment {
                     }
 
                     if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(song.getParentBackdropItemId())) {
-                        ImageOptions options = new ImageOptions();
-                        options.setImageType(ImageType.Backdrop);
+                        ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
                         options.setImageIndex(0);
 
                         String imageUrl = MainApplication.getInstance().API.GetImageUrl(song.getParentBackdropItemId(), options);

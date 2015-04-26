@@ -90,14 +90,12 @@ public class SeriesDetailsFragment extends Fragment {
 
             if (mSeries.getHasThumb()) {
 
-                options = new ImageOptions();
-                options.setImageType(ImageType.Thumb);
+                options = MainApplication.getInstance().getImageOptions(ImageType.Thumb);
                 options.setImageIndex(0);
 
             } else if (mSeries.getBackdropCount() > 0) {
 
-                options = new ImageOptions();
-                options.setImageType(ImageType.Backdrop);
+                options = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
                 options.setImageIndex(0);
             }
 
@@ -114,8 +112,7 @@ public class SeriesDetailsFragment extends Fragment {
         } else {
             NetworkImageView primaryImageLandscape = (NetworkImageView) mView.findViewById(R.id.ivPrimaryImage);
 
-            ImageOptions options = new ImageOptions();
-            options.setImageType(ImageType.Primary);
+            ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
             options.setMaxWidth((int) (300 * mSeriesActivity.getScreenDensity()));
             options.setMaxHeight(mSeriesActivity.getScreenHeight() - 325);
 

@@ -75,9 +75,8 @@ public class TvScenesAdapter extends BaseAdapter {
         holder.secondaryText.setText(Utils.PlaybackRuntimeFromMilliseconds(mBaseItem.getChapters().get(position).getStartPositionTicks() / 10000));
 
 
-        ImageOptions sceneImageOptions = new ImageOptions();
+        ImageOptions sceneImageOptions = MainApplication.getInstance().getImageOptions(ImageType.Chapter);
         sceneImageOptions.setWidth(400);
-        sceneImageOptions.setImageType(ImageType.Chapter);
         sceneImageOptions.setImageIndex(position);
 
         String sceneImageUrl = MainApplication.getInstance().API.GetImageUrl(mBaseItem, sceneImageOptions);

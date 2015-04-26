@@ -80,8 +80,7 @@ public class ScheduledSeriesRecordingsAdapter extends BaseAdapter {
 
         // Set the image
         if (program.getHasPrimaryImage()) {
-            ImageOptions options = new ImageOptions();
-            options.setImageType(ImageType.Primary);
+            ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
             options.setMaxWidth(400);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
 

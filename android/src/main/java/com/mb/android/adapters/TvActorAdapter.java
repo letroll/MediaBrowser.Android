@@ -103,9 +103,7 @@ public class TvActorAdapter extends BaseAdapter {
         holder.secondaryText.setText(role);
 
         if (mPeople[position].getHasPrimaryImage()) {
-            ImageOptions actorImageOptions = new ImageOptions();
-//            actorImageOptions.setHeight(height);
-            actorImageOptions.setImageType(ImageType.Primary);
+            ImageOptions actorImageOptions = MainApplication.getInstance().getImageOptions(ImageType.Primary);
             actorImageOptions.setEnableImageEnhancers(imageEnhancersEnabled);
                 String actorImageUrl = mApi.GetPersonImageUrl(mPeople[position], actorImageOptions);
                 holder.imageView.setImageUrl(actorImageUrl, MainApplication.getInstance().API.getImageLoader());

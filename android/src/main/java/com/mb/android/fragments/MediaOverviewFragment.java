@@ -139,8 +139,7 @@ public class MediaOverviewFragment extends Fragment {
             return;
 
         if (mItem.getHasPrimaryImage()) {
-            ImageOptions options = new ImageOptions();
-            options.setImageType(ImageType.Primary);
+            ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
             options.setMaxWidth((int) (300 * mMediaDetailsActivity.getScreenDensity()));
             options.setMaxHeight(mMediaDetailsActivity.getScreenHeight() - 150);
             options.setEnableImageEnhancers(PreferenceManager
@@ -178,8 +177,7 @@ public class MediaOverviewFragment extends Fragment {
 
         if (mItem.getType().equalsIgnoreCase("episode") && mItem.getHasPrimaryImage()) {
 
-            options = new ImageOptions();
-            options.setImageType(ImageType.Primary);
+            options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
             options.setEnableImageEnhancers(false);
             String imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem, options);
             setBackdropImage(imageUrl);
@@ -193,8 +191,7 @@ public class MediaOverviewFragment extends Fragment {
 
             if (mItem.getBackdropCount() > 0) {
                 for (int i = 0; i < mItem.getBackdropCount(); i++) {
-                    options = new ImageOptions();
-                    options.setImageType(ImageType.Backdrop);
+                    options = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
                     options.setImageIndex(i);
                     options.setMaxWidth(mMediaDetailsActivity.getResources().getDisplayMetrics().widthPixels);
                     String imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem, options);
@@ -202,9 +199,7 @@ public class MediaOverviewFragment extends Fragment {
                     mBackdropUrls.add(imageUrl);
                 }
             } else if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mItem.getParentBackdropItemId())) {
-                options = new ImageOptions();
-                options.setImageType(ImageType.Backdrop);
-
+                options = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
                 String imageUrl = MainApplication.getInstance().API.GetImageUrl(mItem.getParentBackdropItemId(), options);
                 mBackdropUrls.add(imageUrl);
             }

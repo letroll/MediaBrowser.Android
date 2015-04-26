@@ -82,8 +82,7 @@ public class ResumeDialogAdapter extends BaseAdapter {
 
     private String buildChapterImageUrl(String itemId, int chapterIndex) {
 
-        ImageOptions options = new ImageOptions();
-        options.setImageType(ImageType.Chapter);
+        ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Chapter);
         options.setImageIndex(chapterIndex);
 
         return MainApplication.getInstance().API.GetImageUrl(itemId, options);

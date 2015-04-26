@@ -184,16 +184,14 @@ public class MediaAdapterBackdrops extends BaseAdapter implements SectionIndexer
         String imageUrl = null;
 
         if (!type.equalsIgnoreCase("Episode") && mBaseItems.get(position).getHasThumb()) {
-            options = new ImageOptions();
-            options.setImageType(ImageType.Thumb);
+            options = MainApplication.getInstance().getImageOptions(ImageType.Thumb);
             options.setWidth((int)mImageWidth);
             options.setMaxHeight((int)mImageHeight);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
             imageUrl = mApi.GetImageUrl(mBaseItems.get(position).getId(), options);
 
         } else if (!type.equalsIgnoreCase("Episode") && mBaseItems.get(position).getBackdropCount() > 0) {
-            options = new ImageOptions();
-            options.setImageType(ImageType.Backdrop);
+            options = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
             options.setWidth((int)mImageWidth);
             options.setMaxHeight((int)mImageHeight);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
@@ -201,8 +199,7 @@ public class MediaAdapterBackdrops extends BaseAdapter implements SectionIndexer
             imageUrl = mApi.GetImageUrl(mBaseItems.get(position), options);
 
         } else if (mBaseItems.get(position).getHasPrimaryImage()) {
-            options = new ImageOptions();
-            options.setImageType(ImageType.Primary);
+            options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
             options.setWidth((int)mImageWidth);
             options.setMaxHeight((int)mImageHeight);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
@@ -210,8 +207,7 @@ public class MediaAdapterBackdrops extends BaseAdapter implements SectionIndexer
 
         } else if (mBaseItems.get(position).getType().equalsIgnoreCase("episode") &&
                 mBaseItems.get(position).getParentThumbItemId() != null) {
-            options = new ImageOptions();
-            options.setImageType(ImageType.Thumb);
+            options = MainApplication.getInstance().getImageOptions(ImageType.Thumb);
             options.setWidth((int)mImageWidth);
             options.setMaxHeight((int)mImageHeight);
             options.setEnableImageEnhancers(imageEnhancersEnabled);

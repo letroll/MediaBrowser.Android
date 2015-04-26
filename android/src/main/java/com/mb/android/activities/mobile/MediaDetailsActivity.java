@@ -815,9 +815,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                         if (mItem.getParentBackdropImageTags() != null &&
                                 mItem.getParentBackdropImageTags().size() > 0) {
 
-                            options = new ImageOptions();
-                            options.setImageType(ImageType.Backdrop);
-
+                            options = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
                             String imageUrl = MainApplication.getInstance().API.GetImageUrl(
                                     mItem.getParentBackdropItemId(), options);
                             mBackdropUrls.add(imageUrl);
@@ -825,8 +823,7 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
                     } else {
                         if (mItem.getBackdropCount() > 0) {
                             for (int i = 0; i < mItem.getBackdropCount(); i++) {
-                                options = new ImageOptions();
-                                options.setImageType(ImageType.Backdrop);
+                                options = MainApplication.getInstance().getImageOptions(ImageType.Backdrop);
                                 options.setMaxWidth(720);
                                 options.setImageIndex(i);
 

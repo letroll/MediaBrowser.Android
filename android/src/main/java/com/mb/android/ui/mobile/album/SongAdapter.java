@@ -93,16 +93,14 @@ public class SongAdapter extends BaseAdapter implements SectionIndexer {
         holder.titleText.setText(mSongs.get(position).getName());
 
         if (mSongs.get(position).getHasPrimaryImage()) {
-            ImageOptions options = new ImageOptions();
-            options.setImageType(ImageType.Primary);
+            ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
             options.setWidth(mWidth);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
 
             String imageUrl = MainApplication.getInstance().API.GetImageUrl(mSongs.get(position).getId(), options);
             holder.imageView.setImageUrl(imageUrl, MainApplication.getInstance().API.getImageLoader());
         } else if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(mSongs.get(position).getAlbumPrimaryImageTag())) {
-            ImageOptions options = new ImageOptions();
-            options.setImageType(ImageType.Primary);
+            ImageOptions options = MainApplication.getInstance().getImageOptions(ImageType.Primary);
             options.setWidth(mWidth);
             options.setEnableImageEnhancers(imageEnhancersEnabled);
 
