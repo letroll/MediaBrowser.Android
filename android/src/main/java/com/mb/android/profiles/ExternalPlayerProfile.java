@@ -1,21 +1,48 @@
 package com.mb.android.profiles;
 
-import mediabrowser.model.dlna.CodecProfile;
-import mediabrowser.model.dlna.CodecType;
+import mediabrowser.model.dlna.DeviceProfile;
 import mediabrowser.model.dlna.DlnaProfileType;
 import mediabrowser.model.dlna.DirectPlayProfile;
-import mediabrowser.model.dlna.ProfileCondition;
-import mediabrowser.model.dlna.ProfileConditionType;
-import mediabrowser.model.dlna.ProfileConditionValue;
-import mediabrowser.model.dlna.profiles.DefaultProfile;
+import mediabrowser.model.dlna.EncodingContext;
+import mediabrowser.model.dlna.TranscodingProfile;
 
 /**
  * Created by Mark on 2014-11-13.
  */
-public class ExternalPlayerProfile extends DefaultProfile {
+public class ExternalPlayerProfile extends DeviceProfile {
 
     public ExternalPlayerProfile() {
         buildDirectPlayProfiles();
+        buildTranscodingProfiles();
+    }
+
+    private void buildTranscodingProfiles() {
+
+        java.util.ArrayList<TranscodingProfile> transcodingProfiles = new java.util.ArrayList<TranscodingProfile>();
+
+        TranscodingProfile tempVar = new TranscodingProfile();
+        tempVar.setContainer("mp3");
+        tempVar.setAudioCodec("mp3");
+        tempVar.setType(DlnaProfileType.Audio);
+        tempVar.setContext(EncodingContext.Streaming);
+        transcodingProfiles.add(tempVar);
+
+        TranscodingProfile tempVar3 = new TranscodingProfile();
+        tempVar3.setContainer("mp4");
+        tempVar3.setVideoCodec("h264");
+        tempVar3.setAudioCodec("aac");
+        tempVar3.setType(DlnaProfileType.Video);
+        tempVar3.setContext(EncodingContext.Streaming);
+        transcodingProfiles.add(tempVar3);
+
+        TranscodingProfile tempVar4 = new TranscodingProfile();
+        tempVar4.setContainer("jpg");
+        tempVar4.setVideoCodec("jpg");
+        tempVar4.setType(DlnaProfileType.Photo);
+        tempVar4.setContext(EncodingContext.Streaming);
+        transcodingProfiles.add(tempVar4);
+
+        setTranscodingProfiles(transcodingProfiles.toArray(new TranscodingProfile[0]));
     }
 
     private void buildDirectPlayProfiles() {

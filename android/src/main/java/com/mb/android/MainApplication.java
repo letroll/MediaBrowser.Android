@@ -658,7 +658,7 @@ public class MainApplication extends Application
             options.setQuality(60);
         }
         else{
-            options.setQuality(80);
+            options.setQuality(90);
         }
 
         return options;
