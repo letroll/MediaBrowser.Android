@@ -173,14 +173,6 @@ public class Utils {
         }
     }
 
-    public static String convertToLocalDateFormat(Date date) {
-
-        DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(MainApplication.getInstance());
-        return dateFormat.format(date);
-    }
-
-
-
     public static String TotalMemory(Context context) {
 
         ActivityManager actManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -554,63 +546,6 @@ public class Utils {
         }
 
         return convertedDate;
-    }
-
-    public static boolean insertIntoDataset(BaseItemDto item, ArrayList<BaseItemDto> dataset) {
-        if (item == null) {
-            return false;
-        }
-        if (dataset == null) {
-            return false;
-        }
-
-        Integer index = null;
-
-        for (int i = 0; i < dataset.size(); i++) {
-            if (item.getId().equalsIgnoreCase(dataset.get(i).getId())) {
-                index = i;
-                break;
-            }
-        }
-
-        // SUCCESS
-        if (index != null) {
-            dataset.set(index,item);
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Returns a formatted string that shows the episode indexes in a readable manor.
-     *
-     * Output Examples:
-     *  Season 1, Episode 12
-     *  Season 3, Episodes 18 - 20
-     *
-     * @param item The Episode to parse
-     *
-     * @return The formatted String
-     */
-    public static String getLongEpisodeIndexString(BaseItemDto item) {
-        String title = "";
-        if (item == null) {
-            return title;
-        }
-        try {
-            if (item.getIndexNumber() != null)
-                title += item.getIndexNumber().toString();
-            if (item.getIndexNumberEnd() != null && !item.getIndexNumberEnd().equals(item.getIndexNumber())) {
-                title += " - " + item.getIndexNumberEnd();
-                title = "Season " + String.valueOf(item.getParentIndexNumber()) + ", Episodes " + title;
-            } else {
-                title = "Season " + String.valueOf(item.getParentIndexNumber()) + ", Episode " + title;
-            }
-        } catch (Exception e) {
-            AppLogger.getLogger().ErrorException("PopulateTvInfo - ", e);
-        }
-        return title;
     }
 
     /**

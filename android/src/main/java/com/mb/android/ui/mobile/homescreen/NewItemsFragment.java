@@ -16,7 +16,6 @@ import com.mb.android.MainApplication;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.interfaces.ICommandListener;
 import com.mb.android.ui.mobile.musicartist.ArtistActivity;
 import com.mb.android.activities.mobile.BookDetailsActivity;
 import com.mb.android.ui.mobile.library.LibraryPresentationActivity;
@@ -37,7 +36,7 @@ import java.util.ArrayList;
  *
  * Fragment that shows all items recently added to a users library.
  */
-public class NewItemsFragment extends Fragment implements ICommandListener {
+public class NewItemsFragment extends Fragment {
 
     private static final String TAG = "NewItemsFragment";
     private BaseItemDto[] mItems;
@@ -230,31 +229,6 @@ public class NewItemsFragment extends Fragment implements ICommandListener {
         query.setGroupItems(false);
 
         MainApplication.getInstance().API.GetLatestItems(query, new getSeriesUnwatchedItemsResponse());
-    }
-
-    @Override
-    public void onPreviousButton() {
-
-    }
-
-    @Override
-    public void onNextButton() {
-
-    }
-
-    @Override
-    public void onPlayPauseButton() {
-        playRequest();
-    }
-
-    @Override
-    public void onPlayButton() {
-        playRequest();
-    }
-
-    @Override
-    public void onPauseButton() {
-
     }
 
     private class getSeriesUnwatchedItemsResponse extends Response<BaseItemDto[]> {

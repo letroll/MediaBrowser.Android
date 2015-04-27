@@ -17,7 +17,6 @@ import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.library.LibraryPresentationActivity;
 import com.mb.android.adapters.CollectionAdapter;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.interfaces.ICommandListener;
 import com.mb.android.ui.mobile.livetv.LiveTvActivity;
 import com.mb.android.ui.mobile.music.MusicActivity;
 import mediabrowser.model.dto.BaseItemDto;
@@ -32,7 +31,7 @@ import mediabrowser.model.entities.SortOrder;
  *
  * Fragment that shows a grid containing all the users media collections.
  */
-public class CollectionsFragment extends Fragment implements ICommandListener {
+public class CollectionsFragment extends Fragment {
 
     private BaseItemDto[] mItems;
     private ProgressBar mActivityIndicator;
@@ -124,29 +123,4 @@ public class CollectionsFragment extends Fragment implements ICommandListener {
 
         }
     };
-
-    @Override
-    public void onPreviousButton() {
-
-    }
-
-    @Override
-    public void onNextButton() {
-
-    }
-
-    @Override
-    public void onPlayPauseButton() {
-
-    }
-
-    @Override
-    public void onPlayButton() {
-
-    }
-
-    @Override
-    public void onPauseButton() {
-
-    }
 }

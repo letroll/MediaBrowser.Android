@@ -33,11 +33,6 @@ public class PlaylistItem {
     public Long startPositionTicks;
 
     /**
-     * Used when an item is added that has children. IE: a folder or Album
-     */
-    public boolean Recursive;
-
-    /**
      * The audio stream chosen from the advanced play dialog
      */
     public Integer AudioStreamIndex;

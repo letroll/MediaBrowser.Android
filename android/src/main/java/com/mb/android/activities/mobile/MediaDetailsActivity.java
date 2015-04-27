@@ -26,7 +26,6 @@ import android.widget.ListView;
 import android.widget.ViewSwitcher;
 
 import com.android.volley.toolbox.NetworkImageView;
-import com.mb.android.DialogFragments.SyncDialog;
 import com.mb.android.MainApplication;
 import com.mb.android.activities.BaseMbMobileActivity;
 import com.mb.android.adapters.ResumeDialogAdapter;
@@ -334,10 +333,8 @@ public class MediaDetailsActivity extends BaseMbMobileActivity
         Sync
          */
         } else if (((String) item.getTitle()).equalsIgnoreCase("sync")) {
-            SyncDialog dialog = new SyncDialog();
-//            dialog.setItem(mItem);
-//            dialog.setStreams(mSelectedAudioStreamIndex, mSelectedSubtitleStreamIndex);
-            dialog.show(getSupportFragmentManager(), "SyncDialog");
+
+
         /*
         Set Favorite
          */

@@ -9,11 +9,6 @@ import java.util.List;
 public class Playlist {
 
     /**
-     * Set to true to have the list shuffled
-     */
-    public boolean Shuffle;
-
-    /**
      * List of items to play. List is used even if only one item is being played
      */
     public List<PlaylistItem> PlaylistItems;

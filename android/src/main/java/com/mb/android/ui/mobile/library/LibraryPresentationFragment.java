@@ -18,7 +18,6 @@ import android.widget.TextView;
 import mediabrowser.apiinteraction.Response;
 
 import com.mb.android.MainApplication;
-import com.mb.android.interfaces.ICommandListener;
 import com.mb.android.R;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.musicartist.ArtistActivity;
@@ -45,7 +44,7 @@ import java.util.List;
  *
  * This fragment shows a list of various items in a users library
  */
-public class LibraryPresentationFragment extends Fragment implements ICommandListener{
+public class LibraryPresentationFragment extends Fragment {
 
     private static final String TAG = "LibraryPresentationFragment";
     private GridView mLibraryGrid;
@@ -411,30 +410,5 @@ public class LibraryPresentationFragment extends Fragment implements ICommandLis
                     || "video".equalsIgnoreCase(items[0].getMediaType())
                     || "season".equalsIgnoreCase(items[0].getType())
                     || "series".equalsIgnoreCase(items[0].getType()));
-    }
-
-    @Override
-    public void onPreviousButton() {
-
-    }
-
-    @Override
-    public void onNextButton() {
-
-    }
-
-    @Override
-    public void onPlayPauseButton() {
-
-    }
-
-    @Override
-    public void onPlayButton() {
-
-    }
-
-    @Override
-    public void onPauseButton() {
-
     }
 }

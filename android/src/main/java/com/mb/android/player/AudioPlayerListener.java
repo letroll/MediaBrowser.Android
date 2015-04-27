@@ -9,8 +9,6 @@ public interface AudioPlayerListener {
 
     public void onItemLoaded(BaseItemDto baseItemDto, int playlistPositionIndex);
 
-    public void onPlaylistCreated();
-
     public void onPlaylistCompleted();
 
     public void onPlayPauseChanged(boolean paused);

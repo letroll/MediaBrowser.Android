@@ -2734,11 +2734,6 @@ public class VideoCastManager extends BaseCastManager
     }
 
     @Override
-    public void onPlaylistCreated() {
-
-    }
-
-    @Override
     public void onPlaylistCompleted() {
         updateMiniControllersVisibility(false);
         removeRemoteControlClient();

@@ -203,11 +203,6 @@ public class AudioPlaybackActivity extends BaseMbMobileActivity implements Audio
     }
 
     @Override
-    public void onPlaylistCreated() {
-
-    }
-
-    @Override
     public void onPlaylistCompleted() {
         this.finish();
     }

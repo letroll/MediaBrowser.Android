@@ -428,41 +428,6 @@ public class AudioService
         }
     }
 
-    public void increaseVolume() {
-
-        if (mVolume < 1.0) {
-            mVolume += 0.05;
-            mPlayer.setVolume(mVolume, mVolume);
-        }
-
-        if (mAudioPlayerListeners != null) {
-            synchronized (LOCK) {
-                for (AudioPlayerListener listener : mAudioPlayerListeners) {
-                    listener.onVolumeChanged(false, mVolume);
-                }
-            }
-
-        }
-
-    }
-
-    public void decreaseVolume() {
-
-        if (mVolume > 0.0) {
-            mVolume -= 0.05;
-            mPlayer.setVolume(mVolume, mVolume);
-        }
-
-        if (mAudioPlayerListeners != null) {
-            synchronized (LOCK) {
-                for (AudioPlayerListener listener : mAudioPlayerListeners) {
-                    listener.onVolumeChanged(false, mVolume);
-                }
-            }
-
-        }
-    }
-
     /**
      *
      */

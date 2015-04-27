@@ -15,7 +15,6 @@ import com.mb.android.MainApplication;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.interfaces.ICommandListener;
 import com.mb.android.logging.AppLogger;
 import com.mb.android.ui.mobile.musicartist.ArtistActivity;
 import com.mb.android.activities.mobile.BookDetailsActivity;
@@ -41,7 +40,7 @@ import java.util.ArrayList;
  *
  * Fragment shows a grid of items that the user has toggled as favorite
  */
-public class FavoritesFragment extends Fragment implements ICommandListener {
+public class FavoritesFragment extends Fragment {
 
     private static final String TAG = "FavoritesFragment";
     private BaseItemDto[] mItems;
@@ -211,37 +210,6 @@ public class FavoritesFragment extends Fragment implements ICommandListener {
 
         }
     };
-
-
-    @Override
-    public void onPreviousButton() {
-
-    }
-
-
-    @Override
-    public void onNextButton() {
-
-    }
-
-
-    @Override
-    public void onPlayPauseButton() {
-        playRequest();
-    }
-
-
-    @Override
-    public void onPlayButton() {
-        playRequest();
-    }
-
-
-    @Override
-    public void onPauseButton() {
-
-    }
-
 
     private void playRequest() {
         if (mItems == null || mItems.length == 0) return;

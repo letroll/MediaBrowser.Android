@@ -17,11 +17,9 @@ import com.mb.android.ui.mobile.playback.PlaybackActivity;
 public class PlaybackOptionsMenuItemClickListener implements android.support.v7.widget.PopupMenu.OnMenuItemClickListener {
 
     private FragmentActivity mActivity;
-    private PlaybackActivity mPlaybackActivity;
 
-    public PlaybackOptionsMenuItemClickListener(FragmentActivity activity, PlaybackActivity playbackActivity) {
+    public PlaybackOptionsMenuItemClickListener(FragmentActivity activity) {
         mActivity = activity;
-        mPlaybackActivity = playbackActivity;
     }
     @Override
     public boolean onMenuItemClick(MenuItem menuItem) {

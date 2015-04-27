@@ -16,7 +16,6 @@ import com.mb.android.R;
 import com.mb.android.activities.mobile.MediaDetailsActivity;
 import com.mb.android.adapters.HomeScreenItemsAdapter;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.interfaces.ICommandListener;
 import com.mb.android.logging.AppLogger;
 
 import mediabrowser.model.dto.BaseItemDto;
@@ -33,7 +32,7 @@ import mediabrowser.model.entities.SortOrder;
  *
  * Fragment that shows items the use has started watching but not completed
  */
-public class ResumableFragment extends Fragment implements ICommandListener {
+public class ResumableFragment extends Fragment {
 
     private BaseItemDto[] mItems;
     private ProgressBar mActivityIndicator;
@@ -148,29 +147,4 @@ public class ResumableFragment extends Fragment implements ICommandListener {
 
         }
     };
-
-    @Override
-    public void onPreviousButton() {
-
-    }
-
-    @Override
-    public void onNextButton() {
-
-    }
-
-    @Override
-    public void onPlayPauseButton() {
-
-    }
-
-    @Override
-    public void onPlayButton() {
-
-    }
-
-    @Override
-    public void onPauseButton() {
-
-    }
 }

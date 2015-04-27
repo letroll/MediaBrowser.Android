@@ -65,7 +65,6 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
     private boolean mSetPlayedMenuItemVisible;
     private boolean mSetUnPlayedMenuItemVisible;
     private NetworkImageView mBackdropImage;
-    private boolean mDying = false;
     private boolean shouldPlayThemeSong;
     private SeriesDetailsFragment seriesDetailsFragment;
 
@@ -157,7 +156,6 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
     public void onResume() {
         super.onResume();
         buildUi();
-        mDying = false;
     }
 
 
@@ -165,7 +163,6 @@ public class SeriesViewActivity extends BaseMbMobileActivity {
     public void onPause() {
 
         mMini.removeOnMiniControllerChangedListener(mCastManager);
-        mDying = true;
         super.onPause();
     }
 

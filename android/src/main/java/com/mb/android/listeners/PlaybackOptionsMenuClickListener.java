@@ -22,12 +22,10 @@ import mediabrowser.model.entities.MediaStreamType;
 public class PlaybackOptionsMenuClickListener implements View.OnClickListener {
 
     MediaSourceInfo mMediaSourceInfo;
-    PlaybackActivity  mPlaybackActivity;
 
 
-    public PlaybackOptionsMenuClickListener(MediaSourceInfo mediaSourceInfo, PlaybackActivity playbackActivity) {
+    public PlaybackOptionsMenuClickListener(MediaSourceInfo mediaSourceInfo) {
         mMediaSourceInfo = mediaSourceInfo;
-        mPlaybackActivity = playbackActivity;
     }
 
     @Override
@@ -62,7 +60,7 @@ public class PlaybackOptionsMenuClickListener implements View.OnClickListener {
 
         popupMenu.getMenu().add(i, i, 0, MainApplication.getInstance().getResources().getString(R.string.bitrate_selection));
 
-        popupMenu.setOnMenuItemClickListener(new PlaybackOptionsMenuItemClickListener((FragmentActivity)v.getContext(), mPlaybackActivity));
+        popupMenu.setOnMenuItemClickListener(new PlaybackOptionsMenuItemClickListener((FragmentActivity)v.getContext()));
         popupMenu.show();
         AppLogger.getLogger().Debug("Showing playback options menu");
     }

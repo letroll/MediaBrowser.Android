@@ -1655,7 +1655,7 @@ public class PlaybackActivity
 
                             SetNowPlayingInfo(mRecording);
                             loadStreamInfoIntoPlayer();
-                            mOptionsMenu.setOnClickListener(new PlaybackOptionsMenuClickListener(mStreamInfo.getMediaSource(), PlaybackActivity.this));
+                            mOptionsMenu.setOnClickListener(new PlaybackOptionsMenuClickListener(mStreamInfo.getMediaSource()));
 
                             if (mRecording.getRunTimeTicks() != null)
                                 mRuntime = (int) (mRecording.getRunTimeTicks() / 10000);
@@ -1725,7 +1725,7 @@ public class PlaybackActivity
                             loadStreamInfoIntoPlayer();
 
                             mStreamDetails.setText(StreamDetailsFromStreamInfo());
-                            mOptionsMenu.setOnClickListener(new PlaybackOptionsMenuClickListener(mStreamInfo.getMediaSource(), PlaybackActivity.this));
+                            mOptionsMenu.setOnClickListener(new PlaybackOptionsMenuClickListener(mStreamInfo.getMediaSource()));
                         }
                     }
                 });
@@ -1758,7 +1758,7 @@ public class PlaybackActivity
                                     loadStreamInfoIntoPlayer();
 
                                     mStreamDetails.setText(StreamDetailsFromStreamInfo());
-                                    mOptionsMenu.setOnClickListener(new PlaybackOptionsMenuClickListener(mStreamInfo.getMediaSource(), PlaybackActivity.this));
+                                    mOptionsMenu.setOnClickListener(new PlaybackOptionsMenuClickListener(mStreamInfo.getMediaSource()));
                                 } else {
 
                                     if (MainApplication.getInstance().PlayerQueue.PlaylistItems.size() > currentlyPlayingIndex + 1) {

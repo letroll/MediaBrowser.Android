@@ -16,7 +16,6 @@ import com.mb.android.R;
 import com.mb.android.activities.mobile.MediaDetailsActivity;
 import com.mb.android.adapters.HomeScreenItemsAdapter;
 import mediabrowser.apiinteraction.Response;
-import com.mb.android.interfaces.ICommandListener;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.querying.ItemsResult;
 import mediabrowser.model.querying.NextUpQuery;
@@ -29,7 +28,7 @@ import com.mb.android.logging.AppLogger;
  * Fragment shows a list of TV episodes that are "up next" based on user viewing habits. List content is
  * generated server-side.
  */
-public class UpNextFragment extends Fragment implements ICommandListener {
+public class UpNextFragment extends Fragment {
 
     private static final String TAG = "UpNextFragment";
     private ProgressBar mActivityIndicator;
@@ -114,29 +113,4 @@ public class UpNextFragment extends Fragment implements ICommandListener {
             AppLogger.getLogger().Info("********* ON ERROR *********");
         }
     };
-
-    @Override
-    public void onPreviousButton() {
-
-    }
-
-    @Override
-    public void onNextButton() {
-
-    }
-
-    @Override
-    public void onPlayPauseButton() {
-
-    }
-
-    @Override
-    public void onPlayButton() {
-
-    }
-
-    @Override
-    public void onPauseButton() {
-
-    }
 }

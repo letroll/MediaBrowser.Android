@@ -11,7 +11,6 @@ import android.support.multidex.MultiDex;
 
 import com.dolby.dap.DolbyAudioProcessing;
 import com.dolby.dap.OnDolbyAudioProcessingEventListener;
-import com.mb.android.displaypreferences.DisplayPreferenceManager;
 import com.mb.android.exceptions.DefaultExceptionHandler;
 import com.mb.android.interfaces.IWebsocketEventListener;
 import com.mb.android.playbackmediator.cast.VideoCastManager;
@@ -619,14 +618,6 @@ public class MainApplication extends Application
     }
     public void setCurrentActivity(IWebsocketEventListener mCurrentActivity){
         this.mCurrentActivity = mCurrentActivity;
-    }
-
-    private DisplayPreferenceManager preferenceManager;
-    public DisplayPreferenceManager getPreferenceManager() {
-        if (preferenceManager == null) {
-            preferenceManager = new DisplayPreferenceManager();
-        }
-        return preferenceManager;
     }
 
     public void startContentSync() {
