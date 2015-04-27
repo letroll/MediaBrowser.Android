@@ -50,22 +50,14 @@ public class MbConnectActivity extends FragmentActivity {
         // Always show debug logging during initial connection
         AppLogger.setDebugLoggingEnabled(true);
 
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (sharedPrefs.getString("pref_application_profile", "Mobile").equalsIgnoreCase("Mobile")) {
-            setContentView(R.layout.activity_welcome2);
-            findViewById(R.id.btnSignIn).setOnClickListener(onSignInClick);
-            mConnectUserName = (EditText) findViewById(R.id.etUsername);
-            mConnectPassword = (EditText) findViewById(R.id.etPassword);
-            TextView linkText = (TextView) findViewById(R.id.tvParagraph1);
-            linkText.requestFocus();
-            linkText.setText(Html.fromHtml(getResources().getString(R.string.mb_connect_welcome_text_with_url)));
-            linkText.setMovementMethod(LinkMovementMethod.getInstance());
-        } else {
-            setContentView(R.layout.activity_welcome2_pin);
-            mPin = (TextView) findViewById(R.id.tvPin);
-            connectionManager = (AndroidConnectionManager) MainApplication.getInstance().getConnectionManager();
-            connectionManager.CreatePin(connectionManager.getDevice().getDeviceId(), pinCreationResultResponse);
-        }
+        setContentView(R.layout.activity_welcome2);
+        findViewById(R.id.btnSignIn).setOnClickListener(onSignInClick);
+        mConnectUserName = (EditText) findViewById(R.id.etUsername);
+        mConnectPassword = (EditText) findViewById(R.id.etPassword);
+        TextView linkText = (TextView) findViewById(R.id.tvParagraph1);
+        linkText.requestFocus();
+        linkText.setText(Html.fromHtml(getResources().getString(R.string.mb_connect_welcome_text_with_url)));
+        linkText.setMovementMethod(LinkMovementMethod.getInstance());
         Button skip = (Button) findViewById(R.id.btnSkip);
         skip.setOnClickListener(onSkipClick);
         skip.requestFocus();

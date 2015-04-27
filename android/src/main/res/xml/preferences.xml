@@ -25,22 +25,6 @@
         android:key="pref_general_settings"
         android:title="@string/settings_general">
 
-        <ListPreference
-            android:key="pref_application_profile"
-            android:title="Application Profile"
-            android:summary="Specify the layout used."
-            android:dialogTitle="Layout"
-            android:entries="@array/pref_application_profile_values"
-            android:entryValues="@array/pref_application_profile_values"
-            android:defaultValue="Mobile" />
-
-        <!--<com.mb.android.widget.customswitchpreference.CustomSwitchPreference-->
-        <!--android:key="pref_enable_backdrops"-->
-        <!--android:title="Enable Backdrops"-->
-        <!--android:summaryOff="Backdrops are not shown in various views"-->
-        <!--android:summaryOn="Backdrops are shown in various views"-->
-        <!--android:defaultValue="false" />-->
-
         <Preference
             android:key="pref_adjust_overscan"
             android:persistent="false"

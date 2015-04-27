@@ -43,7 +43,6 @@ import com.mb.android.fragments.NavigationMenuFragment;
 import com.mb.android.player.AudioService;
 import com.mb.android.ui.mobile.homescreen.HomescreenActivity;
 import com.mb.android.ui.mobile.playback.PlaybackActivity;
-import com.mb.android.ui.tv.playback.PlayerHelpers;
 import com.mb.android.utils.Utils;
 import mediabrowser.model.dlna.StreamInfo;
 import mediabrowser.model.dto.BaseItemDto;

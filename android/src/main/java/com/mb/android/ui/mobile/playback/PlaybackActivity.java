@@ -46,7 +46,6 @@ import com.mb.android.subtitles.FatalParsingException;
 import com.mb.android.subtitles.FormatSRT;
 import com.mb.android.subtitles.TimedTextFileFormat;
 import com.mb.android.subtitles.TimedTextObject;
-import com.mb.android.ui.tv.playback.PlayerHelpers;
 import com.mb.android.utils.Utils;
 
 import java.io.File;
@@ -1369,7 +1368,7 @@ public class PlaybackActivity
         else if (extra == -110)
             AppLogger.getLogger().Error("Playback Error: -110");
         else
-            AppLogger.getLogger().Error("Playback Error: " + PlayerHelpers.PlayerStatusFromExtra(extra));
+            AppLogger.getLogger().Error("Playback Error: " + Utils.PlayerStatusFromExtra(extra));
 
 //        if (mStreamInfo == null) return false;
 //

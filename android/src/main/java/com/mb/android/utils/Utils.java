@@ -26,9 +26,11 @@ import com.mb.android.logging.AppLogger;
 
 import mediabrowser.model.dto.MediaSourceInfo;
 import mediabrowser.model.entities.MediaStream;
+import mediabrowser.model.entities.SeriesStatus;
 import mediabrowser.model.livetv.RecordingInfoDto;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -658,5 +660,247 @@ public class Utils {
             AppLogger.getLogger().ErrorException("PopulateTvInfo - ", e);
         }
         return title;
+    }
+
+    public static String buildAiringInfoString(BaseItemDto item) {
+        if ("series".equalsIgnoreCase(item.getType())) {
+            return buildSeriesAiringInfoString(item);
+        } else if ("episode".equalsIgnoreCase(item.getType())) {
+            return buildEpisodeAiringInfoString(item);
+        } else {
+            return "";
+        }
+    }
+
+    private static String buildSeriesAiringInfoString(BaseItemDto item) {
+        String aInfo = "";
+
+        if (item.getAirDays() != null && item.getAirDays().size() > 0) {
+            String daysString = "";
+
+            if (item.getAirDays().size() == 7) {
+                daysString = "daily";
+            } else {
+                for (String day : item.getAirDays()) {
+                    if (!daysString.isEmpty())
+                        daysString += ", ";
+
+                    daysString += day + "s";
+                }
+            }
+
+            if (!daysString.isEmpty())
+                aInfo += daysString;
+        }
+
+        if (item.getAirTime() != null && !item.getAirTime().isEmpty()) {
+            aInfo += " " + MainApplication.getInstance().getResources().getString(R.string.at_string) + " ";
+            aInfo += item.getAirTime();
+        }
+
+        if (item.getStudios() != null && item.getStudios().length > 0) {
+            aInfo += " on ";
+            aInfo += item.getStudios()[0].getName();
+        }
+
+        if (!tangible.DotNetToJavaStringHelper.isNullOrEmpty(aInfo)) {
+            if (item.getStatus() != null && item.getStatus().equals(SeriesStatus.Ended)) {
+                aInfo = MainApplication.getInstance().getResources().getString(R.string.aired_string) + " " + aInfo;
+            } else {
+                aInfo = MainApplication.getInstance().getResources().getString(R.string.airs_string) + " " + aInfo;
+            }
+        }
+
+        return aInfo;
+    }
+
+    private static String buildEpisodeAiringInfoString(BaseItemDto item) {
+        String aInfo = "";
+
+        if (item.getPremiereDate() != null) {
+            DateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+
+            Date premiereDate = Utils.convertToLocalDate(item.getPremiereDate());
+            aInfo = outputFormat.format(premiereDate);
+
+            if (premiereDate != null) {
+                if (premiereDate.before(new Date())) {
+                    aInfo = MainApplication.getInstance().getResources().getString(R.string.aired_string) + " " + aInfo;
+                } else {
+                    aInfo = MainApplication.getInstance().getResources().getString(R.string.airs_string) + " " + aInfo;
+                }
+            }
+        }
+        return aInfo;
+    }
+
+    public static String PlayerStatusFromExtra(int extra) {
+
+        String status = "unknown extra status";
+
+		/*
+         Return code for general failure
+		 */
+        if (extra == -1)
+            status = "PVMFFailure (-1)";
+        /*
+		 Error due to cancellation
+		 */
+        else if (extra == -2)
+            status = "PVMFErrCancelled (-2)";
+		/*
+		 Error due to no memory being available
+		 */
+        else if (extra == -3)
+            status = "PVMFErrNoMemory (-3)";
+		/*
+		 Error due to request not being supported
+		 */
+        else if (extra == -4)
+            status = "PVMFErrNotSupported (-4)";
+		/*
+		 Error due to invalid argument
+		 */
+        else if (extra == -5)
+            status = "PVMFErrArgument (-5)";
+		/*
+		 Error due to invalid resource handle being specified
+		 */
+        else if (extra == -6)
+            status = "PVMFErrBadHandle (-6)";
+		/*
+		 Error due to resource already exists and another one cannot be created
+		 */
+        else if (extra == -7)
+            status = "PVMFErrAlreadyExists (-7)";
+		/*
+		 Error due to resource being busy and request cannot be handled
+		 */
+        else if (extra == -8)
+            status = "PVMFErrBusy (-8)";
+		/*
+		 Error due to resource not ready to accept request
+		 */
+        else if (extra == -9)
+            status = "PVMFErrNotReady (-9)";
+		/*
+		 Error due to data corruption being detected
+		 */
+        else if (extra == -10)
+            status = "PVMFErrCorrupt (-10)";
+		/*
+		 Error due to request timing out
+		 */
+        else if (extra == -11)
+            status = "PVMFErrTimeout (-11)";
+		/*
+		 Error due to general overflow
+		 */
+        else if (extra == -12)
+            status = "PVMFErrOverflow (-12)";
+		/*
+		 Error due to general underflow
+		 */
+        else if (extra == -13)
+            status = "PVMFErrUnderflow (-13)";
+		/*
+		 Error due to resource being in wrong state to handle request
+		 */
+        else if (extra == -14)
+            status = "PVMFErrInvalidState (-14)";
+		/*
+		 Error due to resource not being available
+		 */
+        else if (extra == -15)
+            status = "PVMFErrNoResources (-15)";
+		/*
+		 Error due to invalid configuration of resource
+		 */
+        else if (extra == -16)
+            status = "PVMFErrResourceConfiguration (-16)";
+		/*
+		 Error due to general error in underlying resource
+		 */
+        else if (extra == -17)
+            status = "PVMFErrResource (-17)";
+		/*
+		 Error due to general data processing
+		 */
+        else if (extra == -18)
+            status = "PVMFErrProcessing (-18)";
+		/*
+		 Error due to general port processing
+		 */
+        else if (extra == -19)
+            status = "PVMFErrPortProcessing (-19)";
+		/*
+		 Error due to lack of authorization to access a resource.
+		 */
+        else if (extra == -20)
+            status = "PVMFErrAccessDenied (-20)";
+		/*
+		 Error due to the lack of a valid license for the content
+		 */
+        else if (extra == -21)
+            status = "PVMFErrLicenseRequired (-21)";
+		/*
+		 Error due to the lack of a valid license for the content.  However
+		 a preview is available.
+		 */
+        else if (extra == -22)
+            status = "PVMFErrLicenseRequiredPreviewAvailable (-22)";
+		/*
+		 Error due to the download content length larger than the maximum request size
+		 */
+        else if (extra == -23)
+            status = "PVMFErrContentTooLarge (-23)";
+		/*
+		 Error due to a maximum number of objects in use
+		 */
+        else if (extra == -24)
+            status = "PVMFErrMaxReached (-24)";
+		/*
+		 Return code for low disk space
+		 */
+        else if (extra == -25)
+            status = "PVMFLowDiskSpace (-25)";
+		/*
+		 Error due to the requirement of user-id and password input from app for HTTP basic/digest authentication
+		 */
+        else if (extra == -26)
+            status = "PVMFErrHTTPAuthenticationRequired (-26)";
+		/*
+		 PVMFMediaClock specific error. Callback has become invalid due to change in direction of NPT clock.
+		*/
+        else if (extra == -27)
+            status = "PVMFErrCallbackHasBecomeInvalid (-27)";
+		/*
+		 PVMFMediaClock specific error. Callback is called as clock has stopped.
+		*/
+        else if (extra == -28)
+            status = "PVMFErrCallbackClockStopped (-28)";
+		/*
+		 Error due to missing call for ReleaseMatadataValue() API
+		 */
+        else if (extra == -29)
+            status = "PVMFErrReleaseMetadataValueNotDone (-29)";
+		/*
+		 Error due to the redirect error
+		*/
+        else if (extra == -30)
+            status = "PVMFErrRedirect (-30)";
+		/*
+		 Error if a given method or API is not implemented. This is NOT the same as PVMFErrNotSupported.
+		*/
+        else if (extra == -31)
+            status = "PVMFErrNotImplemented (-31)";
+		/*
+		 Error: the video container is not valid for progressive playback.
+		 */
+        else if (extra == -32)
+            status = "PVMFErrContentInvalidForProgressivePlayback (-32)";
+
+
+        return status;
     }
 }

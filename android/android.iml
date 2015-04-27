@@ -110,7 +110,6 @@
     <orderEntry type="library" exported="" name="emby.apiclient.android" level="project" />
     <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="logback-android-classic-1.1.1-3" level="project" />
-    <orderEntry type="module" module-name="two-way-gridview" exported="" />
     <orderEntry type="module" module-name="drag-sort-listview" exported="" />
     <orderEntry type="module" module-name="SlidingUpPanel" exported="" />
   </component>

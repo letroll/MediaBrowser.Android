@@ -18,12 +18,12 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.SeriesViewActivity;
-import com.mb.android.ui.tv.library.LibraryTools;
 
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
 import com.mb.android.logging.AppLogger;
+import com.mb.android.utils.Utils;
 
 /**
  * Created by Mark on 12/12/13.
@@ -132,7 +132,7 @@ public class SeriesDetailsFragment extends Fragment {
 
         AppLogger.getLogger().Info("SeriesDetailsFragment: Setting Airing Info");
         TextView airingInfo = (TextView) mView.findViewById(R.id.tvSeriesViewAiringInfo);
-        airingInfo.setText(LibraryTools.buildAiringInfoString(mSeries));
+        airingInfo.setText(Utils.buildAiringInfoString(mSeries));
 
         AppLogger.getLogger().Info("SeriesDetailsFragment: Set Overview");
         TextView seriesOverview = (TextView) mView.findViewById(R.id.tvSeriesOverview);

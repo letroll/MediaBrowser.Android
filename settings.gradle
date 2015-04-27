@@ -1,1 +1,1 @@
-include ':android', ':two-way-gridview', ':SlidingUpPanel', ':drag-sort-listview', 'CastCompanionLibrary-android'
+include ':android', ':SlidingUpPanel', ':drag-sort-listview', 'CastCompanionLibrary-android'

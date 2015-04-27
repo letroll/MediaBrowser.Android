@@ -9,7 +9,6 @@ import android.os.SystemClock;
 import com.mb.android.MainApplication;
 import com.mb.android.PlaylistItem;
 import com.mb.android.logging.AppLogger;
-import com.mb.android.ui.tv.playback.PlayerHelpers;
 import com.mb.android.utils.Utils;
 
 import java.io.IOException;
@@ -253,8 +252,8 @@ public class AudioService
             AppLogger.getLogger().Error("Playback Error: -110");
             AppLogger.getLogger().Debug("AudioService", "Playback Error: -110");
         } else {
-            AppLogger.getLogger().Error("Playback Error: " + PlayerHelpers.PlayerStatusFromExtra(extra));
-            AppLogger.getLogger().Debug("AudioService", "Playback Error: " + PlayerHelpers.PlayerStatusFromExtra(extra));
+            AppLogger.getLogger().Error("Playback Error: " + Utils.PlayerStatusFromExtra(extra));
+            AppLogger.getLogger().Debug("AudioService", "Playback Error: " + Utils.PlayerStatusFromExtra(extra));
         }
 
         return true;

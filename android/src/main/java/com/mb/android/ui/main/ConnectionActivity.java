@@ -28,7 +28,6 @@ import com.mb.android.R;
 import com.mb.android.ui.mobile.homescreen.HomescreenActivity;
 import com.mb.android.interfaces.IServerDialogClickListener;
 import com.mb.android.logging.AppLogger;
-import com.mb.android.ui.tv.homescreen.HomeScreenActivity;
 import mediabrowser.apiinteraction.ConnectionResult;
 import mediabrowser.apiinteraction.Response;
 import mediabrowser.apiinteraction.android.AndroidApiClient;
@@ -424,15 +423,9 @@ public class ConnectionActivity extends FragmentActivity implements IServerDialo
         MainApplication.getInstance().startContentSync();
 
         Intent intent;
-        if (sharedPrefs.getString("pref_application_profile", "Mobile").equalsIgnoreCase("Mobile")) {
-            AppLogger.getLogger().Info("proceeding to mobile homescreen");
-            // proceed to the mobile layouts
-            intent = new Intent(this, HomescreenActivity.class);
-        } else {
-            AppLogger.getLogger().Info("proceeding to living room homescreen");
-            // proceed to the livingroom layouts.
-            intent = new Intent(this, HomeScreenActivity.class);
-        }
+        AppLogger.getLogger().Info("proceeding to mobile homescreen");
+        // proceed to the mobile layouts
+        intent = new Intent(this, HomescreenActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

@@ -65,28 +65,6 @@ public class MainSettingsFragment extends PreferenceFragment implements SharedPr
             } else {
 
             }
-        } else if (key.equals("pref_application_profile")) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(getResources().getString(R.string.warning_string))
-                    .setMessage(getResources().getString(R.string.restart_warning))
-                    .setPositiveButton(getResources().getString(R.string.restart_button), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent intent = new Intent(getActivity(), ConnectionActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                            startActivity(intent);
-                            getActivity().finish();
-                        }
-                    })
-                    .setNegativeButton(getResources().getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                        }
-                    })
-                    .show();
         } else if (key.equals("pref_debug_logging_enabled")) {
             final CustomSwitchPreference csp = (CustomSwitchPreference) getPreferenceScreen().findPreference(key);
             if (csp == null) return;
