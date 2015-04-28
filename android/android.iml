@@ -85,31 +85,30 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
-    <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
-    <orderEntry type="library" exported="" name="support-annotations-22.0.0" level="project" />
-    <orderEntry type="library" exported="" name="logback-android-core-1.1.1-3" level="project" />
-    <orderEntry type="library" exported="" name="disklrucache-2.0.2" level="project" />
-    <orderEntry type="library" exported="" name="mediarouter-v7-21.0.3" level="project" />
-    <orderEntry type="library" exported="" name="okhttp-2.2.0" level="project" />
-    <orderEntry type="library" exported="" name="library-1.0.11" level="project" />
-    <orderEntry type="library" exported="" name="okio-1.2.0" level="project" />
-    <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
-    <orderEntry type="library" exported="" name="emby.apiclient.android" level="project" />
-    <orderEntry type="library" exported="" name="guava-18.0" level="project" />
     <orderEntry type="library" exported="" name="Java-WebSocket-1.3.0" level="project" />
-    <orderEntry type="library" exported="" name="dolby_audio_processing" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-22.0.0" level="project" />
-    <orderEntry type="library" exported="" name="apktool-lib-1.4.4-3" level="project" />
-    <orderEntry type="library" exported="" name="layouts-1.0.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="core-1.0.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="multidex-1.0.0" level="project" />
-    <orderEntry type="library" exported="" name="recyclerview-v7-21.0.3" level="project" />
-    <orderEntry type="library" exported="" name="logback-android-classic-1.1.1-3" level="project" />
-    <orderEntry type="library" exported="" name="slf4j-api-1.7.10" level="project" />
+    <orderEntry type="library" exported="" name="layouts-1.0.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
+    <orderEntry type="library" exported="" name="okio-1.2.0" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="okhttp-2.2.0" level="project" />
+    <orderEntry type="library" exported="" name="dolby_audio_processing" level="project" />
     <orderEntry type="library" exported="" name="okhttp-urlconnection-2.2.0" level="project" />
+    <orderEntry type="library" exported="" name="mediarouter-v7-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="logback-android-core-1.1.1-3" level="project" />
+    <orderEntry type="library" exported="" name="multidex-1.0.0" level="project" />
+    <orderEntry type="library" exported="" name="apktool-lib-1.4.4-3" level="project" />
+    <orderEntry type="library" exported="" name="recyclerview-v7-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="guava-18.0" level="project" />
+    <orderEntry type="library" exported="" name="gson-2.3.1" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="slf4j-api-1.7.10" level="project" />
     <orderEntry type="library" exported="" name="emby.apiclient" level="project" />
+    <orderEntry type="library" exported="" name="emby.apiclient.android" level="project" />
+    <orderEntry type="library" exported="" name="volley" level="project" />
+    <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
+    <orderEntry type="library" exported="" name="logback-android-classic-1.1.1-3" level="project" />
     <orderEntry type="module" module-name="drag-sort-listview" exported="" />
     <orderEntry type="module" module-name="SlidingUpPanel" exported="" />
   </component>
