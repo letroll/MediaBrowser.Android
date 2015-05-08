@@ -183,6 +183,7 @@ public class MainApplication extends Application
 
         AndroidProfileOptions options = new AndroidProfileOptions();
         options.DefaultH264Level = 41;
+        options.ForceH264Level = true;
         options.SupportsHls = true;
         options.SupportsAc3 = isDolbySupported;
 
