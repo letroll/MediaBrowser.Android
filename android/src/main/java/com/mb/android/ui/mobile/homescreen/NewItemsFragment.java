@@ -26,8 +26,6 @@ import com.mb.android.ui.mobile.musicartist.ArtistActivity;
 import com.mb.android.ui.mobile.playback.PlaybackActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 
 import mediabrowser.apiinteraction.Response;
 import mediabrowser.model.dto.BaseItemDto;
@@ -46,27 +44,6 @@ public class NewItemsFragment extends Fragment {
     private ProgressBar   mActivityIndicator;
     private GridView      mNewItemsGrid;
     private TextView      noContentText;
-    private Comparator<BaseItemDto> baseItemDtoComparator = new Comparator<BaseItemDto>() {
-        @Override
-        public int compare(BaseItemDto baseItemDto, BaseItemDto t1) {
-            return compareEpisodeName(baseItemDto, t1);
-        }
-    };
-
-    private int compareEpisodeName(BaseItemDto item1, BaseItemDto item2) {
-        if (item1.getParentIndexNumber() != null && item1.getIndexNumber() != null && item2.getParentIndexNumber() != null && item2.getIndexNumber() != null) {
-            try {
-                int compareResult=item1.getParentIndexNumber().compareTo(item2.getParentIndexNumber());
-                if(compareResult==0)compareResult=item1.getIndexNumber().compareTo(item2.getIndexNumber());
-                return compareResult;
-            } catch (Exception e) {
-                AppLogger.getLogger().ErrorException("Error setting episode text", e);
-                return item1.getName().compareTo(item2.getName());
-            }
-        } else {
-            return item1.getName().compareTo(item2.getName());
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -125,8 +102,6 @@ public class NewItemsFragment extends Fragment {
         }
         AppLogger.getLogger().Info(TAG + " - processResponse: " + String.valueOf(response.length) + " Items received.");
         mItems = response;
-
-        Arrays.sort(mItems,baseItemDtoComparator);
     }
 
     private void toggleNoContentWarning() {
