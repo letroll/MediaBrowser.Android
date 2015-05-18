@@ -21,18 +21,19 @@ import com.mb.android.MainApplication;
 import com.mb.android.R;
 import com.mb.android.activities.mobile.MediaDetailsActivity;
 import com.mb.android.activities.mobile.SeriesViewActivity;
-import com.mb.android.utils.Utils;
-import mediabrowser.apiinteraction.Response;
 import com.mb.android.logging.AppLogger;
+import com.mb.android.utils.Utils;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
+import mediabrowser.apiinteraction.Response;
 import mediabrowser.model.dto.BaseItemDto;
 import mediabrowser.model.dto.ImageOptions;
 import mediabrowser.model.entities.ImageType;
 import mediabrowser.model.querying.ItemFields;
 import mediabrowser.model.querying.LatestItemsQuery;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 /**
  * Created by Mark on 12/12/13.

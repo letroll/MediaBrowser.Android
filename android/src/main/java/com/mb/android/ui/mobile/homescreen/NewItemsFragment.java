@@ -15,21 +15,24 @@ import com.mb.android.DialogFragments.LatestItemsDialogFragment;
 import com.mb.android.MainApplication;
 import com.mb.android.PlaylistItem;
 import com.mb.android.R;
-import mediabrowser.apiinteraction.Response;
-import com.mb.android.ui.mobile.musicartist.ArtistActivity;
 import com.mb.android.activities.mobile.BookDetailsActivity;
-import com.mb.android.ui.mobile.library.LibraryPresentationActivity;
 import com.mb.android.activities.mobile.MediaDetailsActivity;
-import com.mb.android.ui.mobile.album.MusicAlbumActivity;
 import com.mb.android.activities.mobile.PhotoDetailsActivity;
 import com.mb.android.adapters.HomeScreenItemsAdapter;
-import com.mb.android.ui.mobile.playback.PlaybackActivity;
-import mediabrowser.model.dto.BaseItemDto;
-import mediabrowser.model.querying.ItemFields;
 import com.mb.android.logging.AppLogger;
-import mediabrowser.model.querying.LatestItemsQuery;
+import com.mb.android.ui.mobile.album.MusicAlbumActivity;
+import com.mb.android.ui.mobile.library.LibraryPresentationActivity;
+import com.mb.android.ui.mobile.musicartist.ArtistActivity;
+import com.mb.android.ui.mobile.playback.PlaybackActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+
+import mediabrowser.apiinteraction.Response;
+import mediabrowser.model.dto.BaseItemDto;
+import mediabrowser.model.querying.ItemFields;
+import mediabrowser.model.querying.LatestItemsQuery;
 
 /**
  * Created by Mark on 12/12/13.
@@ -40,10 +43,30 @@ public class NewItemsFragment extends Fragment {
 
     private static final String TAG = "NewItemsFragment";
     private BaseItemDto[] mItems;
-    private ProgressBar mActivityIndicator;
-    private GridView mNewItemsGrid;
-    private TextView noContentText;
+    private ProgressBar   mActivityIndicator;
+    private GridView      mNewItemsGrid;
+    private TextView      noContentText;
+    private Comparator<BaseItemDto> baseItemDtoComparator = new Comparator<BaseItemDto>() {
+        @Override
+        public int compare(BaseItemDto baseItemDto, BaseItemDto t1) {
+            return compareEpisodeName(baseItemDto, t1);
+        }
+    };
 
+    private int compareEpisodeName(BaseItemDto item1, BaseItemDto item2) {
+        if (item1.getParentIndexNumber() != null && item1.getIndexNumber() != null && item2.getParentIndexNumber() != null && item2.getIndexNumber() != null) {
+            try {
+                int compareResult=item1.getParentIndexNumber().compareTo(item2.getParentIndexNumber());
+                if(compareResult==0)compareResult=item1.getIndexNumber().compareTo(item2.getIndexNumber());
+                return compareResult;
+            } catch (Exception e) {
+                AppLogger.getLogger().ErrorException("Error setting episode text", e);
+                return item1.getName().compareTo(item2.getName());
+            }
+        } else {
+            return item1.getName().compareTo(item2.getName());
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,6 +125,8 @@ public class NewItemsFragment extends Fragment {
         }
         AppLogger.getLogger().Info(TAG + " - processResponse: " + String.valueOf(response.length) + " Items received.");
         mItems = response;
+
+        Arrays.sort(mItems,baseItemDtoComparator);
     }
 
     private void toggleNoContentWarning() {
@@ -113,6 +138,7 @@ public class NewItemsFragment extends Fragment {
 
     private void refreshOrInitializeGridContent() {
         if (mNewItemsGrid == null) return;
+
         HomeScreenItemsAdapter adapter = (HomeScreenItemsAdapter) mNewItemsGrid.getAdapter();
         if (adapter != null) {
             adapter.addNewDataset(mItems);
